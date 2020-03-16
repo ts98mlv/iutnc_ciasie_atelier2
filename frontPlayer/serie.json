@@ -1,0 +1,26 @@
+{ "series" : [
+    {
+        "id" : 1,
+        "ville" : "Paris",
+        "map_refs" : "",
+        "distance" : 10
+    },
+    {
+        "id" : 2,
+        "ville" : "Nancy",
+        "map_refs" : "",
+        "distance" : 2
+    },
+    {
+        "id" : 3,
+        "ville" : "Metz",
+        "map_refs" : "",
+        "distance" : 80
+    },
+    {
+        "id" : 4,
+        "ville" : "Strasbourg",
+        "map_refs" : "",
+        "distance" : 20
+    }
+]}
