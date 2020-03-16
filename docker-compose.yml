@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+  api:
+    image: node
+    environment:
+      - NODE_ENV=dev
+    ports:
+      - "19080:8080"
+    volumes:
+      - ./dev:/app/geoquizz_api
+    working_dir: /app/geoquizz_api
+    command: npm run dev
+    links:
+      - mysql.geoquizz:api_geoquizz
+
+  #############################
+  # mysql geoquizz  + phpmyadmin
+  #############################
+  mysql.geoquizz:
+    image: mariadb:latest
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8 --collation-server=utf8_general_ci
+    environment:
+      - MYSQL_ROOT_PASSWORD=comroot123
+      - MYSQL_USER=api_geoquizz
+      - MYSQL_PASSWORD=api_geoquizz
+      - MYSQL_DATABASE=api_geoquizz
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./api/sql:/var/sql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:8080"
+    links:
+      - mysql.geoquizz:api_geoquizz
