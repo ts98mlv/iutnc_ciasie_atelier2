@@ -70,22 +70,22 @@ app.all("*", (req, res) => {
 app.listen(PORT, HOST);
 console.log(`GeoQuizz API Running on http://${HOST}:${PORT}`);
 
-//créé la bdd
-// const db = mysql.createConnection({
-//     host: "mysql",
-//     user: "api_geoquizz",
-//     password: "api_geoquizz",
-//     database: "api_geoquizz"
-// });
+// créé la bdd
+const db = mysql.createConnection({
+    host: "mysql",
+    user: "api_geoquizz",
+    password: "api_geoquizz",
+    database: "api_geoquizz"
+});
 
 // connexion à la bdd
-// db.connect(err => {
-//     if (err) {
-//         throw err;
-//     }else{
-//         console.log("Connected to database");
-//     }
-// });
+db.connect(err => {
+    if (err) {
+        throw err;
+    }else{
+        console.log("Connected to database");
+    }
+});
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          Fonctions                                                                 //
