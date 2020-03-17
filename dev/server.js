@@ -50,6 +50,9 @@ app.get("/", (req, res) => {
     res.status(200).end("Bienvenue sur GeoQuizz API");
 });
 
+app.post("/series/:id_serie/photos", (req, res) => {
+
+});
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                  Fin des routes                                                                    //
