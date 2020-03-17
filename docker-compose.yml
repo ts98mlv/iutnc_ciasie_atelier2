@@ -1,0 +1,51 @@
+version: "3"
+
+networks:
+  geoquizz.net:
+    driver: bridge
+
+
+services:
+  geoquizz_api:
+    image: node
+    environment:
+      - NODE_ENV=dev
+#      - http_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
+#      - https_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
+    ports:
+      - "19080:3000"
+    volumes:
+      - ./dev:/app/geoquizz_api
+    working_dir: /app/geoquizz_api
+    command: npm run dev
+    links:
+      - mysql:db
+    networks:
+      - geoquizz.net
+
+  #############################
+  # mysql geoquizz  + phpmyadmin
+  #############################
+  mysql:
+    image: mariadb:latest
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8 --collation-server=utf8_general_ci
+    environment:
+      - MYSQL_ROOT_PASSWORD=comroot123
+      - MYSQL_USER=api_geoquizz
+      - MYSQL_PASSWORD=api_geoquizz
+      - MYSQL_DATABASE=api_geoquizz
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./api/sql:/var/sql
+    networks:
+      - geoquizz.net
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    ports:
+      - "8080:80"
+    links:
+      - mysql:db
+    networks:
+      - geoquizz.net
