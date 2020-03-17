@@ -18,10 +18,12 @@
 <script>
     import * as camera from "nativescript-camera";
     import * as imagepicker from "nativescript-imagepicker";
+
     const bghttp = require("nativescript-background-http");
     const session = bghttp.session("image-upload");
     import {Image} from "tns-core-modules/ui/image";
     import * as Geolocation from "nativescript-geolocation";
+    import {Accuracy} from "tns-core-modules/ui/enums"; // used to describe at what accuracy the location should be get
 
     export default {
         computed: {},
@@ -29,7 +31,7 @@
             return {
                 images: [],
                 erreurLocation: false,
-                location: null,
+                location: {},
             }
         },
         methods: {
@@ -81,7 +83,7 @@
                 ];
 
                 const task = session.multipartUpload(params, request);
-                task.on("responded",(res) => {
+                task.on("responded", (res) => {
                     let result = JSON.parse(res.data);
                     this.getLocation();
                     let jsonEnvoi = {
@@ -112,25 +114,45 @@
                         console.log('Error requesting permission');
                     });
             },
-            getLocation(){
-                Geolocation.getCurrentLocation({})
-                    .then((result) => {
+            getLocation() {
+                const geo = Geolocation.getCurrentLocation({
+                    desiredAccuracy: Accuracy.high,
+                    maximumAge: 5000,
+                    timeout: 20000
+                });
+
+                geo
+                    .then(result => {
+                        console.log(result);
                         this.location = result;
                     })
-                    .catch((error) => {
-                        alert("Erreur de récupération de la position, veuillez réessayer.");
-                    })
+                    .catch(err => {
+                        alert(err.message);
+                    });
             }
         },
         created() {
             Geolocation.enableLocationRequest(true)
                 .then(() => {
-                    Geolocation.isEnabled().then( locActive => {
-                        if (!locActive){
+                    Geolocation.isEnabled().then(locActive => {
+                        if (!locActive) {
                             this.erreurLocationon = true;
                             return;
                         }
                     })
+                });
+
+            Geolocation.getCurrentLocation({
+                desiredAccuracy: Accuracy.high,
+                maximumAge: 5000,
+                timeout: 20000
+            })
+                .then(result => {
+                    console.log(result);
+                    this.location = result;
+                })
+                .catch(err => {
+                    alert("Erreur Loc :" + err.message);
                 });
         }
     };
