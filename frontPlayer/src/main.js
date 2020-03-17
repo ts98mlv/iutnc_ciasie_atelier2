@@ -2,8 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import VueRouteur from 'vue-router'
 
-import Play from './components/Play.vue'
-import Serie from './components/Serie.vue'
+import Partie from './components/Partie.vue';
+import Serie from './components/Serie.vue';
 
 Vue.use(VueRouteur)
 
@@ -11,7 +11,7 @@ const router = new VueRouteur ({
   mode: 'history',
   routes: [
     {path: '/', component:Serie},
-    {path: '/partie/:id', component:Play},
+    {path: '/partie/:pseudo/:id', component:Partie},
     {path: '*',redirect:'/'}
   ]
 })

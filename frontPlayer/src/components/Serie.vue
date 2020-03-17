@@ -6,14 +6,13 @@
     </p>
     <p>
       Les séries :
-      <select v-model="selected">
-        <option disabled value>Choisissez</option>
-        <option v-for="serie in listeSerie">{{serie.ville}}</option>
+      <select v-model="selected" >
+        <option value="" disabled>Choisissez</option>
+        <option v-bind:value="serie.id" v-for="serie in listeSerie">{{serie.ville}}</option>
       </select>
     </p>
-    <button v-on:click="data()">Démarrer une partie</button>
     <p>
-      <router-link v-bind:to="'/partie/'+selected">Lancer la partie</router-link>
+      <router-link v-bind:to="'/partie/'+pseudo+ '/' + selected">Créer la partie</router-link>
     </p>
   </div>
 </template>
@@ -30,11 +29,7 @@ export default {
     }
   },
   methods: {
-    data() {
-      this.$emit("changevalue", this.selected);
-      this.$emit("changevalue2", this.pseudo);
-      alert(this.pseudo + this.selected);
-    }
+
   }
 };
 </script>
