@@ -1,32 +1,38 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+    <img src="./assets/logo.png" />
     <h1>{{ msg }}</h1>
-    <p>Votre pseudo : <input type="text" v-model="pseudo"></p>
-    <button v-on:click="say(pseudo)" >Démarrer une partie</button>
+    <Serie :selected="selected" ></Serie>
+
+    <!--
+
+    -->
   </div>
 </template>
 
 <script>
+import Serie from "./components/Serie";
+
 export default {
-  name: 'app',
-  data () {
+  name: "app",
+  components: {
+    Serie
+  },
+  data() {
     return {
-      msg: 'Player Geoquizz',
-      pseudo : ""
-    }
+      msg: "Player Geoquizz",
+      pseudo: "",
+      selected: ""
+    };
   },
   methods: {
-    say: function (pseudo) {
-      alert(pseudo);
-    }
   }
-}
+};
 </script>
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -34,7 +40,8 @@ export default {
   margin-top: 60px;
 }
 
-h1, h2 {
+h1,
+h2 {
   font-weight: normal;
 }
 
