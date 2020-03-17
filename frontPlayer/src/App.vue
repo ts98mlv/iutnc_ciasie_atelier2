@@ -2,11 +2,8 @@
   <div id="app">
     <img src="./assets/logo.png" />
     <h1>{{ msg }}</h1>
-    <Serie :selected="selected" ></Serie>
-
-    <!--
-
-    -->
+    <router-view></router-view>
+    <!-- <Serie :selected="selected" ></Serie> -->
   </div>
 </template>
 

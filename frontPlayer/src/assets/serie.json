@@ -2,25 +2,29 @@
     {
         "id" : 1,
         "ville" : "Paris",
-        "map_refs" : "",
+        "map_x" : 1,
+        "map_y" : 1,
         "distance" : 10
     },
     {
         "id" : 2,
         "ville" : "Nancy",
-        "map_refs" : "",
+        "map_x" : 2,
+        "map_y" : 2,
         "distance" : 2
     },
     {
         "id" : 3,
         "ville" : "Metz",
-        "map_refs" : "",
+        "map_x" : 3,
+        "map_y" : 3,
         "distance" : 80
     },
     {
         "id" : 4,
         "ville" : "Strasbourg",
-        "map_refs" : "",
+        "map_x" : 4,
+        "map_y" : 4,
         "distance" : 20
     }
 ]}
