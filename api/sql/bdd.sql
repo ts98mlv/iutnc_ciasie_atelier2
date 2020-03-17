@@ -12,7 +12,9 @@ CREATE TABLE IF NOT EXISTS utilisateur(
 CREATE TABLE IF NOT EXISTS serie(
   id int(50) AUTO_INCREMENT,
   ville varchar(150),
-  map_refs text,
+  map_x varchar(200),
+  map_y varchar(200),
+  map_zoom varchar(200),
   distance float(250,2),
   PRIMARY KEY (id)
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
