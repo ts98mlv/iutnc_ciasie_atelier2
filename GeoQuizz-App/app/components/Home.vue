@@ -81,10 +81,18 @@
                 ];
 
                 const task = session.multipartUpload(params, request);
-                task.on("complete",(res) => {
-                    alert(res.data);
+                task.on("responded",(res) => {
+                    let result = JSON.parse(res.data);
                     this.getLocation();
-                    alert(this.location);
+                    let jsonEnvoi = {
+                        "position": {
+                            "positionX": this.location.latitude,
+                            "positionY": this.location.longitude,
+                        },
+                        "urlImage": result.data.url,
+                    };
+
+                    console.log(jsonEnvoi);
                 });
             },
             takePicture() {
