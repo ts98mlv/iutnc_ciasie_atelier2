@@ -47,12 +47,22 @@
                     })
                     .then(selection => {
                         selection.forEach(selected => {
-
-                            console.log(JSON.stringify(selected));
-
                             let img = new Image();
                             img.src = selected;
                             this.images.push(img);
+
+                            Geolocation.getCurrentLocation({
+                                desiredAccuracy: Accuracy.high,
+                                maximumAge: 5000,
+                                timeout: 20000
+                            })
+                                .then(result => {
+                                    console.log(result);
+                                    this.location = result;
+                                })
+                                .catch(err => {
+                                    alert(err.message);
+                                });
                         });
                     }).catch(function (e) {
                     console.log('error in selectPicture : ', e);
@@ -85,7 +95,7 @@
                 const task = session.multipartUpload(params, request);
                 task.on("responded", (res) => {
                     let result = JSON.parse(res.data);
-                    this.getLocation();
+                    console.log(this.location);
                     let jsonEnvoi = {
                         "position": {
                             "positionX": this.location.latitude,
@@ -93,6 +103,8 @@
                         },
                         "urlImage": result.data.url,
                     };
+                    console.log(jsonEnvoi);
+
 
                     console.log(jsonEnvoi);
                 });
@@ -114,22 +126,6 @@
                         console.log('Error requesting permission');
                     });
             },
-            getLocation() {
-                const geo = Geolocation.getCurrentLocation({
-                    desiredAccuracy: Accuracy.high,
-                    maximumAge: 5000,
-                    timeout: 20000
-                });
-
-                geo
-                    .then(result => {
-                        console.log(result);
-                        this.location = result;
-                    })
-                    .catch(err => {
-                        alert(err.message);
-                    });
-            }
         },
         created() {
             Geolocation.enableLocationRequest(true)
@@ -140,19 +136,6 @@
                             return;
                         }
                     })
-                });
-
-            Geolocation.getCurrentLocation({
-                desiredAccuracy: Accuracy.high,
-                maximumAge: 5000,
-                timeout: 20000
-            })
-                .then(result => {
-                    console.log(result);
-                    this.location = result;
-                })
-                .catch(err => {
-                    alert("Erreur Loc :" + err.message);
                 });
         }
     };
