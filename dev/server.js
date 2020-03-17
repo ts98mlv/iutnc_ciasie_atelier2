@@ -5,7 +5,7 @@ const mysql = require("mysql");
 const fs = require("file-system");
 const jwt = require('jsonwebtoken');
 // Constantes
-const PORT = 8080;
+const PORT = 3000;
 const HOST = "0.0.0.0";
 
 // Gestion du token
@@ -71,20 +71,21 @@ app.listen(PORT, HOST);
 console.log(`GeoQuizz API Running on http://${HOST}:${PORT}`);
 
 //créé la bdd
-const db = mysql.createConnection({
-    host: "mysql.geoquizz",
-    user: "api_geoquizz",
-    password: "api_geoquizz",
-    database: "api_geoquizz"
-});
+// const db = mysql.createConnection({
+//     host: "mysql",
+//     user: "api_geoquizz",
+//     password: "api_geoquizz",
+//     database: "api_geoquizz"
+// });
 
 // connexion à la bdd
-db.connect(err => {
-    if (err) {
-        throw err;
-    }
-    console.log("Connected to database");
-});
+// db.connect(err => {
+//     if (err) {
+//         throw err;
+//     }else{
+//         console.log("Connected to database");
+//     }
+// });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          Fonctions                                                                 //
