@@ -50,8 +50,13 @@ app.get("/", (req, res) => {
     res.status(200).end("Bienvenue sur GeoQuizz API du backoffice");
 });
 
-app.post("/series/:id_serie/photos", (req, res) => {
-
+app.get("/photos", (req, res) => {
+   db.query("select * from photo", [], (error, result) => {
+       if(error){
+           res.status(500).end(getMessageFromHTTPCode(500));
+       }
+       res.status(200).end(JSON.stringify(result));
+   })
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -93,3 +98,84 @@ db.connect(err => {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          Fonctions                                                                 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * fonction qui retourne un json avec le code d'erreur et le message
+ * @param code
+ * @returns json
+ */
+function getMessageFromHTTPCode(code) {
+    code = parseInt(code);
+    let message = "";
+
+    switch (code) {
+        case 400:
+            message = "Requête invalide : mauvaise requête ou paramètre manquant";
+            break;
+        case 401:
+            message = "Accès non autorisé / Utilisateur non connecté";
+            break;
+        case 403:
+            message = "Accès interdit, vous n'avez pas les droits suffisants";
+            break;
+        case 404:
+            message = "Ressource non trouvée";
+            break;
+        case 500:
+            message = "Erreur du serveur";
+            break;
+        case 200:
+            message = "Tout s'est bien passé :)";
+            break;
+    }
+
+    message = JSON.stringify({code: code, message: message});
+
+    return message;
+}
+
+/**
+ * Controle du token avec l'user
+ * @param email, email de l'utilisateur
+ * @param token token transmit par l'utilisateur
+ * @returns {Promise<unknown>}
+ */
+function isValidTokenForSelectUser(email, token) {
+    return new Promise((resolve, reject) => {
+        token = token.split(" ")[1]; // recup du token
+        if (isTokenUnaltered(token)) {
+            // Recup Payload
+            token = token.split(".")[1]; // recup subject du token
+            // Decoder Payload
+            let buffer = new Buffer(token, 'base64');
+            token = buffer.toString('ascii');
+            // Parse en JSON
+            token = JSON.parse(token);
+
+            if(email === token.sub){
+                resolve(200)
+            }else{
+                reject(401)
+            }
+        }
+    });
+}
+
+/**
+ * Verifier que le token ai le bon format
+ * @param token token a tester
+ * @returns {boolean} true si le token est ok
+ */
+function isTokenUnaltered(token) {
+    let isGood = false;
+    // Si token non vide
+    if (typeof token !== "undefined") {
+        let privateKey = fs.readFileSync("./private.key"); // recup fichier keypass pour verifier authenticite
+        jwt.verify(token, privateKey, {algorithm: "HS256"}, (err, user) => {
+            if (!err) {
+                isGood = true;
+            }
+        });
+    }
+    return isGood;
+}
