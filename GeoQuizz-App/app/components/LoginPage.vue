@@ -37,24 +37,29 @@
 </template>
 
 <script>
-    // A stub for a service that authenticates users.
-    // import axios from "axios";
     import Home from "./Home";
+    import axios from "axios";
+    import * as btoa from 'btoa';
+    import localStorage from "nativescript-localstorage";
+    import {encode, decode} from "base-64";
+    import * as utf8 from "utf8";
+    const Buffer = require('buffer/').Buffer;
+
+    const urlAPI = "https://d113dca1.ngrok.io/";
 
     const userService = {
         register(user) {
             return Promise.resolve(user);
         },
         login(user) {
-            // return axios({
-            //     method: "post",
-            //     url: "https://api.todolist.sherpa.one/users/signin",
-            //     auth: {
-            //         username: user.email,
-            //         password: user.password
-            //     }
-            // })
-            return Promise.resolve();
+            let token = Buffer.from(`${user.email}:${user.password}`,'utf8').toString('base64');
+            return axios({
+                method: "post",
+                url: urlAPI +"utilisateurs/"+user.email+"/auth",
+                headers: {
+                    "Authorization": `Basic ${token}`
+                }
+            })
         },
         resetPassword(email) {
             return Promise.resolve(email);
@@ -66,13 +71,16 @@
             return {
                 isLoggingIn: true,
                 user: {
-                    email: "theo.legrand7@etu.univ-lorraine.fr",
-                    password: "olwtWvo1Ej",
+                    email: "michel@test.fr",
+                    password: "michel",
                     confirmPassword: ""
                 }
             };
         },
         mounted() {
+            if(!global.btoa) {
+                global.btoa = encode;
+            }
         },
         methods: {
             toggleForm() {
@@ -97,11 +105,12 @@
                 userService
                     .login(this.user)
                     .then((res) => {
-                        // localStorage.setItem("token",res.data.token);
-                        // localStorage.setItem("uuid",res.data.uuid);
+                        console.log(res);
+                        localStorage.setItem("tokenJWT",res.data.tokenJWT);
                         this.$navigateTo(Home);
                     })
-                    .catch(() => {
+                    .catch((err) => {
+                        console.log(err);
                         this.alert("Unfortunately we could not find your account.");
                     });
             },

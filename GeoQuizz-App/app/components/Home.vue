@@ -23,7 +23,8 @@
     const session = bghttp.session("image-upload");
     import {Image} from "tns-core-modules/ui/image";
     import * as geolocation from "nativescript-geolocation";
-    import {Accuracy} from "tns-core-modules/ui/enums"; // used to describe at what accuracy the location should be get
+    import {Accuracy} from "tns-core-modules/ui/enums";
+    import localStorage from "nativescript-localstorage"; // used to describe at what accuracy the location should be get
 
     export default {
         computed: {},
@@ -127,6 +128,8 @@
             },
         },
         created() {
+
+            console.log("Token : "+localStorage.getItem("tokenJWT"));
 
             geolocation.enableLocationRequest(true)
                 .then(() => {
