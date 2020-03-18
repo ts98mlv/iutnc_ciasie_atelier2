@@ -104,9 +104,6 @@
                         "urlImage": result.data.url,
                     };
                     console.log(jsonEnvoi);
-
-
-                    console.log(jsonEnvoi);
                 });
             },
             takePicture() {
