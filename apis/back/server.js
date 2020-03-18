@@ -128,6 +128,15 @@ app.post("/utilisateurs/:email/auth", (req, res) => {
 
 });
 
+app.get("/series", (req, res) => {
+    db.query("select * from serie;", [], (error, result) => {
+        if(error){
+            res.status(500).end(getMessageFromHTTPCode(500));
+        }
+        res.status(200).end(JSON.stringify(result));
+    })
+});
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                  Fin des routes                                                                    //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
