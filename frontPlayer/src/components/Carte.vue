@@ -47,10 +47,9 @@ export default {
   },
   data() {
     return {
-      map_x:3,
-      map_y:4,
       zoom: 13,
       center: latLng(0, 0),
+      idPartie: this.$route.params.id,
       url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       attribution:
         '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
@@ -76,9 +75,16 @@ export default {
       alert("Click!");
     }
   },
-  created: function(){
-    this.center = latLng(49.11658,6.193886)
-    this.withPopup = latLng(49.132728,6.198789)
+  created: function() {
+    this.center = latLng(this.listeSerie.map_x, this.listeSerie.map_y);
+    this.withPopup = latLng(49.132728, 6.198789);
+  },
+  computed: {
+    listeSerie() {
+      return serie.series.find(element => {
+        return element.id == this.idPartie;
+      });
+    }
   }
 };
 </script>
