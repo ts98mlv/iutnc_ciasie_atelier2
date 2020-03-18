@@ -46,7 +46,7 @@
             "position_x": 48.581024,
             "position_y": 7.752545,
             "url": "https://upload.wikimedia.org/wikipedia/commons/5/56/Cathedrale-de-Strasbourg-IMG_1331.jpg",
-            "serie_id": 4
+            "serie_id": null
         },
         {
             "id": 7,
@@ -54,7 +54,7 @@
             "position_x": 48.583608,
             "position_y": 7.745816,
             "url": "https://upload.wikimedia.org/wikipedia/commons/e/ef/Place_Kl%C3%A9ber_on_a_rainy_day.jpg",
-            "serie_id": 4
+            "serie_id": null
         }
     ]
 }

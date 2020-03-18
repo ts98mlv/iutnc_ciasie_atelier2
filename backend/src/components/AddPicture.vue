@@ -56,36 +56,22 @@
             </table>
         </div>
 
-        <form id="affectPhoto" @submit="checkForm" action="/something" method="post">
-  
-            <p v-if="errors.length">
-                <b>Veuillez remplir ces champs:</b>
-                <ul>
-                <li v-for="error in errors">{{ error }}</li>
-                </ul>
-            </p>
+        <form id="affectPhoto" @submit="sendForm" action="/something" method="post">
             
-            <p>
-                <label for="ville">Ville<label>
-                <input type="text" name="ville" id="ville" v-model="ville">
-            </p>
+            <p>Choisir une série : </p>
+            <select v-model="serieId" >
+                <option value="" disabled>Choisissez</option>
+                <option v-bind:value="serie.id" v-for="serie in listOfDatasSeries">{{serie.ville}}</option>
+            </select>
+           
+           <p>Choisir une photo : </p>
+            <select v-model="photoId" >
+                <option value="" disabled>Choisissez</option>
+                <option v-if="photo.serie_id == null" v-bind:value="photo.id" v-for="photo in listOfDatasPhotos">{{photo.description}}</option>
+            </select>
 
             <p>
-                <label for="mapX">Map_x<label>
-                <input type="number" name="age" id="age" v-model="age" min="0">
-            </p>
-
-            <p>
-                <label for="movie">Favorite Movie<label>
-                <select name="movie" id="movie" v-model="movie">
-                <option>Star Wars</option>
-                <option>Vanilla Sky</option>
-                <option>Atomic Blonde</option>
-                </select>
-            </p>
-
-            <p>
-                <input type="submit" value="Submit">  
+                <input type="submit" value="Assigner">  
             </p>
 
         </form>
@@ -100,12 +86,19 @@ export default {
   name: 'addpho',
   data () {
     return {
-      series: []
+      serieId: null,
+      photoId: null,
     }
   },
 
-  methods: {
+  filters: {
 
+  },
+
+  methods: {
+    sendForm() {
+
+    }
   },
 
   computed: {
