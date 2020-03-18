@@ -1,0 +1,13 @@
+{
+    "parties": [
+        {
+            "id" : 1,
+            "token" : "",
+            "nb_photos" : 1,
+            "status" : 1,
+            "score" : 0,
+            "joueur" : "",
+            "serie_id" : 1 
+        }
+    ]
+}
