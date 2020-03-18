@@ -146,6 +146,15 @@ app.get("/series/:id", (req, res) => {
     })
 });
 
+app.get("/series/:id/photos", (req, res) => {
+    db.query("select * from photo where serie_id=?;", [req.params.id], (error, result) => {
+        if(error){
+            res.status(500).end(getMessageFromHTTPCode(500));
+        }
+        res.status(200).end(JSON.stringify(result));
+    })
+});
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                  Fin des routes                                                                    //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
