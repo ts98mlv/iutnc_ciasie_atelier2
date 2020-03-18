@@ -70,6 +70,15 @@ app.get("/photos", (req, res) => {
 
 });
 
+app.get("/photos/:id", (req, res) => {
+    db.query("select * from photo where id=?;", [req.params.id], (error, result) => {
+        if(error){
+            res.status(500).end(getMessageFromHTTPCode(500));
+        }
+        res.status(200).end(JSON.stringify(result));
+    })
+});
+
 
 /**
  * @root /utilisateurs/:id/auth
