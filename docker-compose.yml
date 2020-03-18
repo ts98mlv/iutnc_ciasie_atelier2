@@ -15,7 +15,7 @@ services:
     ports:
       - "19080:3000"
     volumes:
-      - .apis/mobile:/app/geoquizz_api_mobile
+      - ./apis/mobile:/app/geoquizz_api_mobile
     working_dir: /app/geoquizz_api_mobile
     command: npm run dev
     links:
@@ -32,7 +32,7 @@ services:
     ports:
       - "19180:3000"
     volumes:
-    - .apis/front:/app/geoquizz_api_front
+    - ./apis/front:/app/geoquizz_api_front
     working_dir: /app/geoquizz_api_front
     command: npm run dev
     links:
@@ -49,7 +49,7 @@ services:
     ports:
       - "19280:3000"
     volumes:
-    - .apis/back:/app/geoquizz_api_back
+    - ./apis/back:/app/geoquizz_api_back
     working_dir: /app/geoquizz_api_back
     command: npm run dev
     links:
