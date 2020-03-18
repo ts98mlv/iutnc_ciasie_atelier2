@@ -67,7 +67,6 @@ app.get("/photos", (req, res) => {
             res.status(200).end(JSON.stringify(result));
         })
     }
-
 });
 
 app.get("/photos/:id", (req, res) => {
@@ -76,6 +75,44 @@ app.get("/photos/:id", (req, res) => {
             res.status(500).end(getMessageFromHTTPCode(500));
         }
         res.status(200).end(JSON.stringify(result));
+    })
+});
+
+app.put("/photos/:id", (req, res) => {
+    let id = req.params.id;
+    let jsonPhoto = req.body;
+    if(typeof jsonPhoto === "undefined"){
+        res.status(500).end(getMessageFromHTTPCode(500));
+    }
+    //verification des champs du json
+    let coordX = jsonPhoto.position.positionX;
+    let coordY = jsonPhoto.position.positionY;
+    let descr = jsonPhoto.description;
+    let serie_id = jsonPhoto.serie_id;
+    let photo_id = jsonPhoto.id;
+
+    if(photo_id !== id){
+        res.status(403).end(getMessageFromHTTPCode(403));
+    }
+
+    if(typeof coordY === "undefined" || typeof coordX === "undefined" || typeof descr === "undefined" || typeof serie_id === "undefined" || typeof photo_id === "undefined"){
+        res.status(500).end(getMessageFromHTTPCode(666));
+    }
+
+    db.query("select * from photo where id=?;", [req.params.id], (error, result) => {
+        if(error){
+            res.status(500).end(getMessageFromHTTPCode(500));
+        }
+        if(result.length <= 0){
+            res.status(404).end(getMessageFromHTTPCode(404));
+        }
+
+        db.query("update photo set description=?, positionX=?, positionY=?, serie_id=? where id=?", [coordX, coordY, descr, serie_id, id], (err, rslt) => {
+            if(err){
+                res.status(500).end(getMessageFromHTTPCode(500));
+            }
+            res.status(200).end(getMessageFromHTTPCode(200));
+        })
     })
 });
 
@@ -240,6 +277,9 @@ function getMessageFromHTTPCode(code) {
             break;
         case 200:
             message = "Tout s'est bien passé :)";
+            break;
+        case 666:
+            message = "JSON non conforme !!";
             break;
     }
 
