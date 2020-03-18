@@ -1,101 +1,230 @@
 <template>
-  <div style="height: 500px; width: 100%">
-    <div style="height: 200px; overflow: auto;">
-      <p>First marker is placed at {{ withPopup.lat }}, {{ withPopup.lng }}</p>
-      <p>Center is at {{ currentCenter }} and the zoom is: {{ currentZoom }}</p>
-      <p>Nb photo :{{findPartie.nb_photos}}</p>
-      <button @click="showMap = !showMap">Toggle map</button>
+  <div>
+    <div>
+      Zoom: level
+      <input v-model.number="zoom" type="number" />
+      <br />Center :
+      <span>{{ center }}</span>
+      <br />
+      <hr />
+      <h3>List of Markers</h3>
+      <button name="button" @click="addMarker">Add a marker</button>
+      <table>
+        <tr>
+          <th>Marker</th>
+          <th>Latitude</th>
+          <th>Longitude</th>
+          <th>Tooltip</th>
+          <th>Is Draggable ?</th>
+          <th>Is Visible ?</th>
+          <th>Remove</th>
+        </tr>
+        <tr v-for="(item, index) in markers" :key="index">
+          <td>{{ 'Marker ' + (index + 1) }}</td>
+          <td>
+            <input v-model.number="item.position.lat" type="number" />
+          </td>
+          <td>
+            <input v-model.number="item.position.lng" type="number" />
+          </td>
+          <td>
+            <input v-model="item.tooltip" type="text" />
+          </td>
+          <td style="text-align: center">
+            <input v-model="item.draggable" type="checkbox" />
+          </td>
+          <td style="text-align: center">
+            <input v-model="item.visible" type="checkbox" />
+          </td>
+          <td style="text-align: center">
+            <input type="button" value="X" @click="removeMarker(index)" />
+          </td>
+        </tr>
+      </table>
+      <hr />  
     </div>
     <l-map
-      v-if="showMap"
-      :zoom="zoom"
-      :center="center"
+      :zoom.sync="zoom"
       :options="mapOptions"
-      style="height: 80%"
-      @update:center="centerUpdate"
-      @update:zoom="zoomUpdate"
+      :center="center"
+      :min-zoom="minZoom"
+      :max-zoom="maxZoom"
+      style="height: 500px; width: 100%"
     >
-      <l-tile-layer :url="url" :attribution="attribution" />
-      <l-marker :lat-lng="withPopup">
-        <l-popup>
-          <div @click="innerClick">Cinéma</div>
-        </l-popup>
+      <l-tile-layer
+        v-for="tileProvider in tileProviders"
+        :key="tileProvider.name"
+        :visible="tileProvider.visible"
+        :url="tileProvider.url"
+        :attribution="tileProvider.attribution"
+        :token="token"
+        layer-type="base"
+      />
+      <l-control-scale :imperial="imperial" />
+      <l-marker
+        v-for="marker in markers"
+        :key="marker.id"
+        :visible="marker.visible"
+        :draggable="marker.draggable"
+        :lat-lng.sync="marker.position"
+        :icon="marker.icon"
+        @click="alert(marker)"
+      >
+        <l-popup :content="marker.tooltip" />
+        <l-tooltip :content="marker.tooltip" />
       </l-marker>
-      <l-marker :lat-lng="withTooltip">
-        <l-tooltip :options="{ permanent: true, interactive: true }">
-          <div @click="innerClick">I am a tooltip</div>
-        </l-tooltip>
-      </l-marker>
+      <l-layer-group layer-type="overlay" name="Layer polyline">
+
+      </l-layer-group>
+      <l-layer-group
+        v-for="item in stuff"
+        :key="item.id"
+        :visible.sync="item.visible"
+        layer-type="overlay"
+        name="Layer 1"
+      >
+        <l-layer-group :visible="item.markersVisible">
+          <l-marker
+            v-for="marker in item.markers"
+            :key="marker.id"
+            :visible="marker.visible"
+            :draggable="marker.draggable"
+            :lat-lng="marker.position"
+            @click="alert(marker)"
+          />
+        </l-layer-group>
+
+      </l-layer-group>
     </l-map>
   </div>
 </template>
 
 <script>
-import serie from "../assets/serie.json";
-import partie from "../assets/partie.json";
+import { latLngBounds } from "leaflet";
+import {
+  LMap,
+  LTileLayer,
+  LMarker,
+  LPolyline,
+  LLayerGroup,
+  LTooltip,
+  LPopup,
+  LControlZoom,
+  LControlAttribution,
+  LControlScale,
+  LControlLayers
+} from "vue2-leaflet";
 
-import { latLng } from "leaflet";
-import { LMap, LTileLayer, LMarker, LPopup, LTooltip } from "vue2-leaflet";
+const markers1 = [
+  {
+    position: { lng: -1.219482, lat: 47.41322 },
+    visible: true,
+    draggable: true
+  },
+];
+
+const tileProviders = [
+  {
+    name: "OpenStreetMap",
+    visible: true,
+    attribution:
+      '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+    url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+  },
+  {
+    name: "OpenTopoMap",
+    visible: false,
+    url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+    attribution:
+      'Map data: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+  }
+];
 
 export default {
   name: "Example",
-  
   components: {
     LMap,
     LTileLayer,
     LMarker,
+    LPolyline,
+    LLayerGroup,
+    LTooltip,
     LPopup,
-    LTooltip
+    LControlZoom,
+    LControlAttribution,
+    LControlScale,
+    LControlLayers
   },
   data() {
     return {
-      zoom: 13,
-      center: latLng(0, 0),
-      idPartie: this.$route.params.id,
-      url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-      attribution:
-        '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-      withPopup: latLng(0, 0),
-      withTooltip: latLng(47.41422, -1.250482),
-      currentZoom: 11.5,
-      currentCenter: latLng(47.41322, -1.219482),
-      showParagraph: false,
+      center: [51.505, -0.09],
+      opacity: 0.6,
+      token: "your token if using mapbox",
       mapOptions: {
-        zoomSnap: 0.5
+        zoomControl: false,
+        attributionControl: false,
+        zoomSnap: true
       },
-      showMap: true
+      zoom: 6,
+      minZoom: 1,
+      maxZoom: 20,
+      imperial: false,
+      tileProviders: tileProviders,
+      markers: [
+        {
+          id: "m1",
+          position: { lat: 51.505, lng: -0.09 },
+          tooltip: "tooltip for marker1",
+          draggable: true,
+          visible: true
+        },
+        {
+          id: "m2",
+          position: { lat: 51.8905, lng: -0.09 },
+          tooltip: "tooltip for marker2",
+          draggable: true,
+          visible: false
+        },
+        {
+          id: "m3",
+          position: { lat: 51.005, lng: -0.09 },
+          tooltip: "tooltip for marker3",
+          draggable: true,
+          visible: true
+        },
+        {
+          id: "m4",
+          position: { lat: 50.7605, lng: -0.09 },
+          tooltip: "tooltip for marker4",
+          draggable: true,
+          visible: false
+        }
+      ],
+      stuff: [
+        {
+          id: 's1',
+          markers: markers1,
+          visible: true,
+          markersVisible: true,
+        },
+      ]
     };
   },
   methods: {
-    zoomUpdate(zoom) {
-      this.currentZoom = zoom;
+    alert(item) {
+      alert("this is " + JSON.stringify(item));
     },
-    centerUpdate(center) {
-      this.currentCenter = center;
+    addMarker: function() {
+      const newMarker = {
+        position: { lat: 50.5505, lng: -0.09 },
+        draggable: true,
+        visible: true
+      };
+      this.markers.push(newMarker);
     },
-    innerClick() {
-      alert("Click!");
-    }
-  },
-  created: function() {
-    this.center = latLng(this.listeSerie.map_x, this.listeSerie.map_y);
-    this.withPopup = latLng(49.132728, 6.198789);
-    alert(this.findPartie);
-  },
-  computed: {
-    listeSerie() {
-      return serie.series.find(element => {
-        return element.id == this.idPartie;
-      });
+    removeMarker: function(index) {
+      this.markers.splice(index, 1);
     },
-    findPartie() {
-      return partie.parties.find(element => {
-        return element.serie_id == this.idPartie;
-      })
-    }
   }
 };
 </script>
-
-<style>
-</style>
