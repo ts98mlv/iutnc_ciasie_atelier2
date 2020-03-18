@@ -1,0 +1,75 @@
+{ 
+    "series" : [
+    {
+        "id" : 1,
+        "ville" : "Paris",
+        "map_x" : 58,
+        "map_y" : 67,
+        "map_zoom": 2,
+        "distance" : 10
+    },
+    {
+        "id" : 2,
+        "ville" : "Nancy",
+        "map_x" : 15,
+        "map_y" : 24,
+        "map_zoom": 2,
+        "distance" : 2
+    },
+    {
+        "id" : 3,
+        "ville" : "Metz",
+        "map_x" : 48,
+        "map_y" : 18,
+        "map_zoom": 2,
+        "distance" : 80
+    },
+    {
+        "id" : 4,
+        "ville" : "Strasbourg",
+        "map_x" : 29,
+        "map_y" : 57,
+        "map_zoom": 2,
+        "distance" : 20
+    }
+    ],
+
+    "photos" : [
+        {
+            "id" : 1,
+            "description" : "Tour Eiffel",
+            "positionX" : 4,
+            "positionY" : 10,
+            "url": ""
+        },
+        {
+            "id" : 2,
+            "description" : "Cathédrale Notre Dame",
+            "positionX" : 24,
+            "positionY" : 20,
+            "url": ""
+        },
+        {
+            "id" : 3,
+            "description" : "Place Stanislas",
+            "positionX" : 15,
+            "positionY" : 31,
+            "url": ""
+        },
+        {
+            "id" : 4,
+            "description" : "Centre Pompidou",
+            "positionX" : 27,
+            "positionY" : 8,
+            "url": ""
+        },
+        {
+            "id" : 5,
+            "description" : "Place St Epvre",
+            "positionX" : 48,
+            "positionY" : 53,
+            "url": ""
+        }
+    ]
+
+}
