@@ -4,6 +4,7 @@ import VueRouteur from 'vue-router'
 
 import Partie from './components/Partie.vue';
 import Serie from './components/Serie.vue';
+import Play from './components/Play.vue';
 
 Vue.use(VueRouteur)
 
@@ -12,7 +13,8 @@ const router = new VueRouteur ({
   routes: [
     {path: '/', component:Serie},
     {path: '/partie/:pseudo/:id', component:Partie},
-    {path: '*',redirect:'/'}
+    {path: '*',redirect:'/'},
+    {path: '/play/:pseudo/:id', component:Play},
   ]
 })
 

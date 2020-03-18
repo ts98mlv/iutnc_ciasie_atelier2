@@ -3,7 +3,7 @@
     <div style="height: 200px; overflow: auto;">
       <p>First marker is placed at {{ withPopup.lat }}, {{ withPopup.lng }}</p>
       <p>Center is at {{ currentCenter }} and the zoom is: {{ currentZoom }}</p>
-
+      <p>Nb photo :{{findPartie.nb_photos}}</p>
       <button @click="showMap = !showMap">Toggle map</button>
     </div>
     <l-map
@@ -32,12 +32,14 @@
 
 <script>
 import serie from "../assets/serie.json";
+import partie from "../assets/partie.json";
 
 import { latLng } from "leaflet";
 import { LMap, LTileLayer, LMarker, LPopup, LTooltip } from "vue2-leaflet";
 
 export default {
   name: "Example",
+  
   components: {
     LMap,
     LTileLayer,
@@ -78,12 +80,18 @@ export default {
   created: function() {
     this.center = latLng(this.listeSerie.map_x, this.listeSerie.map_y);
     this.withPopup = latLng(49.132728, 6.198789);
+    alert(this.findPartie);
   },
   computed: {
     listeSerie() {
       return serie.series.find(element => {
         return element.id == this.idPartie;
       });
+    },
+    findPartie() {
+      return partie.parties.find(element => {
+        return element.serie_id == this.idPartie;
+      })
     }
   }
 };
