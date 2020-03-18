@@ -51,12 +51,23 @@ app.get("/", (req, res) => {
 });
 
 app.get("/photos", (req, res) => {
-   db.query("select * from photo", [], (error, result) => {
-       if(error){
-           res.status(500).end(getMessageFromHTTPCode(500));
-       }
-       res.status(200).end(JSON.stringify(result));
-   })
+    let nonAssignees = req.query.nonAssignee;
+    if(typeof nonAssignees === "undefined" || ! nonAssignees){
+        db.query("select * from photo;", [], (error, result) => {
+            if(error){
+                res.status(500).end(getMessageFromHTTPCode(500));
+            }
+            res.status(200).end(JSON.stringify(result));
+        })
+    }else{
+        db.query("select * from photo where serie_id is not null;", [], (error, result) => {
+            if(error){
+                res.status(500).end(getMessageFromHTTPCode(500));
+            }
+            res.status(200).end(JSON.stringify(result));
+        })
+    }
+
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
