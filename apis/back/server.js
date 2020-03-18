@@ -188,6 +188,9 @@ app.get("/series/:id", (req, res) => {
         if(error){
             res.status(500).end(getMessageFromHTTPCode(500));
         }
+        if(result.length <= 0){
+            res.status(404).end(getMessageFromHTTPCode(404));
+        }
         res.status(200).end(JSON.stringify(result));
     })
 });
@@ -197,6 +200,9 @@ app.get("/series/:id/photos", (req, res) => {
         if(error){
             res.status(500).end(getMessageFromHTTPCode(500));
         }
+        if(result.length <= 0){
+            res.status(404).end(getMessageFromHTTPCode(404));
+        }
         res.status(200).end(JSON.stringify(result));
     })
 });
@@ -205,6 +211,9 @@ app.get("/series/:id/parties", (req, res) => {
     db.query("select * from partie where serie_id=?;", [req.params.id], (error, result) => {
         if(error){
             res.status(500).end(getMessageFromHTTPCode(500));
+        }
+        if(result.length <= 0){
+            res.status(404).end(getMessageFromHTTPCode(404));
         }
         res.status(200).end(JSON.stringify(result));
     })
