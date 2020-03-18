@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS photo(
   description text,
   positionX text,
   positionY text,
-  url text,
+  url text not null,
   serie_id int(50),
   PRIMARY KEY (id),
   FOREIGN KEY (serie_id) REFERENCES serie(id)

@@ -98,7 +98,7 @@ app.post("/utilisateurs/:email/auth", (req, res) => {
 
         const privateKey = fs.readFileSync('private.key');
         const token = jwt.sign(
-            {sub: result[0].mail_client},
+            {sub: result[0].email},
             privateKey,
             {expiresIn: '3h'}
         );
@@ -118,6 +118,37 @@ app.get("/utilisateurs", (req, res) => {
        }
        res.status(200).end(JSON.stringify(result));
    })
+});
+
+
+app.post("/photos", async (req, res) => {
+    let jsonPhoto = req.body;
+
+    if(typeof jsonPhoto === "undefined"){
+        res.status(500).end(getMessageFromHTTPCode(500));
+    }
+    //verif du token
+    let codeValidToken;
+    try {
+        codeValidToken = await isValidTokenForSelectUser(req.headers.mail, req.headers.authorization);
+    } catch (e) {
+        codeValidToken = e;
+    }
+    if (codeValidToken === 200) {
+        //ajout de la photo en bdd
+        db.query("INSERT INTO photo (`url`, `positionX`, `positionY`) values (?, ?, ?);", [jsonPhoto.urlImage, jsonPhoto.position.positionX, jsonPhoto.position.positionY],
+            (err, result) => {
+                if(err){
+                    res.status(500).end(getMessageFromHTTPCode(500));
+                }else{
+                    res.status(200).end(JSON.stringify(getMessageFromHTTPCode(200)));
+                }
+            });
+
+    } else {
+        res.status(codeValidToken).end(getMessageFromHTTPCode(codeValidToken))
+    }
+
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -185,9 +216,58 @@ function getMessageFromHTTPCode(code) {
         case 500:
             message = "Erreur du serveur";
             break;
+        case 200:
+            message = "Tout s'est bien passé :)";
+            break;
     }
 
     message = JSON.stringify({code: code, message: message});
 
     return message;
+}
+
+/**
+ * Controle du token avec l'user
+ * @param email, email de l'utilisateur
+ * @param token token transmit par l'utilisateur
+ * @returns {Promise<unknown>}
+ */
+function isValidTokenForSelectUser(email, token) {
+    return new Promise((resolve, reject) => {
+        token = token.split(" ")[1]; // recup du token
+        if (isTokenUnaltered(token)) {
+            // Recup Payload
+            token = token.split(".")[1]; // recup subject du token
+            // Decoder Payload
+            let buffer = new Buffer(token, 'base64');
+            token = buffer.toString('ascii');
+            // Parse en JSON
+            token = JSON.parse(token);
+
+            if(email === token.sub){
+                resolve(200)
+            }else{
+                reject(401)
+            }
+        }
+    });
+}
+
+/**
+ * Verifier que le token ai le bon format
+ * @param token token a tester
+ * @returns {boolean} true si le token est ok
+ */
+function isTokenUnaltered(token) {
+    let isGood = false;
+    // Si token non vide
+    if (typeof token !== "undefined") {
+        let privateKey = fs.readFileSync("./private.key"); // recup fichier keypass pour verifier authenticite
+        jwt.verify(token, privateKey, {algorithm: "HS256"}, (err, user) => {
+            if (!err) {
+                isGood = true;
+            }
+        });
+    }
+    return isGood;
 }
