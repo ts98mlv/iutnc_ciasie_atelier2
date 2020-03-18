@@ -58,10 +58,9 @@ app.get("/", (req, res) => {
  * permet l'authentification
  * @return token jwt
  */
-app.post("/utilisateurs/:id/auth", (req, res) => {
+app.post("/utilisateurs/:email/auth", (req, res) => {
 
     let autorization = req.headers["authorization"];
-
     if (typeof autorization === "undefined") {
         res.status(401);
         res.end(getMessageFromHTTPCode(401));
@@ -76,9 +75,9 @@ app.post("/utilisateurs/:id/auth", (req, res) => {
     emailGiven = emailGiven.toLowerCase().replace(/ /g, "");
     let passwordGiven = dataDecodedB64['1'];
 
-    let id = req.params.id;
+    let mail = req.params.email;
 
-    db.query("select email, passwd, nom_client from client where id=" + id, (error, result) => {
+    db.query("select email, mdp from utilisateur where email=?", [mail], (error, result) => {
         if (error) {
             res.status(500);
             res.end(getMessageFromHTTPCode(500));
@@ -88,8 +87,12 @@ app.post("/utilisateurs/:id/auth", (req, res) => {
             res.end(getMessageFromHTTPCode(404));
         }
 
-        let verifm2p = bcrypt.compareSync(passwordGiven, result[0].passwd);
-        let verifLogin = (result[0].mail_client.toLowerCase().replace(/ /g, "") === emailGiven);
+        let verifm2p = bcrypt.compareSync(passwordGiven, result[0].mdp);
+        let verifLogin = (result[0].email.toLowerCase().replace(/ /g, "") === emailGiven);
+
+        if(!verifm2p || !verifLogin){
+            res.status(401).end(getMessageFromHTTPCode(401));
+        }
 
         //génération du token
 
@@ -97,14 +100,25 @@ app.post("/utilisateurs/:id/auth", (req, res) => {
         const token = jwt.sign(
             {sub: result[0].mail_client},
             privateKey,
-            {expiresIn: '1h'}
+            {expiresIn: '3h'}
         );
 
         res.status(200).end(JSON.stringify({tokenJWT: token, code: 200}));
-    })
+    });
 
 });
 
+app.get("/utilisateurs", (req, res) => {
+   db.query("select * from utilisateur", (err, result) => {
+       if(err){
+           res.status(500).end(getMessageFromHTTPCode(500));
+       }
+       if(result.length <= 0){
+           res.status(404).end(getMessageFromHTTPCode(404));
+       }
+       res.status(200).end(JSON.stringify(result));
+   })
+});
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                  Fin des routes                                                                    //
