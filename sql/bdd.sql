@@ -4,7 +4,7 @@ use `geoquizz`;
 CREATE TABLE IF NOT EXISTS utilisateur(
   id int(50) AUTO_INCREMENT,
   login varchar(100),
-  email varchar(200),
+  email varchar(200) not null unique,
   mdp varchar(512),
   PRIMARY KEY (id)
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
