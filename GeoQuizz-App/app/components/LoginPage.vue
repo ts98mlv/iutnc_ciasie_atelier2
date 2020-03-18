@@ -107,6 +107,7 @@
                     .then((res) => {
                         console.log(res);
                         localStorage.setItem("tokenJWT",res.data.tokenJWT);
+                        localStorage.setItem("mail",this.user.email);
                         this.$navigateTo(Home);
                     })
                     .catch((err) => {

@@ -18,7 +18,7 @@
 <script>
     import * as camera from "nativescript-camera";
     import * as imagepicker from "nativescript-imagepicker";
-
+    import axios from "axios";
     const bghttp = require("nativescript-background-http");
     const session = bghttp.session("image-upload");
     import {Image} from "tns-core-modules/ui/image";
@@ -33,6 +33,7 @@
                 images: [],
                 erreurLocation: false,
                 location: {},
+                urlAPI: "https://d113dca1.ngrok.io/",
             }
         },
         methods: {
@@ -86,11 +87,24 @@
                     let result = JSON.parse(res.data);
                     let jsonEnvoi = {
                         "position": {
-                            "positionX": this.location.latitude,
-                            "positionY": this.location.longitude,
+                            "positionX": this.location.longitude,
+                            "positionY": this.location.latitude,
                         },
                         "urlImage": result.data.url,
                     };
+                    axios({
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("tokenJWT")}`,
+                            mail: localStorage.getItem("mail"),
+                        },
+                        url: this.urlAPI + "photos",
+                        data: jsonEnvoi
+                    }).then((res) => {
+                        console.log(res);
+                    }).catch(err => {
+                        console.log(err)
+                    });
                     console.log(jsonEnvoi);
                 });
             },
