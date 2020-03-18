@@ -22,7 +22,7 @@
     const bghttp = require("nativescript-background-http");
     const session = bghttp.session("image-upload");
     import {Image} from "tns-core-modules/ui/image";
-    import * as Geolocation from "nativescript-geolocation";
+    import * as geolocation from "nativescript-geolocation";
     import {Accuracy} from "tns-core-modules/ui/enums"; // used to describe at what accuracy the location should be get
 
     export default {
@@ -51,18 +51,6 @@
                             img.src = selected;
                             this.images.push(img);
 
-                            Geolocation.getCurrentLocation({
-                                desiredAccuracy: Accuracy.high,
-                                maximumAge: 5000,
-                                timeout: 20000
-                            })
-                                .then(result => {
-                                    console.log(result);
-                                    this.location = result;
-                                })
-                                .catch(err => {
-                                    alert(err.message);
-                                });
                         });
                     }).catch(function (e) {
                     console.log('error in selectPicture : ', e);
@@ -95,7 +83,6 @@
                 const task = session.multipartUpload(params, request);
                 task.on("responded", (res) => {
                     let result = JSON.parse(res.data);
-                    console.log(this.location);
                     let jsonEnvoi = {
                         "position": {
                             "positionX": this.location.latitude,
@@ -114,6 +101,21 @@
                                 let img = new Image();
                                 img.src = imageAsset;
                                 this.images.push(img);
+
+                                //Récupération position
+                                geolocation.getCurrentLocation({
+                                    desiredAccuracy: Accuracy.high,
+                                    maximumAge: 5000,
+                                    timeout: 20000
+                                })
+                                    .then(result => {
+                                        console.log(result)
+                                        this.location = result;
+                                    })
+                                    .catch(err => {
+                                        alert("J'arrive pas à choper la position "+err.message);
+                                    });
+
                             })
                             .catch(e => {
                                 console.log('error: ', e);
@@ -125,12 +127,15 @@
             },
         },
         created() {
-            Geolocation.enableLocationRequest(true)
+
+            geolocation.enableLocationRequest(true)
                 .then(() => {
-                    Geolocation.isEnabled().then(locActive => {
+                    geolocation.isEnabled().then(locActive => {
                         if (!locActive) {
-                            this.erreurLocationon = true;
-                            return;
+                            alert("Erreur permission loc");
+                        }
+                        else {
+                            alert("Pas d'erreur");
                         }
                     })
                 });
