@@ -70,6 +70,64 @@ app.get("/photos", (req, res) => {
 
 });
 
+
+/**
+ * @root /utilisateurs/:id/auth
+ * @method post
+ * @param id, id de l'utilisateur
+ * permet l'authentification
+ * @return token jwt
+ */
+app.post("/utilisateurs/:email/auth", (req, res) => {
+
+    let autorization = req.headers["authorization"];
+    if (typeof autorization === "undefined") {
+        res.status(401);
+        res.end(getMessageFromHTTPCode(401));
+    }
+
+    let dataDecodedB64 = autorization.split(" ");
+    let buffer = new Buffer(dataDecodedB64[1], 'base64');
+    dataDecodedB64 = buffer.toString('ascii');
+
+    dataDecodedB64 = dataDecodedB64.split(':');
+    let emailGiven = dataDecodedB64['0'];
+    emailGiven = emailGiven.toLowerCase().replace(/ /g, "");
+    let passwordGiven = dataDecodedB64['1'];
+
+    let mail = req.params.email;
+
+    db.query("select email, mdp from utilisateur where email=?", [mail], (error, result) => {
+        if (error) {
+            res.status(500);
+            res.end(getMessageFromHTTPCode(500));
+        }
+        if (result.length <= 0) {
+            res.status(404);
+            res.end(getMessageFromHTTPCode(404));
+        }
+
+        let verifm2p = bcrypt.compareSync(passwordGiven, result[0].mdp);
+        let verifLogin = (result[0].email.toLowerCase().replace(/ /g, "") === emailGiven);
+
+        if(!verifm2p || !verifLogin){
+            res.status(401).end(getMessageFromHTTPCode(401));
+        }
+
+        //génération du token
+
+        const privateKey = fs.readFileSync('private.key');
+        const token = jwt.sign(
+            {sub: result[0].email},
+            privateKey,
+            {expiresIn: '3h'}
+        );
+
+        res.status(200).end(JSON.stringify({tokenJWT: token, code: 200}));
+    });
+
+});
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                  Fin des routes                                                                    //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
