@@ -6,7 +6,7 @@ networks:
 
 
 services:
-  geoquizz_api:
+  geoquizz_api_mobile:
     image: node
     environment:
       - NODE_ENV=dev
@@ -15,8 +15,42 @@ services:
     ports:
       - "19080:3000"
     volumes:
-      - ./dev:/app/geoquizz_api
-    working_dir: /app/geoquizz_api
+      - .apis/mobile:/app/geoquizz_api_mobile
+    working_dir: /app/geoquizz_api_mobile
+    command: npm run dev
+    links:
+      - mysql:db
+    networks:
+      - geoquizz.net
+
+  geoquizz_api_front:
+    image: node
+    environment:
+      - NODE_ENV=dev
+#      - http_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
+#      - https_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
+    ports:
+      - "19180:3000"
+    volumes:
+    - .apis/front:/app/geoquizz_api_front
+    working_dir: /app/geoquizz_api_front
+    command: npm run dev
+    links:
+      - mysql:db
+    networks:
+      - geoquizz.net
+
+  geoquizz_api_back:
+    image: node
+    environment:
+      - NODE_ENV=dev
+#      - http_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
+#      - https_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
+    ports:
+      - "19280:3000"
+    volumes:
+    - .apis/back:/app/geoquizz_api_back
+    working_dir: /app/geoquizz_api_back
     command: npm run dev
     links:
       - mysql:db
