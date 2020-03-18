@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div class="home">
     <h1>Gestion Backend GeoQuizz</h1>
     <h2>Fonctionnalités</h2>
     <ul>

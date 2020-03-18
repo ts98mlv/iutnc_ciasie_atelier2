@@ -3,7 +3,7 @@
 import Router from 'vue-router'
 import Vue from 'vue'
 
-import Hello from './components/HelloWorld.vue'
+import Home from './components/Home.vue'
 import App from './App.vue'
 import AddPic from './components/AddPicture.vue'
 
@@ -15,7 +15,7 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      component: Hello
+      component: Home
     },
 
     {
