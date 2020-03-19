@@ -38,36 +38,46 @@
         {
             "id" : 1,
             "description" : "Tour Eiffel",
-            "positionX" : 4,
-            "positionY" : 10,
+            "position": {
+                "positionX" : 4,
+                "positionY" : 10
+            },
             "url": "https://www.numerama.com/content/uploads/2019/05/trou-noir-espace-univers-astronomie.jpg"
         },
         {
             "id" : 2,
             "description" : "Cathédrale Notre Dame",
-            "positionX" : 24,
-            "positionY" : 20,
+            "position": {
+                "positionX" : 24,
+                "positionY" : 20
+            },
             "url": ""
         },
         {
             "id" : 3,
             "description" : "Place Stanislas",
-            "positionX" : 15,
-            "positionY" : 31,
+            "position": {
+                "positionX" : 15,
+                "positionY" : 31
+            },
             "url": ""
         },
         {
             "id" : 4,
             "description" : "Centre Pompidou",
-            "positionX" : 27,
-            "positionY" : 8,
+            "position": { 
+                "positionX" : 27,
+                "positionY" : 8
+            },
             "url": ""
         },
         {
             "id" : 5,
             "description" : "Place St Epvre",
-            "positionX" : 48,
-            "positionY" : 53,
+            "position": {
+                "positionX" : 48,
+                "positionY" : 53
+            },
             "url": ""
         }
     ]

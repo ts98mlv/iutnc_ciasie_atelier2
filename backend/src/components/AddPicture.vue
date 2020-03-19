@@ -44,8 +44,8 @@
                 </thead>
                     <tr v-for="photo in listOfDatasPhotos">
                         <td>{{photo.description}}</td>
-                        <td>{{photo.position_x}}</td>
-                        <td>{{photo.position_y}}</td>
+                        <td>{{photo.position.position_x}}</td>
+                        <td>{{photo.position.position_y}}</td>
                         <td><img :src='photo.url'></td>
                         <td>{{photo.serie_id}}</td>
                     </tr>
@@ -56,7 +56,7 @@
             </table>
         </div>
 
-        <form id="affectPhoto" @submit="sendForm" action="/something" method="post">
+        <div id="affectPhoto">
             
             <p>Choisir une série : </p>
             <select v-model="serieId" >
@@ -71,10 +71,10 @@
             </select>
 
             <p>
-                <input type="submit" value="Assigner">  
+                <button v-on:click="sendForm">Assigner</button>
             </p>
 
-        </form>
+        </div>
     </div>
 </template>
 
@@ -86,20 +86,27 @@ export default {
   name: 'addpho',
   data () {
     return {
-      serieId: null,
-      photoId: null,
+      serieId: '',
+      photoId: '',
+      test: 'salut'
     }
   },
 
   filters: {
 
   },
-
-  methods: {
-    sendForm() {
-
-    }
+  
+  created () {
+      datasPhotos.photos.push({description: this.test, position: {position_x: 54.2458, position_y: 36.48542}, url: "https://res.cloudinary.com/du5jifpgg/image/upload/t_opengraph_image/Surcharge-APIDAE/Mus%C3%A9e%20du%20Louvre%20Paris.jpg", serie_id: 2});
   },
+  
+  methods: {
+      sendForm () {
+          alert("hey");
+
+          
+      }
+    },
 
   computed: {
 
