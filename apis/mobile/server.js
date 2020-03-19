@@ -153,7 +153,7 @@ app.post("/photos", async (req, res) => {
 app.post("/utilisateurs", (req, res) => {
     let jsonUser = req.body;
     if(isUndefined(jsonUser)){
-        req.status(500).end(getMessageFromHTTPCode(500));
+        res.status(500).end(getMessageFromHTTPCode(500));
     }
     //vérification du contenu du json
     let login = jsonUser.login;
@@ -161,7 +161,7 @@ app.post("/utilisateurs", (req, res) => {
     let mdp = jsonUser.mdp;
 
     if(isUndefined(login) || isUndefined(mail) || isUndefined(mdp) || isEmptyString(mail) || isEmptyString(mdp)){
-        req.status(500).end(getMessageFromHTTPCode(666));
+        res.status(500).end(getMessageFromHTTPCode(666));
     }
 
     //hashage du mot de passe
