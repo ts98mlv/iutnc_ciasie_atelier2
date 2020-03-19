@@ -11,7 +11,6 @@ const HOST = "0.0.0.0";
 // Gestion du token
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-const bcrypt_password = 'jesuislemotdepasse';
 
 const axios = require("axios");
 // App
@@ -151,6 +150,33 @@ app.post("/photos", async (req, res) => {
   
 });
 
+app.post("/utilisateurs", (req, res) => {
+    let jsonUser = req.body;
+    if(isUndefined(jsonUser)){
+        req.status(500).end(getMessageFromHTTPCode(500));
+    }
+    //vérification du contenu du json
+    let login = jsonUser.login;
+    let mail = jsonUser.mail;
+    let mdp = jsonUser.mdp;
+
+    if(isUndefined(login) || isUndefined(mail) || isUndefined(mdp) || isEmptyString(mail) || isEmptyString(mdp)){
+        req.status(500).end(getMessageFromHTTPCode(666));
+    }
+
+    //hashage du mot de passe
+    let salt = bcrypt.genSaltSync(saltRounds);
+    mdp = bcrypt.hashSync(mdp, salt);
+
+    //insertion en bdd
+    db.query("insert into utilisateur (login, email, mdp) values (?, ?, ?)", [login, mail, mdp], (err, res) => {
+        if(err)
+            res.status(500).end(getMessageFromHTTPCode(500));
+        else
+            res.status(200).end(getMessageFromHTTPCode(200))
+    })
+});
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                  Fin des routes                                                                    //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -270,4 +296,12 @@ function isTokenUnaltered(token) {
         });
     }
     return isGood;
+}
+
+function isUndefined(element) {
+    return (typeof element === "undefined");
+}
+
+function isEmptyString(element){
+    return (element === "");
 }
