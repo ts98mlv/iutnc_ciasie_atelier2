@@ -109,7 +109,7 @@ app.post("/utilisateurs/:email/auth", (req, res) => {
 /**
  * @api {post} /photos permet d'ajouter une photo en bdd
  * @apiDescription route permettant d'ajouter une photo en bdd, par défaut elle n'est ratachée à aucune série
- * @apiHeader {String} authorization "Basic chaineEncodeeB64" avec chaineEncodeeB64 correspondant à "email:motDePasse" encodé en base 64
+ * @apiHeader {String} authorization "Bearer tokenJWT" avec tokenJWT correspondant au token JWT récupéré lors de la connexion
  * @apiParam {json} body {
                         "position": {
                             "positionX": 64.44,
