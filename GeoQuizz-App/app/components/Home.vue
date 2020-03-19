@@ -33,7 +33,7 @@
                 images: [],
                 erreurLocation: false,
                 location: {},
-                urlAPI: "https://d113dca1.ngrok.io/",
+                urlAPI: "http://415ee425.ngrok.io/",
             }
         },
         methods: {

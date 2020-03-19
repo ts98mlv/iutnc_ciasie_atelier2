@@ -2,34 +2,44 @@
     <Page actionBarHidden="true">
         <FlexboxLayout class="page">
             <StackLayout class="form">
-                <Label class="header" text="To-do List" />
+                <Label class="header" text="To-do List"/>
 
+                <StackLayout v-show="!isLoggingIn" class="input-field">
+                    <TextField ref="pseudo" class="input" hint="Nickname" autocorrect="false"
+                               v-model="user.nickname" returnKeyType="next"
+                               fontSize="18"/>
+                    <StackLayout class="hr-light"/>
+                </StackLayout>
                 <StackLayout class="input-field" marginBottom="25">
-                    <TextField class="input" hint="Email" keyboardType="email" autocorrect="false" autocapitalizationType="none" v-model="user.email"
-                               returnKeyType="next" @returnPress="focusPassword" fontSize="18" />
-                    <StackLayout class="hr-light" />
+                    <TextField class="input" hint="Email" keyboardType="email" autocorrect="false"
+                               autocapitalizationType="none" v-model="user.email"
+                               returnKeyType="next" @returnPress="focusPassword" fontSize="18"/>
+                    <StackLayout class="hr-light"/>
                 </StackLayout>
 
                 <StackLayout class="input-field" marginBottom="25">
-                    <TextField ref="password" class="input" hint="Password" secure="true" v-model="user.password" :returnKeyType="isLoggingIn ? 'done' : 'next'"
-                               @returnPress="focusConfirmPassword" fontSize="18" />
-                    <StackLayout class="hr-light" />
+                    <TextField ref="password" class="input" hint="Password" secure="true" v-model="user.password"
+                               :returnKeyType="isLoggingIn ? 'done' : 'next'"
+                               @returnPress="focusConfirmPassword" fontSize="18"/>
+                    <StackLayout class="hr-light"/>
                 </StackLayout>
 
                 <StackLayout v-show="!isLoggingIn" class="input-field">
-                    <TextField ref="confirmPassword" class="input" hint="Confirm password" secure="true" v-model="user.confirmPassword" returnKeyType="done"
-                               fontSize="18" />
-                    <StackLayout class="hr-light" />
+                    <TextField ref="confirmPassword" class="input" hint="Confirm password" secure="true"
+                               v-model="user.confirmPassword" returnKeyType="done"
+                               fontSize="18"/>
+                    <StackLayout class="hr-light"/>
                 </StackLayout>
 
-                <Button :text="isLoggingIn ? 'Log In' : 'Sign Up'" @tap="submit" class="btn btn-primary m-t-20" />
-                <Label v-show="isLoggingIn" text="Forgot your password?" class="login-label" @tap="forgotPassword" />
+
+                <Button :text="isLoggingIn ? 'Log In' : 'Sign Up'" @tap="submit" class="btn btn-primary m-t-20"/>
+<!--                <Label v-show="isLoggingIn" text="Forgot your password?" class="login-label" @tap="forgotPassword"/>-->
             </StackLayout>
 
             <Label class="login-label sign-up-label" @tap="toggleForm">
                 <FormattedString>
-                    <Span :text="isLoggingIn ? 'Don’t have an account? ' : 'Back to Login'" />
-                    <Span :text="isLoggingIn ? 'Sign up' : ''" class="bold" />
+                    <Span :text="isLoggingIn ? 'Don’t have an account? ' : 'Back to Login'"/>
+                    <Span :text="isLoggingIn ? 'Sign up' : ''" class="bold"/>
                 </FormattedString>
             </Label>
         </FlexboxLayout>
@@ -43,19 +53,33 @@
     import localStorage from "nativescript-localstorage";
     import {encode, decode} from "base-64";
     import * as utf8 from "utf8";
+
     const Buffer = require('buffer/').Buffer;
 
-    const urlAPI = "https://d113dca1.ngrok.io/";
+    const urlAPI = "http://415ee425.ngrok.io/";
 
     const userService = {
         register(user) {
-            return Promise.resolve(user);
+            if (user.nickname !== "" && user.password === user.confirmPassword && user.password !== "" && user.email !== "") {
+                // alert("Premier test !");
+                return axios({
+                    method: "POST",
+                    url: urlAPI + "utilisateurs",
+                    data: {
+                        "login": user.nickname,
+                        "mail": user.email,
+                        "mdp": user.password,
+                    }
+                });
+            } else {
+                return Promise.reject("Remplir tous les champs.");
+            }
         },
         login(user) {
-            let token = Buffer.from(`${user.email}:${user.password}`,'utf8').toString('base64');
+            let token = Buffer.from(`${user.email}:${user.password}`, 'utf8').toString('base64');
             return axios({
                 method: "post",
-                url: urlAPI +"utilisateurs/"+user.email+"/auth",
+                url: urlAPI + "utilisateurs/" + user.email + "/auth",
                 headers: {
                     "Authorization": `Basic ${token}`
                 }
@@ -71,6 +95,7 @@
             return {
                 isLoggingIn: true,
                 user: {
+                    nickname: "",
                     email: "michel@test.fr",
                     password: "michel",
                     confirmPassword: ""
@@ -78,7 +103,7 @@
             };
         },
         mounted() {
-            if(!global.btoa) {
+            if (!global.btoa) {
                 global.btoa = encode;
             }
         },
@@ -105,33 +130,36 @@
                 userService
                     .login(this.user)
                     .then((res) => {
-                        console.log(res);
-                        localStorage.setItem("tokenJWT",res.data.tokenJWT);
-                        localStorage.setItem("mail",this.user.email);
+                        localStorage.setItem("tokenJWT", res.data.tokenJWT);
+                        localStorage.setItem("mail", this.user.email);
                         this.$navigateTo(Home);
                     })
                     .catch((err) => {
-                        console.log(err);
                         this.alert("Unfortunately we could not find your account.");
                     });
             },
 
             register() {
-                if (this.user.password != this.user.confirmPassword) {
+                if (this.user.password !== this.user.confirmPassword) {
                     this.alert("Your passwords do not match.");
                     return;
                 }
 
                 userService
                     .register(this.user)
-                    .then(() => {
+                    .then((res) => {
                         this.alert("Your account was successfully created.");
                         this.isLoggingIn = true;
                     })
-                    .catch(() => {
-                        this.alert(
-                            "Unfortunately we were unable to create your account."
-                        );
+                    .catch((err) => {
+                        if (err.response.status === 500) {
+                            alert("Un compte avec cet email existe déjà.");
+                        } else {
+                            this.alert(
+                                "Unfortunately we were unable to create your account. "
+                            );
+                        }
+
                     });
             },
 
