@@ -40,22 +40,21 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors(corsOptions));
 
 /**
- * route d'accueil de l'api commande
- * affiche un message de bienvenue
- * @root /
- * @method get
- */
+ * @api {get} / route d'accueil de l'api commande
+ * @apiDescription affiche un message de bienvenue
+*/
 app.get("/", (req, res) => {
     res.status(200).end("Bienvenue sur GeoQuizz API pour l'application mobile");
 });
 
 
 /**
- * @root /utilisateurs/:id/auth
- * @method post
- * @param id, id de l'utilisateur
- * permet l'authentification
- * @return token jwt
+ * @api {post} /utilisateurs/:email/auth permet l'authentification
+ * @apiParam {String} email email de l'utilisateur
+ * @apiHeader {String} authorization "Basic chaineEncodeeB64" avec chaineEncodeeB64 qui vaut "email:mdp" le tout encodé en base 64
+ * @apiDescription permet l'authentification
+ * @apiSuccess {JSON} tokenJWT json avec le token d'authentification jwt et le code de retour
+ *
  */
 app.post("/utilisateurs/:email/auth", (req, res) => {
 
@@ -107,19 +106,18 @@ app.post("/utilisateurs/:email/auth", (req, res) => {
 
 });
 
-app.get("/utilisateurs", (req, res) => {
-   db.query("select * from utilisateur", (err, result) => {
-       if(err){
-           res.status(500).end(getMessageFromHTTPCode(500));
-       }
-       if(result.length <= 0){
-           res.status(404).end(getMessageFromHTTPCode(404));
-       }
-       res.status(200).end(JSON.stringify(result));
-   })
-});
-
-
+/**
+ * @api {post} /photos permet d'ajouter une photo en bdd
+ * @apiDescription route permettant d'ajouter une photo en bdd, par défaut elle n'est ratachée à aucune série
+ * @apiHeader {String} authorization "Basic chaineEncodeeB64" avec chaineEncodeeB64 correspondant à "email:motDePasse" encodé en base 64
+ * @apiParam {json} body {
+                        "position": {
+                            "positionX": 64.44,
+                            "positionY": 48.44,
+                        },
+                        "urlImage": "non vide",
+                    }
+ */
 app.post("/photos", async (req, res) => {
     let jsonPhoto = req.body;
 
@@ -150,6 +148,17 @@ app.post("/photos", async (req, res) => {
   
 });
 
+/**
+ * @api {post} /utilisateurs permet d'ajouter un utilisateur en bdd
+ * @apiDescription route permettant d'ajouter un utilisateur en bdd
+ * @apiHeader {String} authorization "Basic chaineEncodeeB64" avec chaineEncodeeB64 correspondant à "email:motDePasse" encodé en base 64
+ * @apiParam {json} body {
+    "login": "bb",
+    "mail": "bob@test.fr",
+    "mdp": "michel"
+}
+
+ */
 app.post("/utilisateurs", (req, res) => {
     let jsonUser = req.body;
     if(isUndefined(jsonUser)){
