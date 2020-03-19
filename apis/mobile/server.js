@@ -159,21 +159,22 @@ app.post("/utilisateurs", (req, res) => {
     let login = jsonUser.login;
     let mail = jsonUser.mail;
     let mdp = jsonUser.mdp;
-
+    console.log("ok");
     if(isUndefined(login) || isUndefined(mail) || isUndefined(mdp) || isEmptyString(mail) || isEmptyString(mdp)){
-        res.status(500).end(getMessageFromHTTPCode(666));
+        res.status(666).end(getMessageFromHTTPCode(666));
     }
 
     //hashage du mot de passe
     let salt = bcrypt.genSaltSync(saltRounds);
     mdp = bcrypt.hashSync(mdp, salt);
-
     //insertion en bdd
-    db.query("insert into utilisateur (login, email, mdp) values (?, ?, ?)", [login, mail, mdp], (err, res) => {
-        if(err)
+    db.query("insert into utilisateur (`login`, `email`, `mdp`) values (?, ?, ?);", [login, mail, mdp], (error, result) => {
+        if(error){
             res.status(500).end(getMessageFromHTTPCode(500));
-        else
-            res.status(200).end(getMessageFromHTTPCode(200))
+        }
+        else{
+            res.status(200).end(getMessageFromHTTPCode(200));
+        }
     })
 });
 
