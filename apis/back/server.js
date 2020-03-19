@@ -50,6 +50,12 @@ app.get("/", (req, res) => {
     res.status(200).end("Bienvenue sur GeoQuizz API du backoffice");
 });
 
+/**
+ * route pour récupérer toutes les photos
+ * @param nonAssignee qui si à true permet de ne retourner que les photos qui ne sont pas assignées à une série
+ * @root /photos
+ * @method get
+ */
 app.get("/photos", (req, res) => {
     let nonAssignees = req.query.nonAssignee;
     if(typeof nonAssignees === "undefined" || ! nonAssignees){
@@ -69,6 +75,12 @@ app.get("/photos", (req, res) => {
     }
 });
 
+/**
+ * route pour récupérer toutes les infos d'une photo
+ * @param id id de la photo concernée
+ * @root /photos/:id
+ * @method get
+ */
 app.get("/photos/:id", (req, res) => {
     db.query("select * from photo where id=?;", [req.params.id], (error, result) => {
         if(error){
@@ -78,6 +90,23 @@ app.get("/photos/:id", (req, res) => {
     })
 });
 
+/**
+ * route pour modifier les infos d'une photo
+ * @param id id de la photo concernée
+ * @body json de format
+ * {
+ *     "id": 00,
+ *     "serie_id": 00,
+ *     "description": "",
+ *     "position":
+ *           {
+ *               "positionX": 48.55,
+ *               "positionY": 64.25
+ *           }
+ * }
+ * @root /photos/:id
+ * @method put
+ */
 app.put("/photos/:id", (req, res) => {
     let id = req.params.id;
     let jsonPhoto = req.body;
@@ -94,6 +123,9 @@ app.put("/photos/:id", (req, res) => {
     if(photo_id !== id){
         res.status(403).end(getMessageFromHTTPCode(403));
     }
+
+    if(serie_id == 0)
+        serie_id = null;
 
     if(typeof coordY === "undefined" || typeof coordX === "undefined" || typeof descr === "undefined" || typeof serie_id === "undefined" || typeof photo_id === "undefined"){
         res.status(500).end(getMessageFromHTTPCode(666));
@@ -118,9 +150,10 @@ app.put("/photos/:id", (req, res) => {
 
 
 /**
- * @root /utilisateurs/:id/auth
+ * @root /utilisateurs/:email/auth
  * @method post
- * @param id, id de l'utilisateur
+ * @param email, email de l'utilisateur
+ * @header autorization de type "Basic chaineEncodeeB64" avec chaineEncodeeB64 qui vaut "email:mdp" le tout encodé en base 64
  * permet l'authentification
  * @return token jwt
  */
@@ -173,7 +206,11 @@ app.post("/utilisateurs/:email/auth", (req, res) => {
     });
 
 });
-
+/**
+ * route pour modifier les series
+ * @root /series
+ * @method get
+ */
 app.get("/series", (req, res) => {
     db.query("select * from serie;", [], (error, result) => {
         if(error){
@@ -183,6 +220,12 @@ app.get("/series", (req, res) => {
     })
 });
 
+/**
+ * route pour avoir les infos d'une série
+ * @param id id de la série concernée
+ * @root /series/:id
+ * @method get
+ */
 app.get("/series/:id", (req, res) => {
     db.query("select * from serie where id=?;", [req.params.id], (error, result) => {
         if(error){
@@ -195,6 +238,12 @@ app.get("/series/:id", (req, res) => {
     })
 });
 
+/**
+ * route pour avoir les photos liées à une série
+ * @param id id de la série concernée
+ * @root /series/:id/photos
+ * @method get
+ */
 app.get("/series/:id/photos", (req, res) => {
     db.query("select * from photo where serie_id=?;", [req.params.id], (error, result) => {
         if(error){
@@ -207,6 +256,12 @@ app.get("/series/:id/photos", (req, res) => {
     })
 });
 
+/**
+ * route pour avoir les parties liées à une série
+ * @param id id de la série concernée
+ * @root /series/:id/parties
+ * @method get
+ */
 app.get("/series/:id/parties", (req, res) => {
     db.query("select * from partie where serie_id=?;", [req.params.id], (error, result) => {
         if(error){
