@@ -41,20 +41,21 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cors(corsOptions));
 
 /**
- * route d'accueil de l'api commande
+ * @api {get} / route d'accueil de l'api commande
+ * @apiName getHomePage
+ * @apiDescription
  * affiche un message de bienvenue
- * @root /
- * @method get
+ * 
  */
 app.get("/", (req, res) => {
     res.status(200).end("Bienvenue sur GeoQuizz API du backoffice");
 });
 
 /**
- * route pour récupérer toutes les photos
- * @param nonAssignee qui si à true permet de ne retourner que les photos qui ne sont pas assignées à une série
- * @root /photos
- * @method get
+ * @api {get} /photos route pour récupérer toutes les photos
+ * @apiParam {Boolean} [nonAssignee] paramètre optionnel qui si à true permet de ne retourner que les photos qui ne sont pas assignées à une série
+ * @apiDescription route pour récupérer toutes les photos
+ * 
  */
 app.get("/photos", (req, res) => {
     let nonAssignees = req.query.nonAssignee;
@@ -76,10 +77,10 @@ app.get("/photos", (req, res) => {
 });
 
 /**
- * route pour récupérer toutes les infos d'une photo
- * @param id id de la photo concernée
- * @root /photos/:id
- * @method get
+ * @api {get} /photos/:id route pour récupérer toutes les infos d'une photo
+ * @apiParam {Number} id id de la photo concernée
+ * @apiDescription route pour récupérer toutes les infos d'une photo
+ * 
  */
 app.get("/photos/:id", (req, res) => {
     db.query("select * from photo where id=?;", [req.params.id], (error, result) => {
@@ -91,9 +92,11 @@ app.get("/photos/:id", (req, res) => {
 });
 
 /**
- * route pour modifier les infos d'une photo
- * @param id id de la photo concernée
- * @body json de format
+ * @api {put} /photos/:id route pour modifier les infos d'une photo
+ * @apiParam {Number} id id de la photo concernée
+ * @apiDescription route pour modifier les infos d'une photo
+ * @apiParam {json} body de format
+ * 
  * {
  *     "id": 00,
  *     "serie_id": 00,
@@ -104,8 +107,6 @@ app.get("/photos/:id", (req, res) => {
  *               "positionY": 64.25
  *           }
  * }
- * @root /photos/:id
- * @method put
  */
 app.put("/photos/:id", (req, res) => {
     let id = req.params.id;
@@ -150,12 +151,12 @@ app.put("/photos/:id", (req, res) => {
 
 
 /**
- * @root /utilisateurs/:email/auth
- * @method post
- * @param email, email de l'utilisateur
- * @header autorization de type "Basic chaineEncodeeB64" avec chaineEncodeeB64 qui vaut "email:mdp" le tout encodé en base 64
- * permet l'authentification
- * @return token jwt
+ * @api {post} /utilisateurs/:email/auth permet l'authentification
+ * @apiParam {String} email email de l'utilisateur
+ * @apiHeader {String} authorization "Basic chaineEncodeeB64" avec chaineEncodeeB64 qui vaut "email:mdp" le tout encodé en base 64
+ * @apiDescription permet l'authentification
+ * @apiSuccess {JSON} tokenJWT json avec le token d'authentification jwt et le code de retour
+ * 
  */
 app.post("/utilisateurs/:email/auth", (req, res) => {
 
@@ -206,10 +207,11 @@ app.post("/utilisateurs/:email/auth", (req, res) => {
     });
 
 });
+
 /**
- * route pour modifier les series
- * @root /series
- * @method get
+ * @api {get} /series route pour modifier les series
+ * @apiDescription route pour modifier les series
+ * 
  */
 app.get("/series", (req, res) => {
     db.query("select * from serie;", [], (error, result) => {
@@ -221,10 +223,10 @@ app.get("/series", (req, res) => {
 });
 
 /**
- * route pour avoir les infos d'une série
- * @param id id de la série concernée
- * @root /series/:id
- * @method get
+ * @api {get} /series/:id route pour avoir les infos d'une série
+ * @apiDescription route pour avoir les infos d'une série
+ * @apiParam {Number} id id de la série concernée
+ * 
  */
 app.get("/series/:id", (req, res) => {
     db.query("select * from serie where id=?;", [req.params.id], (error, result) => {
@@ -239,10 +241,10 @@ app.get("/series/:id", (req, res) => {
 });
 
 /**
- * route pour avoir les photos liées à une série
- * @param id id de la série concernée
- * @root /series/:id/photos
- * @method get
+ * @api {get} /series/:id/photos route pour avoir les photos liées à une série
+ * @apiDescription  route pour avoir les photos liées à une série
+ * @apiParam {Number} id id de la série concernée
+ * 
  */
 app.get("/series/:id/photos", (req, res) => {
     db.query("select * from photo where serie_id=?;", [req.params.id], (error, result) => {
@@ -257,10 +259,10 @@ app.get("/series/:id/photos", (req, res) => {
 });
 
 /**
- * route pour avoir les parties liées à une série
- * @param id id de la série concernée
- * @root /series/:id/parties
- * @method get
+ * @api {get} /series/:id/parties route pour avoir les parties liées à une série
+ * @apiDescription route pour avoir les parties liées à une série
+ * @apiParam {Number} id id de la série concernée
+ * 
  */
 app.get("/series/:id/parties", (req, res) => {
     db.query("select * from partie where serie_id=?;", [req.params.id], (error, result) => {
