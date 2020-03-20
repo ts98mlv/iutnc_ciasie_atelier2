@@ -59,7 +59,7 @@ app.get("/photos", (req, res) => {
             if(error){
                 res.status(500).end(getMessageFromHTTPCode(500));
             }
-            res.status(200).end(JSON.stringify(result));
+            res.type('json').send(JSON.stringify(result)).end();
         })
     }
 });
