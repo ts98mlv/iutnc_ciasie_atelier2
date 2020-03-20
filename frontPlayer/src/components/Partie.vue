@@ -2,16 +2,21 @@
   <div>
     <h3>Bonjour {{$route.params.pseudo}}</h3>
     <p style="margin-bottom:0">
-      Vous avez choisis la série de
-      <b>{{listeSerie.ville}}</b> avec une distance de
-      <b>{{listeSerie.distance}}</b>.
+      Vous avez choisis la ville de
+      <b>{{listeSerie.ville}}</b>
     </p>
-    <p style="margin-top:0">
-      Les règles sont simples. Vous aurez
-      <b>{{findPartie.nb_photos}}</b> photos à insérer sur la carte. Attention, vous aurez 20 secondes max pour le faire.
-      Plus vous êtes rapide, et plus vous gagnerez de points.
+    <p>
+      Les règles sont simples : 
+      <ul>
+        <li>🏰<b>{{findPartie.nb_photos}}</b> Photos de monuments ou place à insérer sur la carte🏰</li>
+        <li>⌛<b>20</b> secondes max pour placer une image⌛</li>
+        <li>👉Plus vous êtes rapide et précis, plus vous gagnez des points👈</li>
+        <li>⚠️Dès que vous appuyez sur "Démarrer le jeu", le timer est lancé⚠️</li>
+      </ul>
     </p>
+    <p></p>
     <router-link v-bind:to="'/play/'+pseudo+ '/' + selected">Démarrer le jeu</router-link>
+
   </div>
 </template>
 

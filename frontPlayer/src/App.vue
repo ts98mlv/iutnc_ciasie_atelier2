@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png" />
+    <img src="./assets/logo2.jpg" />
     <h1>{{ msg }}</h1>
     <router-view></router-view>
     <!-- <Serie :selected="selected" ></Serie> -->
@@ -17,7 +17,7 @@ export default {
   },
   data() {
     return {
-      msg: "Player Geoquizz",
+      msg: "Geoquizz Game",
       pseudo: "",
       selected: ""
     };
@@ -34,7 +34,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 10px;
 }
 
 h1,
@@ -48,7 +48,6 @@ ul {
 }
 
 li {
-  display: inline-block;
   margin: 0 10px;
 }
 
