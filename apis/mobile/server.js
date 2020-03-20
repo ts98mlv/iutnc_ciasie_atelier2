@@ -226,7 +226,6 @@ db.connect(err => {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          Fonctions                                                                 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 /**
  * fonction qui retourne un json avec le code d'erreur et le message
  * @param code
@@ -255,12 +254,16 @@ function getMessageFromHTTPCode(code) {
         case 200:
             message = "Tout s'est bien passé :)";
             break;
+        case 666:
+            message = "JSON non conforme !!";
+            break;
     }
 
     message = JSON.stringify({code: code, message: message});
 
     return message;
 }
+
 
 /**
  * Controle du token avec l'user

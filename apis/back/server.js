@@ -149,7 +149,7 @@ app.put("/photos/:id", (req, res) => {
     })
 });
 
-
+  
 /**
  * @api {post} /utilisateurs/:email/auth permet l'authentification
  * @apiParam {String} email email de l'utilisateur
