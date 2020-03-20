@@ -6,6 +6,9 @@ import Vue from 'vue'
 import Home from './components/Home.vue'
 import App from './App.vue'
 import AddPic from './components/AddPicture.vue'
+import AllPic from './components/AllPic.vue'
+import AllSeries from './components/AllSeries.vue'
+
 
 Vue.use(Router)
 
@@ -21,6 +24,16 @@ const router = new Router({
     {
       path: '/addPictures',
       component: AddPic
+    },
+
+    {
+      path: '/photos',
+      component: AllPic
+    },
+
+    {
+      path: '/series',
+      component: AllSeries
     }
   ]
 })

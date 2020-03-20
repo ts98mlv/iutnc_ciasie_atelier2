@@ -16,7 +16,7 @@
                         <th>Distance</th>
                     </tr>
                 </thead>
-                    <tr v-for="serie in listOfDatasSeries">
+                    <tr v-for="serie in this.listSeries">
                         <td>{{serie.id}}</td>
                         <td>{{serie.ville}}</td>
                         <td>{{serie.map_x}}</td>
@@ -42,10 +42,10 @@
                         <th>Serie</th>
                     </tr>
                 </thead>
-                    <tr v-for="photo in listOfDatasPhotos">
+                    <tr v-for="photo in this.listPhotos">
                         <td>{{photo.description}}</td>
-                        <td>{{photo.position.position_x}}</td>
-                        <td>{{photo.position.position_y}}</td>
+                        <td>{{photo.positionX}}</td>
+                        <td>{{photo.positionY}}</td>
                         <td><img :src='photo.url'></td>
                         <td>{{photo.serie_id}}</td>
                     </tr>
@@ -61,13 +61,13 @@
             <p>Choisir une série : </p>
             <select v-model="serieId" >
                 <option value="" disabled>Choisissez</option>
-                <option v-bind:value="serie.id" v-for="serie in listOfDatasSeries">{{serie.ville}}</option>
+                <option v-bind:value="serie.id" v-for="serie in this.listSeries">{{serie.ville}}</option>
             </select>
            
            <p>Choisir une photo : </p>
             <select v-model="photoId" >
                 <option value="" disabled>Choisissez</option>
-                <option v-if="photo.serie_id == null" v-bind:value="photo.id" v-for="photo in listOfDatasPhotos">{{photo.description}}</option>
+                <option v-if="photo.serie_id == null" v-bind:value="photo.id" v-for="photo in this.listPhotos">{{photo.description}}</option>
             </select>
 
             <p>
@@ -81,14 +81,19 @@
 <script>
 import datasSeries from '../assets/serie.json'
 import datasPhotos from '../assets/photo.json'
+import axios from "axios"
+
+const urlAPI = "http://d3292950.ngrok.io/"
 
 export default {
-  name: 'addpho',
+
   data () {
     return {
       serieId: '',
       photoId: '',
-      test: 'salut'
+      test: 'salut',
+      listPhotos: '',
+      listSeries: ''
     }
   },
 
@@ -97,29 +102,51 @@ export default {
   },
   
   created () {
-      datasPhotos.photos.push({description: this.test, position: {position_x: 54.2458, position_y: 36.48542}, url: "https://res.cloudinary.com/du5jifpgg/image/upload/t_opengraph_image/Surcharge-APIDAE/Mus%C3%A9e%20du%20Louvre%20Paris.jpg", serie_id: 2});
-  },
-  
+
+            axios.get(urlAPI)
+            .then( (res) => {
+                console.log(res.data); // res.data contains request data
+                
+            })
+            .catch( err => console.error(err));
+      },
+
   methods: {
       sendForm () {
-          alert("hey");
-
-          
+        // datasPhotos.photos.push({description: this.test, position: {position_x: 54.2458, position_y: 36.48542}, url: "https://res.cloudinary.com/du5jifpgg/image/upload/t_opengraph_image/Surcharge-APIDAE/Mus%C3%A9e%20du%20Louvre%20Paris.jpg", serie_id: 2});
+        datasPhotos.photos.map(item => {
+        //if (item.id = this.photoId) item.serie_id = this.serieId
+        console.log("if " + item.id + " = " + this.photoId + " alors " + item.serie_id + " prend " + this.serieId)
+        // console.log("id photo " + item.id + " id photo choisi " + this.photoId)
+      })
       }
+
     },
 
   computed: {
 
     listOfDatasSeries () {
-      return datasSeries.series.map(item => {
-        return item
-      })
+        axios.get(urlAPI + "series")
+            .then( (res) => {
+                const pars = JSON.parse(res.data);
+                this.listSeries = pars.map(item => {
+                    return item
+                })
+                
+            })
+            .catch( err => console.error(err));
     },
 
     listOfDatasPhotos () {
-      return datasPhotos.photos.map(item => {
-        return item
-      })
+        axios.get(urlAPI + "photos")
+            .then( (res) => {
+                const pars = JSON.parse(res.data);
+                this.listPhotos = pars.map(item => {
+                    return item
+                })
+                
+            })
+            .catch( err => console.error(err));
     }
   }
 }

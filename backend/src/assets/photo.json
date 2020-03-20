@@ -1,74 +1,18 @@
-{
-    "photos": [
-        {
-            "id": 1,
-            "description": "Musée du louvre",
-            "position": {
-                "position_x": 48.861373,
-                "position_y": 2.337923
-            },
-            "url": "https://res.cloudinary.com/du5jifpgg/image/upload/t_opengraph_image/Surcharge-APIDAE/Mus%C3%A9e%20du%20Louvre%20Paris.jpg",
-            "serie_id": 1
-        },
-        {
-            "id": 2,
-            "description": "Tour Eiffel",
-            "position": {
-                "position_x": 48.858603,
-                "position_y": 2.294481
-            },
-            "url": "https://www.toureiffel.paris/themes/custom/tour_eiffel/img/picto_myGoogleBusiness_1.jpg",
-            "serie_id": 1
-        },
-        {
-            "id": 3,
-            "description": "Place Stanislas",
-            "position": {
-                "position_x": 48.693838,
-                "position_y": 6.183273
-            },
-            "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Place_Stanislas_et_ses_grilles_%C3%A0_Nancy.jpg/444px-Place_Stanislas_et_ses_grilles_%C3%A0_Nancy.jpg",
-            "serie_id": 2
-        },
-        {
-            "id": 4,
-            "description": "Cathédrale de Metz",
-            "position": {
-                "position_x": 49.120526,
-                "position_y": 6.175851
-            },
-            "url": "https://cdn.radiofrance.fr/s3/cruiser-production/2019/11/7892ebf0-e2bd-4152-a664-b4a92fa7f450/870x489_gettyimages-1179612762_2.jpg",
-            "serie_id": 3
-        },
-        {
-            "id": 5,
-            "description": "Centre Pompidou Metz",
-            "position": {
-                "position_x": 49.108423,
-                "position_y": 6.181698
-            },
-            "url": "https://www.centrepompidou-metz.fr/sites/default/files/gallery-home/181017_ancart_metz_012_col3_v1_current.jpg.crop_display.jpg",
-            "serie_id": 3
-        },
-        {
-            "id": 6,
-            "description": "Palais Rohan",
-            "position": {
-                "position_x": 48.581024,
-                "position_y": 7.752545
-            },
-            "url": "https://upload.wikimedia.org/wikipedia/commons/5/56/Cathedrale-de-Strasbourg-IMG_1331.jpg",
-            "serie_id": null
-        },
-        {
-            "id": 7,
-            "description": "Place Kléber",
-            "position": {
-                "position_x": 48.583608,
-                "position_y": 7.745816
-            },
-            "url": "https://upload.wikimedia.org/wikipedia/commons/e/ef/Place_Kl%C3%A9ber_on_a_rainy_day.jpg",
-            "serie_id": null
-        }
-    ]
-}
+[
+    {
+        "id": 1,
+        "description": null,
+        "positionX": "6.8378592",
+        "positionY": "48.4075591",
+        "url": "https://i.ibb.co/9wdGm17/NSIMG-20200318-162312.jpg",
+        "serie_id": null
+    },
+    {
+        "id": 2,
+        "description": null,
+        "positionX": "6.8379225",
+        "positionY": "48.4075152",
+        "url": "https://i.ibb.co/F4dFNDD/NSIMG-20200318-163050.jpg",
+        "serie_id": 1
+    }
+]

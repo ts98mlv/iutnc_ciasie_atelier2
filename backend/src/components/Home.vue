@@ -10,6 +10,22 @@
           Ajout de photos
         </a>
       </li>
+
+      <li>
+        <a
+          href="/photos"
+        >
+          Voir toutes les photos
+        </a>
+      </li>
+
+      <li>
+        <a
+          href="/series"
+        >
+          Voir toutes les series
+        </a>
+      </li>
     </ul>
   </div>
 </template>

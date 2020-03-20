@@ -1,0 +1,98 @@
+<template>
+    <div class="AddPhoto">
+        <h1>Toutes les photos</h1>
+
+        <div class="placeTab">
+
+            <h3 class="titreTab">Photos</h3>
+
+            <table class="tableauPhotos">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>positionX</th>
+                        <th>positionY</th>
+                        <th>Photo</th>
+                        <th>Serie</th>
+                        <th>Detail</th>
+                    </tr>
+                </thead>
+                    <tr v-for="photo in this.listPhotos">
+                        <td>{{photo.description}}</td>
+                        <td>{{photo.positionX}}</td>
+                        <td>{{photo.positionY}}</td>
+                        <td><img :src='photo.url'></td>
+                        <td>{{photo.serie_id}}</td>
+                        
+                    </tr>
+
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>
+
+<script>
+import datasPhotos from '../assets/photo.json'
+import axios from "axios"
+
+const urlAPI = "http://d3292950.ngrok.io/"
+
+export default {
+
+  data () {
+    return {
+      photoId: '',
+      listPhotos: ''
+    }
+  },
+
+  filters: {
+
+  },
+  
+  created () {
+
+            axios.get(urlAPI)
+            .then( (res) => {
+                console.log(res.data); // res.data contains request data
+                
+            })
+            .catch( err => console.error(err));
+      },
+
+  methods: {
+
+    },
+
+  computed: {
+
+    listOfDatasPhotos () {
+        axios.get(urlAPI + "photos")
+            .then( (res) => {
+                const pars = JSON.parse(res.data);
+                this.listPhotos = pars.map(item => {
+                    return item
+                })
+                
+            })
+            .catch( err => console.error(err));
+    }
+  }
+}
+
+</script>
+
+<style>
+.tableauPhotos {
+    border: 1px solid black;
+    margin: 0 auto;
+}
+
+.tableauPhotos img {
+    width: 80px;
+}
+
+</style>
