@@ -5,8 +5,8 @@
         </ActionBar>
 
         <GridLayout columns="*,*">
-            <Button col="0" class="button" text="Prendre une photo" @tap="takePicture"/>
-            <Button col="1" class="button" text="Choisir une photo" @tap="selectPicture"/>
+            <Button col="0" class="btn-primary" text="Prendre une photo" @tap="takePicture"/>
+            <Button col="1" class="btn-primary" text="Choisir une photo" @tap="selectPicture"/>
             <WrapLayout class="test" col="1" row="2">
                 <Image class="test" v-for="(img,index) in images" :src="img.src" width="75" height="75"
                        @tap="gererUpload(index)"/>
@@ -19,12 +19,13 @@
     import * as camera from "nativescript-camera";
     import * as imagepicker from "nativescript-imagepicker";
     import axios from "axios";
+
     const bghttp = require("nativescript-background-http");
     const session = bghttp.session("image-upload");
     import {Image} from "tns-core-modules/ui/image";
     import * as geolocation from "nativescript-geolocation";
-    import {Accuracy} from "tns-core-modules/ui/enums";
-    import localStorage from "nativescript-localstorage"; // used to describe at what accuracy the location should be get
+    import {Accuracy} from "tns-core-modules/ui/enums"; // used to describe at what accuracy the location should be get
+    import localStorage from "nativescript-localstorage";
 
     export default {
         computed: {},
@@ -33,10 +34,11 @@
                 images: [],
                 erreurLocation: false,
                 location: {},
-                urlAPI: "http://415ee425.ngrok.io/",
+                urlAPI: "https://f484859a.ngrok.io/",
             }
         },
         methods: {
+            //Choix de l'image dans la galerie
             selectPicture() {
 
                 let context = imagepicker.create({
@@ -59,6 +61,7 @@
                 });
 
             },
+            //Upload l'image sur imgBB et ensuite, envoie les données à l'API
             gererUpload(args) {
                 const key = "6bd91e436b3a802783b6bdea2bd530da";
                 let urlApi = "https://api.imgbb.com/1/upload?key=" + key;
@@ -108,6 +111,7 @@
                     console.log(jsonEnvoi);
                 });
             },
+            //Fonction permettant de prendre une photo, et, qui prend la position ensuite
             takePicture() {
                 camera.requestPermissions()
                     .then(() => {
@@ -128,7 +132,7 @@
                                         this.location = result;
                                     })
                                     .catch(err => {
-                                        alert("J'arrive pas à choper la position "+err.message);
+                                        alert("J'arrive pas à choper la position " + err.message);
                                     });
 
                             })
@@ -143,15 +147,14 @@
         },
         created() {
 
-            console.log("Token : "+localStorage.getItem("tokenJWT"));
+            console.log("Token : " + localStorage.getItem("tokenJWT"));
 
             geolocation.enableLocationRequest(true)
                 .then(() => {
                     geolocation.isEnabled().then(locActive => {
                         if (!locActive) {
                             alert("Erreur permission loc");
-                        }
-                        else {
+                        } else {
                             alert("Pas d'erreur");
                         }
                     })
@@ -162,6 +165,26 @@
 
 <style scoped lang="scss">
     @import '~@nativescript/theme/scss/variables/blue';
+
+    .btn-primary {
+        height: 50;
+        margin: 30 5 15 5;
+        background-color: #D51A1A;
+        border-radius: 5;
+        font-size: 20;
+        font-weight: 600;
+    }
+
+
+    ActionBar {
+        horizontal-align: center;
+        font-size: 25;
+        font-weight: 600;
+        margin-bottom: 70;
+        text-align: center;
+        background-color: #D51A1A;
+    }
+
 
     // Custom styles
     .fas {

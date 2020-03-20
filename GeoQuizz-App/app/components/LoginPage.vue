@@ -2,7 +2,7 @@
     <Page actionBarHidden="true">
         <FlexboxLayout class="page">
             <StackLayout class="form">
-                <Label class="header" text="To-do List"/>
+                <Label class="header" text="GeoQuiZz"/>
 
                 <StackLayout v-show="!isLoggingIn" class="input-field">
                     <TextField ref="pseudo" class="input" hint="Nickname" autocorrect="false"
@@ -56,8 +56,9 @@
 
     const Buffer = require('buffer/').Buffer;
 
-    const urlAPI = "http://415ee425.ngrok.io/";
+    const urlAPI = "https://f484859a.ngrok.io/";
 
+    //Gère connexion/Inscription
     const userService = {
         register(user) {
             if (user.nickname !== "" && user.password === user.confirmPassword && user.password !== "" && user.email !== "") {
@@ -85,9 +86,6 @@
                 }
             })
         },
-        resetPassword(email) {
-            return Promise.resolve(email);
-        }
     };
 
     export default {
@@ -95,7 +93,7 @@
             return {
                 isLoggingIn: true,
                 user: {
-                    nickname: "",
+                    nickname: "michel",
                     email: "michel@test.fr",
                     password: "michel",
                     confirmPassword: ""
@@ -162,34 +160,6 @@
 
                     });
             },
-
-            forgotPassword() {
-                prompt({
-                    title: "Forgot Password",
-                    message:
-                        "Enter the email address you used to register for To-do List to reset your password.",
-                    inputType: "email",
-                    defaultText: "",
-                    okButtonText: "Ok",
-                    cancelButtonText: "Cancel"
-                }).then(data => {
-                    if (data.result) {
-                        userService
-                            .resetPassword(data.text.trim())
-                            .then(() => {
-                                this.alert(
-                                    "Your password was successfully reset. Please check your email for instructions on choosing a new password."
-                                );
-                            })
-                            .catch(() => {
-                                this.alert(
-                                    "Unfortunately, an error occurred resetting your password."
-                                );
-                            });
-                    }
-                });
-            },
-
             focusPassword() {
                 this.$refs.password.nativeView.focus();
             },
@@ -201,7 +171,7 @@
 
             alert(message) {
                 return alert({
-                    title: "To-do List",
+                    title: "GeoQuiZz",
                     okButtonText: "OK",
                     message: message
                 });
