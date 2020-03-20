@@ -1,57 +1,19 @@
 <template>
   <div v-if="this.statusPartie == 2">
     <div>
-      Zoom: level
-      <p>Image à placer :</p>
-      <img v-bind:src="this.tabImages[compteurImg].url" alt />
-      <input v-model.number="zoom" type="number" />
-      <br />Center :
-      <span>{{ center }}</span>
       <br />
       <hr />
-      <h3>List of Markers</h3>
-      <button>Mettre fin à la partie</button>
-      <h3>Score : {{score}}</h3>
-      <h3>{{ timer }}</h3>
-      <button name="button" @click="addMarker">Add a marker</button>
-      <table>
-        <tr>
-          <th>Marker</th>
-          <th>Latitude</th>
-          <th>Longitude</th>
-          <th>Tooltip</th>
-          <th>Is Draggable ?</th>
-          <th>Is Visible ?</th>
-          <th>Remove</th>
-          <th>Valider</th>
-        </tr>
-        <tr v-for="(item, index) in markers" :key="index">
-          <td>{{ 'Marker ' + (index + 1) }}</td>
-          <td>
-            <input v-model.number="item.position.lat" type="number" />
-          </td>
-          <td>
-            <input v-model.number="item.position.lng" type="number" />
-          </td>
-          <td>
-            <input v-model="item.tooltip" type="text" />
-          </td>
-          <td style="text-align: center">
-            <input v-model="item.draggable" type="checkbox" />
-          </td>
-          <td style="text-align: center">
-            <input v-model="item.visible" type="checkbox" />
-          </td>
-          <td style="text-align: center">
-            <input type="button" value="X" @click="removeMarker(index)" />
-          </td>
-          <td v-if="item.draggable == true">
-            <input type="button" @click="validerMarker(item)" />
-          </td>
-          <td v-else>Validé</td>
-        </tr>
-      </table>
-      <hr />
+      <div style="width : 80%; height : 180px; margin:auto; display : flex; justify-content: space-between">
+        <h3 style="line-height:125px;">Image à placer : {{tabImages[compteurImg].description}}</h3>
+        <img
+          style="	max-width:100%;max-height:100%;padding-right: 100px;"
+          v-bind:src="this.tabImages[compteurImg].url"
+          alt
+        />
+      
+      <h3 style="line-height:125px;">Temps restant : {{ timer }}</h3>
+      </div>
+      <hr>
     </div>
     <l-map
       :zoom.sync="zoom"
@@ -331,13 +293,11 @@ export default {
             this.score = this.score + 1;
           }
 
-          if (this.timer >= 15){
-            this.score = this.score *4
+          if (this.timer >= 15) {
+            this.score = this.score * 4;
+          } else if (this.timer >= 10 && this.timer <= 15) {
+            this.score = this.score * 2;
           }
-          else if (this.timer >= 10 && this.timer <= 15){
-            this.score = this.score * 2
-          }
-
 
           this.distance = 0;
 
