@@ -67,7 +67,7 @@ app.get("/photos", (req, res) => {
             res.status(200).end(JSON.stringify(result));
         })
     }else{
-        db.query("select * from photo where serie_id is not null;", [], (error, result) => {
+        db.query("select * from photo where serie_id is null;", [], (error, result) => {
             if(error){
                 res.status(500).end(getMessageFromHTTPCode(500));
             }
