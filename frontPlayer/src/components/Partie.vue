@@ -1,12 +1,17 @@
 <template>
   <div>
     <h3>Bonjour {{$route.params.pseudo}}</h3>
-    <p style="margin-bottom:0">Vous avez choisis la série de <b>{{listeSerie.ville}}</b> avec une distance de <b>{{listeSerie.distance}}</b>.</p>
-    <p style="margin-top:0">Les règles sont simples. Vous aurez <b>{{findPartie.nb_photos}}</b> photos à insérer sur la carte.
-      Vous gagnerez ainsi des points en fonction de 
+    <p style="margin-bottom:0">
+      Vous avez choisis la série de
+      <b>{{listeSerie.ville}}</b> avec une distance de
+      <b>{{listeSerie.distance}}</b>.
+    </p>
+    <p style="margin-top:0">
+      Les règles sont simples. Vous aurez
+      <b>{{findPartie.nb_photos}}</b> photos à insérer sur la carte. Attention, vous aurez 20 secondes max pour le faire.
+      Plus vous êtes rapide, et plus vous gagnerez de points.
     </p>
     <router-link v-bind:to="'/play/'+pseudo+ '/' + selected">Démarrer le jeu</router-link>
-    <Carte></Carte>
   </div>
 </template>
 
