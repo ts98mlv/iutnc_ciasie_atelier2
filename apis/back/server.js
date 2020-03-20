@@ -59,7 +59,7 @@ app.get("/", (req, res) => {
  */
 app.get("/photos", (req, res) => {
     let nonAssignees = req.query.nonAssignee;
-    if(typeof nonAssignees === "undefined" || ! nonAssignees){
+    if(typeof nonAssignees === "undefined" || ! nonAssignees || nonAssignees === "false"){
         db.query("select * from photo;", [], (error, result) => {
             if(error){
                 res.status(500).end(getMessageFromHTTPCode(500));
