@@ -8,6 +8,8 @@ import App from './App.vue'
 import AddPic from './components/AddPicture.vue'
 import AllPic from './components/AllPic.vue'
 import AllSeries from './components/AllSeries.vue'
+import DetailPic from './components/DetailPic.vue'
+
 
 
 Vue.use(Router)
@@ -34,6 +36,13 @@ const router = new Router({
     {
       path: '/series',
       component: AllSeries
+    }
+
+    ,
+
+    {
+      path: '/photos/:id',
+      component: DetailPic
     }
   ]
 })

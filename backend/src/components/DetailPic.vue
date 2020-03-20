@@ -1,12 +1,12 @@
 <template>
     <div class="AddPhoto">
-        <h1>Toutes les photos</h1>
+        <h1>Toutes les photos de l'id {{$route.params.id}}</h1>
 
         <div class="placeTab">
 
             <h3 class="titreTab">Photos</h3>
 
-            <table class="tableauPhotos">
+            <table  class="tableauPhotos">
                 <thead>
                     <tr>
                         <th>Description</th>
@@ -17,7 +17,7 @@
                         <th>Detail</th>
                     </tr>
                 </thead>
-                    <tr v-for="photo in this.listOfDatasPhotos">
+                    <tr v-if="photo.id == $route.params.id" v-for="photo in this.listOfDatasPhotosById">
                         <td>{{photo.description}}</td>
                         <td>{{photo.positionX}}</td>
                         <td>{{photo.positionY}}</td>
@@ -69,7 +69,7 @@ export default {
 
   computed: {
 
-    listOfDatasPhotos () {
+    listOfDatasPhotosById () {
         // axios.get(urlAPI + "photos")
         //     .then( (res) => {
         //         const pars = JSON.parse(res.data);
