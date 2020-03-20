@@ -4,27 +4,27 @@
         "ville" : "Paris",
         "map_x" : 48.849806,
         "map_y" : 2.407379,
-        "distance" : 10
+        "distance" : 0.0022561023667568847
     },
     {
         "id" : 2,
         "ville" : "Nancy",
         "map_x" : 48.689827,
         "map_y" : 6.194057,
-        "distance" : 2
+        "distance" : 0.0022561023667568847
     },
     {
         "id" : 3,
         "ville" : "Metz",
         "map_x" : 49.11658,
         "map_y" : 6.193886,
-        "distance" : 80
+        "distance" : 0.0022561023667568847
     },
     {
         "id" : 4,
         "ville" : "Strasbourg",
         "map_x" : 48.581718,
         "map_y" : 7.760124,
-        "distance" : 20
+        "distance" : 0.0022561023667568847
     }
 ]}
