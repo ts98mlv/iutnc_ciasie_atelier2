@@ -201,6 +201,10 @@
         @include colorize($color: accent);
     }
 
+    Progress {
+        margin-top: 10;
+    }
+
     .info {
         font-size: 20;
         horizontal-align: center;
