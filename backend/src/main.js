@@ -9,6 +9,8 @@ import AddPic from './components/AddPicture.vue'
 import AllPic from './components/AllPic.vue'
 import AllSeries from './components/AllSeries.vue'
 import DetailPic from './components/DetailPic.vue'
+import DetailSerie from './components/DetailSerie.vue'
+
 
 
 
@@ -18,32 +20,13 @@ const router = new Router({
   mode: 'history',
 
   routes: [
-    {
-      path: '/',
-      component: Home
-    },
-
-    {
-      path: '/addPictures',
-      component: AddPic
-    },
-
-    {
-      path: '/photos',
-      component: AllPic
-    },
-
-    {
-      path: '/series',
-      component: AllSeries
-    }
-
-    ,
-
-    {
-      path: '/photos/:id',
-      component: DetailPic
-    }
+    { path: '/', component: Home },
+    { path: '/addPictures', component: AddPic },
+    { path: '/photos', component: AllPic },
+    { path: '/series', component: AllSeries },
+    { path: '/photos/:id', component: DetailPic },
+    { path: '/series/:id', component: DetailSerie },
+    { path: '*', redirect: '/' }
   ]
 })
 

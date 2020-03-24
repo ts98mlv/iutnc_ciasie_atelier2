@@ -83,7 +83,7 @@ import datasSeries from '../assets/serie.json'
 import datasPhotos from '../assets/photo.json'
 import axios from "axios"
 
-const urlAPI = "http://d3292950.ngrok.io/"
+const urlAPI = "http://docketu.iutnc.univ-lorraine.fr:17280/"
 
 export default {
 
@@ -103,9 +103,29 @@ export default {
   
   created () {
 
-            axios.get(urlAPI)
+            // axios.get(urlAPI + "photos")
+            // .then( (res) => {
+            //     console.log(res.data); // res.data contains request data
+                
+            // })
+            // .catch( err => console.error(err));
+
+            axios.get(urlAPI + "series")
             .then( (res) => {
-                console.log(res.data); // res.data contains request data
+                const pars = JSON.parse(res.data);
+                this.listSeries = pars.map(item => {
+                    return item
+                })
+                
+            })
+            .catch( err => console.error(err));
+
+             axios.get(urlAPI + "photos")
+            .then( (res) => {
+                const pars = JSON.parse(res.data);
+                this.listPhotos = pars.map(item => {
+                    return item
+                })
                 
             })
             .catch( err => console.error(err));
@@ -113,14 +133,57 @@ export default {
 
   methods: {
       sendForm () {
-        // datasPhotos.photos.push({description: this.test, position: {position_x: 54.2458, position_y: 36.48542}, url: "https://res.cloudinary.com/du5jifpgg/image/upload/t_opengraph_image/Surcharge-APIDAE/Mus%C3%A9e%20du%20Louvre%20Paris.jpg", serie_id: 2});
-        datasPhotos.photos.map(item => {
-        //if (item.id = this.photoId) item.serie_id = this.serieId
-        console.log("if " + item.id + " = " + this.photoId + " alors " + item.serie_id + " prend " + this.serieId)
-        // console.log("id photo " + item.id + " id photo choisi " + this.photoId)
-      })
-      }
 
+    //     datasPhotos.photos.map(item => {
+    //     //if (item.id = this.photoId) item.serie_id = this.serieId
+    //     console.log("if " + item.id + " = " + this.photoId + " alors " + item.serie_id + " prend " + this.serieId)
+    //     // console.log("id photo " + item.id + " id photo choisi " + this.photoId)
+    //   })
+
+        if(this.photoId.length == 0) {
+            console.log("Vous n'avez rien assigné")
+            return
+        }
+      
+        const elemAss = this.listPhotos.find(element => element.id == this.photoId); 
+        console.log(elemAss)
+        console.log(elemAss.id)
+            
+        const options = {
+            method: 'put',
+            url: urlAPI + "photos/" + elemAss.id,
+            data: {
+                "id": elemAss.id,
+                "serie_id": this.serieId,
+                "description": elemAss.description,
+                "url": elemAss.url,
+                "position": 
+                {
+                    "positionX": elemAss.positionX,
+                    "positionY": elemAss.positionY
+                }
+            },
+            transformResponse: [(data) => {
+                // transform the response
+
+                return data;
+                this.reload();
+            }]
+        };
+
+        // send the request
+        axios(options);  
+
+    //     // return
+    //     axios.put(urlAPI + "photos/" + elemAss.id, {
+    //             "serie_id": this.serieId
+    //         })
+    //         .then(res => {
+    //             console.log("reussi : " + res)
+    //         })
+    //         .catch(err => console.error("non :" + err))
+    //         return
+      }
     },
 
   computed: {

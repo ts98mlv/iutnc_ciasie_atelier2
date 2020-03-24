@@ -1,9 +1,10 @@
 <template>
     <div class="AddPhoto">
-        <h1>Toutes les séries</h1>
+        <h1>Info de la série {{$route.params.id}}</h1>
 
         <div class="placeTab">
-            <h3 class="titreTab">Series</h3>
+
+            <h3 class="titreTab">Serie</h3>
 
             <table class="tableauSeries">
                 <thead>
@@ -16,21 +17,19 @@
                         <th>Distance</th>
                     </tr>
                 </thead>
-                    <tr v-for="serie in this.listSeries">
+                   <tr v-if="serie.id == $route.params.id" v-for="serie in this.listSeries">
                         <td>{{serie.id}}</td>
                         <td>{{serie.ville}}</td>
                         <td>{{serie.map_x}}</td>
                         <td>{{serie.map_y}}</td>
                         <td>{{serie.map_zoom}}</td>
                         <td>{{serie.distance}}</td>
-                        <td><router-link v-bind:to="'/series/'+serie.id">Detail</router-link></td>
                     </tr>
 
                 <tbody>
 
                 </tbody>
             </table>
-
         </div>
     </div>
 </template>
@@ -56,7 +55,7 @@ export default {
   
   created () {
 
-            axios.get(urlAPI + "series")
+            axios.get(urlAPI + "serie" + serieId)
             .then( (res) => {
                 const pars = JSON.parse(res.data);
                 this.listSeries = pars.map(item => {
@@ -73,8 +72,12 @@ export default {
 
   computed: {
 
-    listOfDatasSeries () {
+    listOfDatasSerieById () {
         
+
+        return datasPhotos.map(item => {
+            return item;
+        });
     }
   }
 }
@@ -82,9 +85,13 @@ export default {
 </script>
 
 <style>
-.tableauSeries {
+.tableauPhotos {
     border: 1px solid black;
     margin: 0 auto;
+}
+
+.tableauPhotos img {
+    width: 80px;
 }
 
 </style>

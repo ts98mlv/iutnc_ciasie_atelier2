@@ -38,7 +38,7 @@
 import datasPhotos from '../assets/photo.json'
 import axios from "axios"
 
-const urlAPI = "http://d3292950.ngrok.io/"
+const urlAPI = "http://docketu.iutnc.univ-lorraine.fr:17280/"
 
 export default {
 
