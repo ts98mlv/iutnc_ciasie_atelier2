@@ -56,7 +56,7 @@
 
     const Buffer = require('buffer/').Buffer;
 
-    const urlAPI = "https://f484859a.ngrok.io/";
+    const urlAPI = "http://docketu.iutnc.univ-lorraine.fr:17080/";
 
     //Gère connexion/Inscription
     const userService = {

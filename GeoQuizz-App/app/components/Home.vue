@@ -4,17 +4,20 @@
             <Label text="GeoQuiZz"></Label>
         </ActionBar>
 
-        <GridLayout columns="*,*">
-            <Button col="0" class="btn-primary" text="Prendre une photo" @tap="takePicture"/>
-            <Button col="1" class="btn-primary" text="Choisir une photo" @tap="selectPicture"/>
-            <WrapLayout class="test" col="1" row="2">
-                <Image class="test" v-for="(img,index) in images" :src="img.src" width="75" height="75"
+        <StackLayout>
+            <Label v-if="images.length !== 0" class="h5 text-center" text="Cliquer sur l'image pour l'upload"></Label>
+            <WrapLayout class="test">
+                <Image class="test" v-for="(img,index) in images" :src="img.src" width="120" height="120"
                        @tap="gererUpload(index)"/>
             </WrapLayout>
-        </GridLayout>
+            <StackLayout>
+                <Progress v-if="upload" v-bind:value="progress" maxValue="100" color="green"></Progress>
+                <Button class="btn-primary" text="Prendre une photo" @tap="takePicture"/>
+                <Button class="btn-primary" text="Choisir une photo" @tap="selectPicture"/>
+            </StackLayout>
+        </StackLayout>
     </Page>
 </template>
-
 <script>
     import * as camera from "nativescript-camera";
     import * as imagepicker from "nativescript-imagepicker";
@@ -33,8 +36,10 @@
             return {
                 images: [],
                 erreurLocation: false,
+                upload: false,
+                progress: 0,
                 location: {},
-                urlAPI: "https://f484859a.ngrok.io/",
+                urlAPI: "http://docketu.iutnc.univ-lorraine.fr:17080/",
             }
         },
         methods: {
@@ -86,7 +91,13 @@
                 ];
 
                 const task = session.multipartUpload(params, request);
+                this.upload = true;
+                task.on("progress", (e) => {
+                    this.progress = Math.floor(((e.currentBytes / e.totalBytes) * 100));
+                    console.log(this.progress)
+                });
                 task.on("responded", (res) => {
+                    this.upload = false;
                     let result = JSON.parse(res.data);
                     let jsonEnvoi = {
                         "position": {
@@ -154,8 +165,6 @@
                     geolocation.isEnabled().then(locActive => {
                         if (!locActive) {
                             alert("Erreur permission loc");
-                        } else {
-                            alert("Pas d'erreur");
                         }
                     })
                 });
@@ -168,11 +177,12 @@
 
     .btn-primary {
         height: 50;
-        margin: 30 5 15 5;
+        margin: 10 5 15 5;
         background-color: #D51A1A;
         border-radius: 5;
         font-size: 20;
         font-weight: 600;
+        width: 100%;
     }
 
 
