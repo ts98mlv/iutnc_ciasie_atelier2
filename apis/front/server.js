@@ -20,25 +20,13 @@ const bodyParser = require('body-parser');
 
 // CORS
 const cors = require('cors');
-// On peut remplacer cette URL par les sites que l'on voudra autoriser par la suite, pour le moment, étant donné qu'on n'a pas d'application client on ne peut pas vraiment utiliser cette fonctionnalité.
-var whitelist = ['http://example1.com'];
-// On autorise les requêtes ne présentant pas d'origine afin d'autoriser Postman à effectuer les requêtes.
-const corsOptions = {
-    origin: function (origin, callback) {
-      if (whitelist.indexOf(origin) !== -1 || !origin) {
-        callback(null, true)
-      } else {
-        callback(new Error('Not allowed by CORS'))
-      }
-    }
-  };
 const uuid = require('uuid/v1');
 
 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(cors(corsOptions));
+app.use(cors());
 
 /**
  * @api  {get} / route d'accueil de l'api commande
@@ -78,6 +66,23 @@ app.post("/parties", (req, res) => {
         res.status(200).end(JSON.stringify({jsonFourni : jsonPartie, token: token}));
     })
 
+});
+
+/**
+ * @api {get} /series permet d'obtenir la liste des séries disponibles en bdd
+ * @apiDescription permet d'obtenir la liste des séries disponibles en bdd
+ * @apiSuccess {Json} fichier json avec un tableau d'objets correspondant à une série en bdd
+ */
+app.get("/series", (req, res) => {
+    db.query("select * from serie;", [], (err, result) => {
+       if(err){
+           res.status(500).header("").end(getMessageFromHTTPCode(500));
+       }
+       if(result.length <= 0){
+           res.status(404).end(getMessageFromHTTPCode(404));
+       }
+       res.status(200).json(result);
+    });
 });
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                  Fin des routes                                                                    //
