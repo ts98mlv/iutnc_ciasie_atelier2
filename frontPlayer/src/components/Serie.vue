@@ -6,12 +6,16 @@
     </p>
     <p>
       Les séries :
-      <select v-model="selected" >
-        <option value="" disabled>Choisissez</option>
-        <option v-bind:value="serie.id" v-for="serie in listeSerie">{{serie.ville}}</option>
+      <select v-model="selected">
+        <option value disabled>Choisissez</option>
+        <option
+          v-bind:value="serie.id"
+          v-for="(serie,index) in listeSerie"
+          :key="index"
+        >{{serie.ville}}</option>
       </select>
     </p>
-    <p>
+    <p v-if="selected != null && pseudo != null ">
       <router-link v-bind:to="'/partie/'+pseudo+ '/' + selected">Créer la partie</router-link>
     </p>
   </div>
@@ -19,8 +23,15 @@
 
 <script>
 import serie from "../assets/serie.json";
+const axios = require("axios");
+
 export default {
-  props: ["selected", "pseudo"],
+  data() {
+    return {
+      pseudo: "",
+      selected: ""
+    };
+  },
   computed: {
     listeSerie() {
       return serie.series.map(item => {
@@ -29,7 +40,24 @@ export default {
     }
   },
   methods: {
-
+    getSeries() {
+      axios
+        .get("http://docketu.iutnc.univ-lorraine.fr:17180/series")
+        .then(function(response) {
+          // handle success
+          console.log(response);
+        })
+        .catch(function(error) {
+          // handle error
+          console.log(error);
+        })
+        .finally(function() {
+          // always executed
+        });
+    }
+  },
+  created: function() {
+    this.getSeries();
   }
 };
 </script>
