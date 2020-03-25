@@ -74,7 +74,7 @@
     <h3>Votre partie est terminée. Votre score est de {{score}}</h3>
     <router-link
       v-bind:to="'/end/'+pseudo+ '/' + selected + '/' + score"
-    > Cliqué ici si vous voulez enregistrer votre score </router-link>
+    >Cliqué ici si vous voulez enregistrer votre score</router-link>
   </div>
 </template>
 
@@ -96,14 +96,6 @@ import {
   LControlScale,
   LControlLayers
 } from "vue2-leaflet";
-
-const markers1 = [
-  {
-    position: { lng: -1.219482, lat: 47.41322 },
-    visible: true,
-    draggable: true
-  }
-];
 
 const tileProviders = [
   {
@@ -164,14 +156,7 @@ export default {
       imperial: false,
       tileProviders: tileProviders,
       markers: [],
-      stuff: [
-        {
-          id: "s1",
-          markers: markers1,
-          visible: true,
-          markersVisible: true
-        }
-      ]
+      stuff: []
     };
   },
   methods: {
@@ -340,9 +325,7 @@ export default {
       alert("ntm");
     }
     if (this.markers.length > this.tabImages.length - 1) {
-      alert(
-        "Fin de la partie"
-      );
+      alert("Fin de la partie");
       this.statusPartie = 3;
       this.timer = -500;
     }
@@ -358,5 +341,4 @@ export default {
 </script>
 
 <style>
-
 </style>

@@ -28,7 +28,6 @@ export default {
   },
   created: function() {
     this.center = latLng(this.listeSerie.map_x, this.listeSerie.map_y);
-    this.withPopup = latLng(49.132728, 6.198789);
     this.partieStatus = 2;
   }
 };
