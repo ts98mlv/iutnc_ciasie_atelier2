@@ -187,6 +187,38 @@ app.post("/utilisateurs", (req, res) => {
     })
 });
 
+app.post("/series", (req, res) => {
+    console.log(req.body);
+
+    let jsonSerie = req.body;
+    if(typeof jsonSerie === "undefined"){
+        res.status(500).json(getMessageFromHTTPCode(500));
+    }
+
+    console.log("c'était pas ça", jsonSerie);
+    //vérification du format du json
+    let ville = jsonSerie.ville;
+    let map_x = jsonSerie.map_refs.map_x;
+    let map_y = jsonSerie.map_refs.map_y;
+    let map_zoom = jsonSerie.map_refs.map_zoom;
+
+    if(isUndefined(ville) || isUndefined(map_x) || isUndefined(map_y) || isUndefined(map_zoom)){
+        res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(666));
+    }
+    if(!isString(ville) || isEmptyString(ville) || !isPositive(map_x) || !isPositive(map_y) || !isPositive(map_zoom)){
+        res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(666));
+    }
+
+    db.query("insert into serie (`ville`, `map_x`, `map_y`, `map_zoom`, `distance`) values (?, ?, ?, ?, 0.0022561023667568847)", [ville, map_x, map_y, map_zoom], (err, result) => {
+        if(err){
+            res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(500));
+        }else{
+            res.status(200).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(200));
+        }
+    })
+
+});
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                  Fin des routes                                                                    //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -255,11 +287,11 @@ function getMessageFromHTTPCode(code) {
             message = "Tout s'est bien passé :)";
             break;
         case 666:
-            message = "JSON non conforme !!";
+            message = "JSON non conformé !!";
             break;
     }
 
-    message = JSON.stringify({code: code, message: message});
+    message = {"code": code, "message": message};
 
     return message;
 }
@@ -317,4 +349,20 @@ function isUndefined(element) {
 
 function isEmptyString(element){
     return (element === "");
+}
+
+function isNumber(element){
+    return (typeof element === "number");
+}
+
+function isString(element){
+    return (typeof element === "string");
+}
+
+function isPositive(element) {
+    return (isNumber(element) && element >= 0);
+}
+
+function isStrictlyPositive(element) {
+    return (isNumber(element) && element > 0);
 }
