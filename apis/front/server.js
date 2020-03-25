@@ -84,6 +84,31 @@ app.get("/series", (req, res) => {
        res.status(200).json(result);
     });
 });
+
+/**
+ * @api {get} /series/:id permet d'obtenir les infos d'une série disponibles en bdd
+ * @apiDescription permet d'obtenir les infos d'une série disponibles en bdd
+ * @apiParam {Number} id id de la série concernée
+ * @apiSuccess {Json} fichier json avec un tableau d'objets correspondant à une série en bdd
+ */
+app.get("/series/:id", (req, res) => {
+    //vérification de l'id
+    let id = req.params["id"];
+    id = parseInt(id);
+    if(typeof id !== "number" || id <= 0){
+        res.status(500).header("").end(getMessageFromHTTPCode(500));
+    }
+
+    db.query("select * from serie where id=?;", [id], (err, result) => {
+       if(err){
+           res.status(500).header("").end(getMessageFromHTTPCode(500));
+       }
+       if(result.length <= 0){
+           res.status(404).end(getMessageFromHTTPCode(404));
+       }
+       res.status(200).json(result);
+    });
+});
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                  Fin des routes                                                                    //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
