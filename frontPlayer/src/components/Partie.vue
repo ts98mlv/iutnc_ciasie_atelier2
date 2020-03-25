@@ -29,7 +29,6 @@ export default {
   components: {
     Carte
   },
-  props: ["idPartie", "pseudo"],
   data() {
     return {
       idPartie: this.$route.params.id,

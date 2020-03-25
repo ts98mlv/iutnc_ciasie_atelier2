@@ -3,17 +3,20 @@
     <div>
       <br />
       <hr />
-      <div style="width : 80%; height : 180px; margin:auto; display : flex; justify-content: space-between">
+      <div
+        style="width : 100%; height : 180px; margin:auto; display : flex; justify-content: space-between"
+      >
         <h3 style="line-height:125px;">Image à placer : {{tabImages[compteurImg].description}}</h3>
         <img
-          style="	max-width:100%;max-height:100%;padding-right: 100px;"
+          style="	max-width:100%;max-height:100%;"
           v-bind:src="this.tabImages[compteurImg].url"
           alt
         />
-      
-      <h3 style="line-height:125px;">Temps restant : {{ timer }}</h3>
+
+        <h3 style>Temps restant : {{ timer }}</h3>
+        <h3 style>Score : {{ score }}</h3>
       </div>
-      <hr>
+      <hr />
     </div>
     <l-map
       :zoom.sync="zoom"
@@ -68,9 +71,10 @@
     </l-map>
   </div>
   <div v-else>
+    <h3>Votre partie est terminée. Votre score est de {{score}}</h3>
     <router-link
       v-bind:to="'/end/'+pseudo+ '/' + selected + '/' + score"
-    >Votre partie est finit. Cliqué ici pour voir votre score</router-link>
+    > Cliqué ici si vous voulez enregistrer votre score </router-link>
   </div>
 </template>
 
@@ -178,9 +182,20 @@ export default {
           this.timerFunction();
         }, 1000);
       }
-    },
-    finPartie() {
-      alert("cest la fin");
+      if (this.timer == 0 && this.compteurImg == this.tabImages.length) {
+        this.statusPartie = 3;
+        this.timer = -500;
+        //alert("Fin de partie, c'était la dernière image");
+      } else if (this.timer == 0) {
+        alert("Trop tard, photo suivante ! ");
+        this.compteurImg++;
+        this.markers.push("Pas trouvé");
+        this.timer = 20;
+        setTimeout(() => {
+          this.timer -= 1;
+          this.timerFunction();
+        }, 1000);
+      }
     },
     alert(item) {
       alert("this is " + JSON.stringify(item));
@@ -202,21 +217,13 @@ export default {
     removeMarker: function(index) {
       this.markers.splice(index, 1);
     },
-    validerMarker: function(item) {
-      if (
-        confirm(
-          "Souhaitez-vous confirmer votre choix ? Vous ne pourrez plus le modifier"
-        )
-      )
-        item.draggable = false;
-      this.distance = this.distance + 2;
-    },
     onMapClick(e) {
       if (this.markers.length > this.tabImages.length - 1) {
         alert(
           "Vous avez insérer toutes les photos sur la map. Vous pouvez mettre fin à la partie en cliquant sur OK."
         );
         this.statusPartie = 3;
+        this.timer = -500;
       } else {
         if (
           confirm(
@@ -309,6 +316,7 @@ export default {
           if (this.compteurImg > this.tabImages.length - 1) {
             this.markers.push(newMarker);
             this.statusPartie = 3;
+            this.timer = -500;
           }
           if (this.compteurImg < this.tabImages.length - 1) {
             this.compteurImg++;
@@ -327,6 +335,18 @@ export default {
       }
     });
   },
+  beforeUpdate: function() {
+    if (this.statusPartie == 3) {
+      alert("ntm");
+    }
+    if (this.markers.length > this.tabImages.length - 1) {
+      alert(
+        "Fin de la partie"
+      );
+      this.statusPartie = 3;
+      this.timer = -500;
+    }
+  },
   computed: {
     listeSerie() {
       return serie.series.find(element => {
@@ -336,3 +356,7 @@ export default {
   }
 };
 </script>
+
+<style>
+
+</style>

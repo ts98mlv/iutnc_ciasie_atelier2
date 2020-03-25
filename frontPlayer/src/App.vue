@@ -8,18 +8,13 @@
 </template>
 
 <script>
-import Serie from "./components/Serie";
 
 export default {
   name: "app",
-  components: {
-    Serie
-  },
+
   data() {
     return {
-      msg: "Geoquizz Game",
-      pseudo: "",
-      selected: ""
+      msg: "Geoquizz Game"
     };
   },
   methods: {
