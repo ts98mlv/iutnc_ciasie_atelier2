@@ -15,6 +15,7 @@
             return {
                 ville: "",
                 urlAPI: "http://docketu.iutnc.univ-lorraine.fr:17080/",
+                connection: "",
             }
         },
         methods: {
@@ -46,6 +47,28 @@
                     this.$modal.close();
                 }
             },
+        },
+        created() {
+            connectivityModule.startMonitoring(newConnectionType => {
+                switch (newConnectionType) {
+                    case connectivityModule.connectionType.none:
+                        this.connection = "none";
+                        alert("Vous n'avez pas internet !");
+                        break;
+                    case connectivityModule.connectionType.wifi:
+                        if (this.connection === "none") {
+                            alert("Vous avez de nouveau internet");
+                        }
+                        this.connection = "wifi";
+                        break;
+                    case connectivityModule.connectionType.mobile:
+                        if (this.connection === "none") {
+                            alert("Vous avez de nouveau internet");
+                        }
+                        this.connection = "mobile";
+                        break;
+                }
+            });
         }
     }
 </script>

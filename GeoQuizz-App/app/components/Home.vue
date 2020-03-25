@@ -202,19 +202,26 @@
                     alert("Vous devez autoriser l'utilisation de votre localisation !")
                 });
 
-            // connectivityModule.startMonitoring(newConnectionType => {
-            //     switch (newConnectionType) {
-            //         case connectivityModule.connectionType.none:
-            //             this.connection = "none";
-            //             break;
-            //         case connectivityModule.connectionType.wifi:
-            //             this.connection = "wifi";
-            //             break;
-            //         case connectivityModule.connectionType.mobile:
-            //             this.connection = "mobile";
-            //             break;
-            //     }
-            // });
+            connectivityModule.startMonitoring(newConnectionType => {
+                switch (newConnectionType) {
+                    case connectivityModule.connectionType.none:
+                        this.connection = "none";
+                        alert("Vous n'avez pas internet !");
+                        break;
+                    case connectivityModule.connectionType.wifi:
+                        if (this.connection === "none") {
+                            alert("Vous avez de nouveau internet");
+                        }
+                        this.connection = "wifi";
+                        break;
+                    case connectivityModule.connectionType.mobile:
+                        if (this.connection === "none") {
+                            alert("Vous avez de nouveau internet");
+                        }
+                        this.connection = "mobile";
+                        break;
+                }
+            });
         }
     };
 </script>

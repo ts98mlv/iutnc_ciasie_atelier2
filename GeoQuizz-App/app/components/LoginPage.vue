@@ -54,6 +54,8 @@
     import {encode, decode} from "base-64";
     import * as utf8 from "utf8";
 
+    const connectivityModule = require("tns-core-modules/connectivity");
+
     const Buffer = require('buffer/').Buffer;
 
     const urlAPI = "http://docketu.iutnc.univ-lorraine.fr:17080/";
@@ -96,7 +98,8 @@
                     nickname: "michel",
                     email: "michel@test.fr",
                     password: "michel",
-                    confirmPassword: ""
+                    confirmPassword: "",
+                    connection: "",
                 }
             };
         },
@@ -176,6 +179,28 @@
                     message: message
                 });
             }
+        },
+        created() {
+            connectivityModule.startMonitoring(newConnectionType => {
+                switch (newConnectionType) {
+                    case connectivityModule.connectionType.none:
+                        this.connection = "none";
+                        alert("Vous n'avez pas internet !");
+                        break;
+                    case connectivityModule.connectionType.wifi:
+                        if (this.connection === "none") {
+                            alert("Vous avez de nouveau internet");
+                        }
+                        this.connection = "wifi";
+                        break;
+                    case connectivityModule.connectionType.mobile:
+                        if (this.connection === "none") {
+                            alert("Vous avez de nouveau internet");
+                        }
+                        this.connection = "mobile";
+                        break;
+                }
+            });
         }
     };
 </script>
