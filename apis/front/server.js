@@ -178,6 +178,7 @@ app.get("/series/:id/photos", (req, res) => {
         })
 
 });
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                  Fin des routes                                                                    //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -271,7 +272,7 @@ function getMessageFromHTTPCode(code) {
             break;
     }
 
-    message = JSON.stringify({code: code, message: message});
+    message = {"code": code, "message": message};
 
     return message;
 }
