@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container text-center">
       Votre Partie est finit. Vous avez obtenu un score de <b>{{score}}</b>
   </div>
 </template>
@@ -27,4 +27,6 @@ export default {
 </script>
 
 <style>
+@import "../style/css/End.css";
+
 </style>

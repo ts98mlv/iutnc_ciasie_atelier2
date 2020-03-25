@@ -1,14 +1,16 @@
 <template>
   <div id="app">
-    <img src="./assets/logo2.jpg" />
-    <h1>{{ msg }}</h1>
+    <div class="header text-center">
+      <img src="./assets/logo2.jpg" class="rounded-circle " />
+      <h2>{{ msg }}</h2>
+    </div>
+    
     <router-view></router-view>
     <!-- <Serie :selected="selected" ></Serie> -->
   </div>
 </template>
 
 <script>
-
 export default {
   name: "app",
 
@@ -17,36 +19,10 @@ export default {
       msg: "Geoquizz Game"
     };
   },
-  methods: {
-  }
+  methods: {}
 };
 </script>
 
 <style>
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 10px;
-}
-
-h1,
-h2 {
-  font-weight: normal;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
-}
+@import "./style/css/Header.css";
 </style>
