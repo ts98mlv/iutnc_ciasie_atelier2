@@ -44,3 +44,5 @@ CREATE TABLE IF NOT EXISTS partie(
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 INSERT INTO `utilisateur` (`login`, `email`, `mdp`) VALUES ('Michel2i', 'michel@test.fr', '$2b$10$yZTjIy7Jk94v4JkToPUnAuShefZM0vUQndKLtl0LH1kMeOtvq.R52');
+
+ALTER TABLE `serie` CHANGE `distance` `distance` FLOAT(250,25) NULL DEFAULT NULL;
