@@ -15,6 +15,7 @@
                 <Button class="btn-primary" text="Prendre une photo" @tap="takePicture"/>
                 <Button class="btn-primary" text="Choisir une photo" @tap="selectPicture"/>
             </StackLayout>
+            <Button class="btn-primary" text="Créer une série" @tap="creerSerie"/>
         </StackLayout>
     </Page>
 </template>
@@ -24,14 +25,21 @@
     import axios from "axios";
 
     const bghttp = require("nativescript-background-http");
+    const connectivityModule = require("tns-core-modules/connectivity");
     const session = bghttp.session("image-upload");
     import {Image} from "tns-core-modules/ui/image";
     import * as geolocation from "nativescript-geolocation";
     import {Accuracy} from "tns-core-modules/ui/enums"; // used to describe at what accuracy the location should be get
     import localStorage from "nativescript-localstorage";
+    import NewSerie from "./NewSerie";
 
     export default {
-        computed: {},
+        computed: {
+            afficherCo() {
+                console.log(this.connection);
+                return this.connection;
+            }
+        },
         data() {
             return {
                 images: [],
@@ -39,10 +47,33 @@
                 upload: false,
                 progress: 0,
                 location: {},
+                connection: "",
                 urlAPI: "http://docketu.iutnc.univ-lorraine.fr:17080/",
             }
         },
         methods: {
+            creerSerie() {
+                //Récupération position
+                geolocation.getCurrentLocation({
+                    desiredAccuracy: Accuracy.high,
+                    maximumAge: 5000,
+                    timeout: 20000
+                })
+                    .then(result => {
+                        console.log(result)
+                        this.location = result;
+                        this.$showModal(NewSerie, {props: {location: this.location}}).then((res) => {
+                            if (res.response.status !== 200) {
+                                console.log(res);
+                            }
+                        });
+                    })
+                    .catch(err => {
+                        alert("J'arrive pas à choper la position " + err.message);
+                    });
+
+
+            },
             //Choix de l'image dans la galerie
             selectPicture() {
 
@@ -94,7 +125,6 @@
                 this.upload = true;
                 task.on("progress", (e) => {
                     this.progress = Math.floor(((e.currentBytes / e.totalBytes) * 100));
-                    console.log(this.progress)
                 });
                 task.on("responded", (res) => {
                     this.upload = false;
@@ -164,10 +194,27 @@
                 .then(() => {
                     geolocation.isEnabled().then(locActive => {
                         if (!locActive) {
-                            alert("Erreur permission loc");
+                            alert("Erreur permission localisation.");
                         }
                     })
+                })
+                .catch((err) => {
+                    alert("Vous devez autoriser l'utilisation de votre localisation !")
                 });
+
+            // connectivityModule.startMonitoring(newConnectionType => {
+            //     switch (newConnectionType) {
+            //         case connectivityModule.connectionType.none:
+            //             this.connection = "none";
+            //             break;
+            //         case connectivityModule.connectionType.wifi:
+            //             this.connection = "wifi";
+            //             break;
+            //         case connectivityModule.connectionType.mobile:
+            //             this.connection = "mobile";
+            //             break;
+            //     }
+            // });
         }
     };
 </script>
