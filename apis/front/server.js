@@ -61,9 +61,9 @@ app.post("/parties", (req, res) => {
    //enregistrement en bdd
     db.query("insert into partie (`token`, `nb_photos`, `joueur`) values (?, ?, ?)", [token, nb_photos, joueur_id], (err, result) => {
         if(err){
-            res.status(500).end(getMessageFromHTTPCode(500));
+            res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(500));
         }
-        res.status(200).end(JSON.stringify({jsonFourni : jsonPartie, token: token}));
+        res.status(200).header("Content-Type", "application/json; charset=utf-8").end(JSON.stringify({jsonFourni : jsonPartie, token: token}));
     })
 
 });
@@ -76,7 +76,7 @@ app.post("/parties", (req, res) => {
 app.get("/series", (req, res) => {
     db.query("select * from serie;", [], (err, result) => {
        if(err){
-           res.status(500).header("").end(getMessageFromHTTPCode(500));
+           res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(500));
        }
        if(result.length <= 0){
            res.status(404).end(getMessageFromHTTPCode(404));
@@ -96,15 +96,15 @@ app.get("/series/:id", (req, res) => {
     let id = req.params["id"];
     id = parseInt(id);
     if(typeof id !== "number" || id <= 0){
-        res.status(500).header("").end(getMessageFromHTTPCode(500));
+        res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(500));
     }
 
     db.query("select * from serie where id=?;", [id], (err, result) => {
        if(err){
-           res.status(500).header("").end(getMessageFromHTTPCode(500));
+           res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(500));
        }
        if(result.length <= 0){
-           res.status(404).end(getMessageFromHTTPCode(404));
+           res.status(404).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(404));
        }
        res.status(200).json(result);
     });
@@ -121,7 +121,7 @@ app.get("/series/:id", (req, res) => {
 app.all("*", (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.status(400);
-    res.end(JSON.stringify({type: "error", error: 400, message: "Requête daubée du cul : " + req.url}));
+    res.header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(400));
 });
 
 // lance l'application
