@@ -13,7 +13,7 @@ services:
 #      - http_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
 #      - https_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
     ports:
-      - "19080:3000"
+      - "17080:3000"
     volumes:
       - ./apis/mobile:/app/geoquizz_api_mobile
     working_dir: /app/geoquizz_api_mobile
@@ -30,7 +30,7 @@ services:
 #      - http_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
 #      - https_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
     ports:
-      - "19180:3000"
+      - "17180:3000"
     volumes:
     - ./apis/front:/app/geoquizz_api_front
     working_dir: /app/geoquizz_api_front
@@ -47,7 +47,7 @@ services:
 #      - http_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
 #      - https_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
     ports:
-      - "19280:3000"
+      - "17280:3000"
     volumes:
     - ./apis/back:/app/geoquizz_api_back
     working_dir: /app/geoquizz_api_back
@@ -69,7 +69,7 @@ services:
       - MYSQL_PASSWORD=api_geoquizz
       - MYSQL_DATABASE=api_geoquizz
     ports:
-      - "3307:3306"
+      - "17307:3306"
     volumes:
       - ./api/sql:/var/sql
     networks:
@@ -78,7 +78,7 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     ports:
-      - "8080:80"
+      - "17880:80"
     links:
       - mysql:db
     networks:
