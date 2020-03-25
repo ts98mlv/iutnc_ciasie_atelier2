@@ -3,18 +3,23 @@
     <div>
       <br />
       <hr />
-      <div
-        style="width : 100%; height : 180px; margin:auto; display : flex; justify-content: space-between"
-      >
-        <h3 style="line-height:125px;">Image à placer : {{tabImages[compteurImg].description}}</h3>
-        <img
-          style="	max-width:100%;max-height:100%;"
-          v-bind:src="this.tabImages[compteurImg].url"
-          alt
-        />
-
-        <h3 style>Temps restant : {{ timer }}</h3>
-        <h3 style>Score : {{ score }}</h3>
+      <div class="detail">
+        <div class="item1 text-center">
+          <h3>Image à placer :</h3>
+        </div>
+        <div class="item2 text-center">
+          <h3>{{tabImages[compteurImg].description}}</h3>
+        </div>
+        <div class="item3">
+          <img v-bind:src="this.tabImages[compteurImg].url" alt />
+        </div>
+        <div class="item4 text-center">
+          <h3 style>Temps restant : {{ timer }}</h3>
+          <br />
+        </div>
+        <div class="item5 text-center">
+          <h3 style>Score : {{ score }}</h3>
+        </div>
       </div>
       <hr />
     </div>
@@ -25,7 +30,7 @@
       :min-zoom="minZoom"
       :max-zoom="maxZoom"
       @click="onMapClick"
-      style="height: 500px; width: 100%"
+      style="height: 500px; width: 97%; margin:0 auto;"
     >
       <l-tile-layer
         v-for="tileProvider in tileProviders"
@@ -70,11 +75,13 @@
       </l-layer-group>
     </l-map>
   </div>
-  <div v-else>
+  <div class="text-center" style="margin-top:20px;" v-else>
     <h3>Votre partie est terminée. Votre score est de {{score}}</h3>
-    <router-link
-      v-bind:to="'/end/'+pseudo+ '/' + selected + '/' + score"
-    >Cliqué ici si vous voulez enregistrer votre score</router-link>
+    <button
+      type="button"
+      class="btn btn-secondary text-center"
+      v-on:click="$router.push({path:'/end/'+ pseudo + '/' + selected +'/' + score})"
+    >Cliqué ici si vous voulez enregistrer votre score</button>
   </div>
 </template>
 
@@ -146,9 +153,10 @@ export default {
       opacity: 0.6,
       token: "your token if using mapbox",
       mapOptions: {
-        zoomControl: false,
+        zoomControl: true,
         attributionControl: false,
-        zoomSnap: true
+        zoomSnap: true,
+        scrollWheelZoom: false
       },
       zoom: 13,
       minZoom: 1,
@@ -341,4 +349,5 @@ export default {
 </script>
 
 <style>
+@import "../style/css/Carte.css";
 </style>

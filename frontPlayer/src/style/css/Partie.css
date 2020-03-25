@@ -1,0 +1,26 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto+Slab);
+.container {
+  margin-top: 45px;
+  font-family: "Roboto Slab";
+}
+
+li {
+  list-style: none;
+  padding: 0;
+}
+
+ul {
+  padding: 0;
+}
+
+p {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.btn {
+  background-image: linear-gradient(to right, #f6d365 0%, #fda085 51%, #f6d365 100%);
+  color: black;
+}
+
+/*# sourceMappingURL=Partie.css.map */
