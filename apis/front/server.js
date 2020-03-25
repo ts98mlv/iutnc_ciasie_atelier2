@@ -109,6 +109,75 @@ app.get("/series/:id", (req, res) => {
        res.status(200).json(result);
     });
 });
+
+/**
+ * @api {get} /series/:id/photos permet d'avoir un n photos aléatoires d'une série ou toutes les photos si n==all
+ * @apiDescription permet d'avoir un n photos aléatoires d'une série ou toutes les photos si n==-1. Par défaut n vaut 10.
+ * @apiParam {Number} id id de la série concernée
+ * @apiParam {Number} [n] nombre de photos retournées souhaité. Par défaut n vaut 10 et si n==-1 retourne toutes les photos de la série
+ */
+app.get("/series/:id/photos", (req, res) => {
+    //vérification de l'id
+    let id = req.params["id"];
+    id = parseInt(id);
+    if(typeof id !== "number" || id <= 0){
+        res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(500));
+    }
+
+    //vérification de n
+    let n = req.query["n"];
+    if(typeof n !== "undefined"){
+        id = parseInt(id);
+        if(typeof id !== "number" || id <= -2){
+            res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(500));
+        }
+    }else{
+        n = 10;
+    }
+
+    let lesPhotos = [];
+
+        db.query("select * from photo where `serie_id` = ?", [id], (err, result) => {
+            if(err){
+                res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(500));
+            }
+            if(result.length <= 0){
+                res.status(404).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(404));
+            }
+
+            //dans le cas où on veut toutes les photos
+            if(n === -1 || n === "-1") {
+                res.status(200).json(result);
+            }
+             else{// sinon
+                if(n > result.length){ //si la série comporte moins de photos que n
+                    res.status(200).header("Content-Type", "application/json; charset=utf-8").json({
+                        "message" : "La série ne comporte pas assez de photos",
+                        "demande": n,
+                        "disponibles": result.length,
+                        "photos": result
+                    })
+                }else{
+                    let aleat = 0;
+                    let aleatJoues = [];
+                    for(let i = 0; i < n; i++){
+                        aleat = entierAleatoire(0, result.length - 1);
+                        while (aleatJoues.includes(aleat)){
+                            aleat = entierAleatoire(0, result.length - 1);
+                        }
+                        aleatJoues.push(aleat);
+                        lesPhotos.push(result[aleat]);
+                    }
+                    res.status(200).header("Content-Type", "application/json; charset=utf-8").json({
+                        "demande": n,
+                        "disponible": result.length,
+                        "photos": lesPhotos
+                    })
+                }
+            }
+        })
+
+});
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                  Fin des routes                                                                    //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -121,7 +190,8 @@ app.get("/series/:id", (req, res) => {
 app.all("*", (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.status(400);
-    res.header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(400));
+    res.header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(400
+    ));
 });
 
 // lance l'application
@@ -206,3 +276,7 @@ function getMessageFromHTTPCode(code) {
     return message;
 }
 
+function entierAleatoire(min, max)
+{
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
