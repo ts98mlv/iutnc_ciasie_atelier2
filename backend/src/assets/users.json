@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "pseudo": "allan",
+        "mail": "a@i.fr",
+        "mdp": "123",
+        "token": "token123"
+    },
+    {
+        "id": 2,
+        "pseudo": "izzi",
+        "mail": "i@a.fr",
+        "mdp": "456",
+        "token": "token456"
+    }
+]

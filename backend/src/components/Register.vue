@@ -8,27 +8,34 @@
 					</span>
 
 					<span class="login100-form-title p-b-34 p-t-27">
-						Log in
+						Register
 					</span>
 
 					<div class="wrap-input100 validate-input" data-validate = "Enter pseudo">
 						<input class="input100" type="text" name="pseudo" placeholder="Pseudo">
-                        
+					</div>
+
+                    <div class="wrap-input100 validate-input" data-validate="Enter email">
+						<input class="input100" type="text" name="emailE" placeholder="Email">
 					</div>
 
 					<div class="wrap-input100 validate-input" data-validate="Enter password">
 						<input class="input100" type="password" name="pass" placeholder="Password">
 					</div>
 
+                    <div class="wrap-input100 validate-input" data-validate="Enter password">
+						<input class="input100" type="password" name="pass2" placeholder="Confirm Password">
+					</div>
+
 					<div class="container-login100-form-btn">
 						<button class="login100-form-btn">
-							Login
+							S'inscrire
 						</button>
 					</div>
 
                     <div class="text-center p-t-90">
-						<a class="txt1" href="/inscription">
-							Pas encore inscrit ?
+						<a class="txt1" href="/auth">
+							Déjà inscrit ?
 						</a>
 					</div>
 				</form>
@@ -57,6 +64,7 @@
 .limiter {
     background-image: url('https://1-background.com/images/black-dreams/black-dreams-in-purple-website-background.jpg');
     background-size: 800px;
+
 }
 
 #app {
