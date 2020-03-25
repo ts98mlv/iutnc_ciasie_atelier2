@@ -10,9 +10,14 @@
         <option value disabled>Choisissez</option>
         <option
           v-bind:value="serie.id"
-          v-for="(serie,index) in listeSerie"
+          v-for="(serie,index) in tabSeries" 
           :key="index"
         >{{serie.ville}}</option>
+        <!--        <option
+          v-bind:value="serie.id"
+          v-for="(serie,index) in listeSerie" 
+          :key="index"
+        >{{serie.ville}}</option> -->
       </select>
     </p>
     <p v-if="selected != null && pseudo != null ">
@@ -29,7 +34,8 @@ export default {
   data() {
     return {
       pseudo: "",
-      selected: ""
+      selected: "",
+      tabSeries: []
     };
   },
   computed: {
@@ -43,9 +49,12 @@ export default {
     getSeries() {
       axios
         .get("http://docketu.iutnc.univ-lorraine.fr:17180/series")
-        .then(function(response) {
+        .then(response => {
           // handle success
           console.log(response);
+          response.data.forEach(element => {
+            this.tabSeries.push(element);
+          });
         })
         .catch(function(error) {
           // handle error
