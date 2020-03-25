@@ -1,7 +1,5 @@
 <template>
   <div id="app">
-    <h1>Gestion Backend</h1>
-    <img src="./assets/logo.png">
 
     <router-view></router-view>
 

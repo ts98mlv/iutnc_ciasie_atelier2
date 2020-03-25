@@ -17,6 +17,7 @@
                         <th>Distance</th>
                     </tr>
                 </thead>
+                    <!-- Condition pour afficher seulement la série selon l'id obtenu grâce à la route -->
                    <tr v-if="serie.id == $route.params.id" v-for="serie in this.listSeries">
                         <td>{{serie.id}}</td>
                         <td>{{serie.ville}}</td>
@@ -55,6 +56,7 @@ export default {
   
   created () {
 
+            // Reqête axios récupérant la série selon son id obtenu grâce à $route.params
             axios.get(urlAPI + "serie" + serieId)
             .then( (res) => {
                 const pars = JSON.parse(res.data);

@@ -17,7 +17,7 @@
                         <th>Detail</th>
                     </tr>
                 </thead>
-                    <tr v-for="photo in this.listOfDatasPhotos">
+                    <tr v-for="photo in this.listPhotos">
                         <td>{{photo.description}}</td>
                         <td>{{photo.positionX}}</td>
                         <td>{{photo.positionY}}</td>
@@ -61,6 +61,17 @@ export default {
                 
             })
             .catch( err => console.error(err));
+
+            // Requête axios récupérant toutes les photos lors de l'actualisation de la page
+            axios.get(urlAPI + "photos")
+            .then( (res) => {
+                const pars = JSON.parse(res.data);
+                this.listPhotos = pars.map(item => {
+                    return item
+                })
+                
+            })
+            .catch( err => console.error(err));
       },
 
   methods: {
@@ -70,16 +81,6 @@ export default {
   computed: {
 
     listOfDatasPhotos () {
-        // axios.get(urlAPI + "photos")
-        //     .then( (res) => {
-        //         const pars = JSON.parse(res.data);
-        //         this.listPhotos = pars.map(item => {
-        //             return item
-        //         })
-                
-        //     })
-        //     .catch( err => console.error(err));
-
         return datasPhotos.map(item => {
             return item;
         });

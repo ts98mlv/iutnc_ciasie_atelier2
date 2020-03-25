@@ -14,16 +14,14 @@
                         <th>positionY</th>
                         <th>Photo</th>
                         <th>Serie</th>
-                        <th>Detail</th>
                     </tr>
                 </thead>
-                    <tr v-if="photo.id == $route.params.id" v-for="photo in this.listOfDatasPhotosById">
+                    <tr v-if="photo.id == $route.params.id" v-for="photo in this.listPhotos">
                         <td>{{photo.description}}</td>
                         <td>{{photo.positionX}}</td>
                         <td>{{photo.positionY}}</td>
                         <td><img :src='photo.url'></td>
                         <td>{{photo.serie_id}}</td>
-                        <td><router-link v-bind:to="'/photos/'+photo.id">Detail</router-link></td>
                     </tr>
 
                 <tbody>
@@ -61,6 +59,17 @@ export default {
                 
             })
             .catch( err => console.error(err));
+
+        // Reqête axios récupérant toutes les photos lors de l'actualisation de la page
+        axios.get(urlAPI + "photos")
+            .then( (res) => {
+                const pars = JSON.parse(res.data);
+                this.listPhotos = pars.map(item => {
+                    return item
+                })
+                
+            })
+            .catch( err => console.error(err));
       },
 
   methods: {
@@ -70,15 +79,7 @@ export default {
   computed: {
 
     listOfDatasPhotosById () {
-        // axios.get(urlAPI + "photos")
-        //     .then( (res) => {
-        //         const pars = JSON.parse(res.data);
-        //         this.listPhotos = pars.map(item => {
-        //             return item
-        //         })
-                
-        //     })
-        //     .catch( err => console.error(err));
+
 
         return datasPhotos.map(item => {
             return item;

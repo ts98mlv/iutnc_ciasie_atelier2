@@ -56,6 +56,7 @@ export default {
   
   created () {
 
+            // Reqête axios récupérant toutes les séries
             axios.get(urlAPI + "series")
             .then( (res) => {
                 const pars = JSON.parse(res.data);

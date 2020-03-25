@@ -26,6 +26,14 @@
           Voir toutes les series
         </a>
       </li>
+
+      <li>
+        <a
+          href="/auth"
+        >
+          Se connecter
+        </a>
+      </li>
     </ul>
   </div>
 </template>
