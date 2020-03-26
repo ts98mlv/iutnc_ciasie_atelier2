@@ -224,6 +224,23 @@ app.get("/parties", (req, res) => {
        res.status(200).header("Content-Type", "application/json; charset=utf-8").json(result);
    })
 });
+
+app.get("/parties/:id", (req, res) => {
+    let id = parseInt(req.params.id);
+    if(id <= 0 || isUndefined(id)){
+       res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(500));
+    }
+   db.query("select * from `partie` where `id`=?", [id], (err, result) => {
+       if(err){
+           res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(500));
+       }
+       if(result.length <= 0){
+           res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(500));
+       }
+       console.log("get /parties/" + id);
+       res.status(200).header("Content-Type", "application/json; charset=utf-8").json(result);
+   })
+});
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                  Fin des routes                                                                    //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
