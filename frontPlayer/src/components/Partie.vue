@@ -49,6 +49,7 @@ export default {
     };
   },
   methods: {
+    // Récupère la bonne série dans l'Api ainsi que ses infos
     listeSerie() {
       axios
         .get(
@@ -68,6 +69,7 @@ export default {
         });
     },
     getnbPhoto() {
+      // Pour afficher le nombre de photo qu'il y a dans la série
       axios
         .get(
           "http://docketu.iutnc.univ-lorraine.fr:17180/series/" +
@@ -87,6 +89,7 @@ export default {
           // always executed
         });
     },
+    // A changer ??
     findPartie() {
       return partie.parties.find(element => {
         return element.serie_id == this.idPartie;
@@ -94,6 +97,7 @@ export default {
     }
   },
   created: function() {
+    // On récup l'id de la partie, le pseudo, la liste des séries et le nombre de photo
     this.idPartie = this.$route.params.id;
     this.pseudo = this.$route.params.pseudo;
     this.listeSerie();
