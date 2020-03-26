@@ -48,24 +48,35 @@ app.get("/", (req, res) => {
 app.post("/parties", (req, res) => {
    //vérification des données envoyées
    let jsonPartie = req.body;
-   let joueur_id = jsonPartie.joueur_id;
+   let login = jsonPartie.pseudo;
    let serie_id = jsonPartie.serie_id;
 
-   if(isUndefined(joueur_id) || isUndefined(serie_id) || !isStrictlyPositive(joueur_id) || !isStrictlyPositive(serie_id)){
+   if(isUndefined(login) || isUndefined(serie_id) || isEmptyString(login) || !isStrictlyPositive(serie_id)){
        res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(666));
    }
 
-   //génération du token uuid
-    let token = uuid();
-
-   //enregistrement en bdd
-    db.query("insert into partie (`token`, `joueur`, `serie_id`) values (?, ?, ?)", [token, joueur_id, serie_id], (err, result) => {
-        if(err){
+   //recupération de l'id du joueur
+    db.query("select * from utilisateur where login=?", [login], (erreur, resultat) => {
+        if(erreur){
             res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(500));
         }
-        res.status(200).header("Content-Type", "application/json; charset=utf-8").json({"jsonFourni" : jsonPartie, "token": token, "idPartie" : result.insertId});
-    })
+        if(resultat.length <= 0){
+            res.status(404).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(404));
+        }
 
+        let joueur_id = resultat.id;
+
+        //génération du token uuid
+        let token = uuid();
+
+        //enregistrement en bdd
+        db.query("insert into partie (`token`, `joueur`, `serie_id`, `status`, `score`) values (?, ?, ?, 2, 0)", [token, joueur_id, serie_id], (err, result) => {
+            if(err){
+                res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(500));
+            }
+            res.status(200).header("Content-Type", "application/json; charset=utf-8").json({"jsonFourni" : jsonPartie, "token": token, "idPartie" : result.insertId});
+        })
+    });
 });
 
 /**
