@@ -50,7 +50,7 @@
 
 </script>
 
-<style>
+<style scoped>
 @import '../../vendor/bootstrap/css/bootstrap.min.css';
 @import '../assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css';
 @import '../assets/fonts/iconic/css/material-design-iconic-font.min.css';
@@ -67,9 +67,6 @@
 
 }
 
-#app {
-    margin-top: 0
-}
 
 .container-login100::before {
     position: relative !important;

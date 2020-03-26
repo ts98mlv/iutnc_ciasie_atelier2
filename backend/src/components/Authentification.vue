@@ -2,7 +2,7 @@
     <div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100">
-				<form class="login100-form validate-form">
+				<div class="login100-form validate-form">
 					<span class="login100-form-logo">
 						<i class="zmdi zmdi-landscape"></i>
 					</span>
@@ -11,27 +11,31 @@
 						Log in
 					</span>
 
-					<div class="wrap-input100 validate-input" data-validate = "Enter pseudo">
-						<input class="input100" type="text" name="pseudo" placeholder="Pseudo">
+					<div class="wrap-input100 validate-input" data-validate = "Enter email">
+						<input class="input100" type="text" name="email" placeholder="Email" v-model="email">
                         
 					</div>
 
 					<div class="wrap-input100 validate-input" data-validate="Enter password">
-						<input class="input100" type="password" name="pass" placeholder="Password">
+						<input class="input100" type="password" name="pass" placeholder="Password" v-model="password">
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate="Enter token">
+						<input class="input100" type="text" name="tok" placeholder="token" v-model="leToken">
 					</div>
 
 					<div class="container-login100-form-btn">
-						<button class="login100-form-btn">
+						<button class="login100-form-btn" v-on:click="cnxUser">
 							Login
 						</button>
 					</div>
-
+										
                     <div class="text-center p-t-90">
 						<a class="txt1" href="/inscription">
 							Pas encore inscrit ?
 						</a>
 					</div>
-				</form>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -40,10 +44,63 @@
 </template>
 
 <script>
+import axios from "axios"
 
+const urlAPI = "https://104aebac.ngrok.io/"
+
+export default {
+
+	data () {
+		return {
+		password: '',
+		email: '',
+		isLogged: false,
+		leToken: ''
+		}
+	},
+
+	created () {
+		
+	},
+
+	methods: {
+		cnxUser() {
+			let mailPass = this.email + ':' + this.password;
+			let mailPass64 = Buffer.from(mailPass,'utf8').toString('base64');
+			let mailPassBasic = 'Basic ' + mailPass64; 
+
+			axios({
+                method: "post",
+                url: urlAPI + "utilisateurs/" + this.email + "/auth",
+                headers: {
+                    "Authorization": mailPassBasic
+                }
+            })
+			.then(res => {
+				console.log(JSON.parse(res.data).tokenJWT);
+				  localStorage.token = JSON.parse(res.data).tokenJWT;
+				  localStorage.email = this.email;
+			})		
+			.catch( err => console.error(err));
+
+			// localStorage.token = this.email + ':' + this.password;
+			// localStorage.email = this.email;
+		}
+	},
+
+	mounted() {
+    	if(localStorage.token) this.leToken = localStorage.token;
+	},
+
+	watch:{
+		token(newToken) {
+			localStorage.token = newToken;
+		}
+  }
+}
 </script>
 
-<style>
+<style scoped>
 @import '../../vendor/bootstrap/css/bootstrap.min.css';
 @import '../assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css';
 @import '../assets/fonts/iconic/css/material-design-iconic-font.min.css';
@@ -59,11 +116,11 @@
     background-size: 800px;
 }
 
-#app {
-    margin-top: 0
-}
-
 .container-login100::before {
     position: relative !important;
+}
+
+.container-login100 {
+	padding: 50px;
 }
 </style>
