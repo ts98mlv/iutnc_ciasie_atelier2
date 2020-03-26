@@ -40,30 +40,30 @@ app.get("/", (req, res) => {
  * @api {post} /parties crée une nouvelle partie en fonction d'un json fourni
  * @apiDescription crée une nouvelle partie en fonction d'un json fourni
  * @apiParam {json} body {
- *     "nb_photos" : 1,
+ *     "serie_id" : 1,
  *     "joueur_id" : 1
  * }
- * @apiSuccess {json} result fichier json avec les données fournies en entrée (jsonFourni) et le token de la partie (token)
+ * @apiSuccess {json} result fichier json avec les données fournies en entrée (jsonFourni) et le token de la partie (token) et l'id de la partie
  */
 app.post("/parties", (req, res) => {
    //vérification des données envoyées
    let jsonPartie = req.body;
-   let nb_photos = jsonPartie.nb_photos;
    let joueur_id = jsonPartie.joueur_id;
+   let serie_id = jsonPartie.serie_id;
 
-   if(isUndefined(nb_photos) || isUndefined(joueur_id) || !isStrictlyPositive(nb_photos) || !isPositive(joueur_id)){
-       res.status(500).end(getMessageFromHTTPCode(666));
+   if(isUndefined(joueur_id) || isUndefined(serie_id) || !isStrictlyPositive(joueur_id) || !isStrictlyPositive(serie_id)){
+       res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(666));
    }
 
    //génération du token uuid
     let token = uuid();
 
    //enregistrement en bdd
-    db.query("insert into partie (`token`, `nb_photos`, `joueur`) values (?, ?, ?)", [token, nb_photos, joueur_id], (err, result) => {
+    db.query("insert into partie (`token`, `joueur`, `serie_id`) values (?, ?, ?)", [token, joueur_id, serie_id], (err, result) => {
         if(err){
-            res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(500));
+            res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(500));
         }
-        res.status(200).header("Content-Type", "application/json; charset=utf-8").end(JSON.stringify({jsonFourni : jsonPartie, token: token}));
+        res.status(200).header("Content-Type", "application/json; charset=utf-8").json({"jsonFourni" : jsonPartie, "token": token, "idPartie" : result.insertId});
     })
 
 });
@@ -139,12 +139,12 @@ app.get("/series/:id/photos", (req, res) => {
 
         db.query("select * from photo where `serie_id` = ?", [id], (err, result) => {
             if(err){
-                res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(500));
+                res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(500));
             }
             if(result.length <= 0){
-                res.status(404).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(404));
+                res.status(404).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(404));
             }
-
+ 
             //dans le cas où on veut toutes les photos
             if(n === -1 || n === "-1") {
                 res.status(200).json(result);
@@ -191,7 +191,7 @@ app.get("/series/:id/photos", (req, res) => {
 app.all("*", (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.status(400);
-    res.header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(400
+    res.header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(400
     ));
 });
 
