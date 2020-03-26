@@ -80,14 +80,13 @@
     <button
       type="button"
       class="btn btn-secondary text-center"
-      v-on:click="$router.push({path:'/end/'+ pseudo + '/' + selected +'/' + score})"
+      v-on:click="$router.push({path:'/end/' + idSerie +'/' + idPartie + '/' + score})"
     >Cliqué ici si vous voulez enregistrer votre score</button>
   </div>
 </template>
 
 <script>
-import serie from "../assets/serie.json";
-import photo from "../assets/photo.json";
+const axios = require("axios");
 
 import { latLngBounds } from "leaflet";
 import {
@@ -140,16 +139,16 @@ export default {
   data() {
     return {
       idPartie: this.$route.params.id,
-      selected: this.$route.params.id,
+      idSerie: this.$route.params.serid,
       pseudo: this.$route.params.pseudo,
       center: [0, 0],
       tabImages: [],
       compteurImg: 0,
       timer: 20,
       score: 0,
+      serie: "",
       distance: 0,
       statusPartie: 2,
-      idPartie: this.$route.params.id,
       opacity: 0.6,
       token: "your token if using mapbox",
       mapOptions: {
@@ -215,55 +214,55 @@ export default {
         // En fonction de la distance et du temps
         if (
           newMarker.position.lat >=
-            this.tabImages[this.compteurImg].position_x &&
-          newMarker.position.lng >= this.tabImages[this.compteurImg].position_y
+            this.tabImages[this.compteurImg].positionX &&
+          newMarker.position.lng >= this.tabImages[this.compteurImg].positionY
         ) {
           this.distance +=
             this.distance +
             (newMarker.position.lat -
-              this.tabImages[this.compteurImg].position_x) +
+              this.tabImages[this.compteurImg].positionX) +
             (newMarker.position.lng -
-              this.tabImages[this.compteurImg].position_y);
+              this.tabImages[this.compteurImg].positionY);
         } else if (
           newMarker.position.lat <=
-            this.tabImages[this.compteurImg].position_x &&
-          newMarker.position.lng >= this.tabImages[this.compteurImg].position_y
+            this.tabImages[this.compteurImg].positionX &&
+          newMarker.position.lng >= this.tabImages[this.compteurImg].positionY
         ) {
           this.distance +=
             this.distance +
-            (this.tabImages[this.compteurImg].position_x -
+            (this.tabImages[this.compteurImg].positionX -
               newMarker.position.lat) +
             (newMarker.position.lng -
-              this.tabImages[this.compteurImg].position_y);
+              this.tabImages[this.compteurImg].positionY);
         } else if (
           newMarker.position.lat <=
-            this.tabImages[this.compteurImg].position_x &&
-          newMarker.position.lng <= this.tabImages[this.compteurImg].position_y
+            this.tabImages[this.compteurImg].positionX &&
+          newMarker.position.lng <= this.tabImages[this.compteurImg].positionY
         ) {
           this.distance +=
             this.distance +
-            (this.tabImages[this.compteurImg].position_x -
+            (this.tabImages[this.compteurImg].positionX -
               newMarker.position.lat) +
-            (this.tabImages[this.compteurImg].position_y -
+            (this.tabImages[this.compteurImg].positionY -
               newMarker.position.lng);
         } else if (
           newMarker.position.lat >=
-            this.tabImages[this.compteurImg].position_x &&
-          newMarker.position.lng <= this.tabImages[this.compteurImg].position_y
+            this.tabImages[this.compteurImg].positionX &&
+          newMarker.position.lng <= this.tabImages[this.compteurImg].positionY
         ) {
           this.distance +=
             this.distance +
             (newMarker.position.lat -
-              this.tabImages[this.compteurImg].position_x) +
-            (this.tabImages[this.compteurImg].position_y -
+              this.tabImages[this.compteurImg].positionX) +
+            (this.tabImages[this.compteurImg].positionY -
               newMarker.position.lng);
         }
         // Ajout de point
-        if (this.distance < this.listeSerie.distance) {
+        if (this.distance < this.serie.distance) {
           this.score = this.score + 5;
-        } else if (this.distance < this.listeSerie.distance * 2) {
+        } else if (this.distance < this.serie.distance * 2) {
           this.score = this.score + 3;
-        } else if (this.distance < this.listeSerie.distance * 3) {
+        } else if (this.distance < this.serie.distance * 3) {
           this.score = this.score + 1;
         }
 
@@ -293,19 +292,89 @@ export default {
           this.timer = 20;
         }
       }
+    },
+    // Pour recup info de la partie et trouver la bonne série
+    findPartie() {
+      axios
+        /*
+        .get(
+          "http://docketu.iutnc.univ-lorraine.fr:17180/series/" + this.idPartie
+        )
+        */
+        .get("https://58de787a.ngrok.io/parties/" + this.idPartie)
+
+        .then(response => {
+          // handle success
+          console.log(response);
+        })
+        .catch(function(error) {
+          // handle error
+          console.log(error);
+        })
+        .finally(function() {
+          // always executed
+        });
+    },
+    // Récupère la bonne série dans l'Api ainsi que ses infos + Place la map avec bon coordonnée
+    getSerie() {
+      axios
+        /*
+        .get(
+          "http://docketu.iutnc.univ-lorraine.fr:17180/series/" + this.idPartie
+        )
+        */
+        .get("https://58de787a.ngrok.io/series/" + this.idSerie)
+
+        .then(response => {
+          // handle success
+          console.log(response.data[0]);
+          this.serie = response.data[0];
+          this.center = [this.serie.map_x, this.serie.map_y];
+        })
+        .catch(function(error) {
+          // handle error
+          console.log(error);
+        })
+        .finally(function() {
+          // always executed
+        });
+    },
+    getnbPhoto() {
+      // Pour afficher le nombre de photo qu'il y a dans la série
+      axios
+        /*
+        .get(
+          "http://docketu.iutnc.univ-lorraine.fr:17180/series/" +
+            this.idPartie +
+            "/photos"
+        )
+        */
+        .get("https://58de787a.ngrok.io/series/" + this.idSerie + "/photos")
+
+        .then(response => {
+          // handle success
+          console.log(response);
+          response.data.photos.forEach(element => {
+            this.tabImages.push(element);
+          });
+        })
+        .catch(function(error) {
+          // handle error
+          console.log(error);
+        })
+        .finally(function() {
+          // always executed
+        });
     }
   },
   created: function() {
+    this.findPartie();
     // On met la bonne carte (associée à la ville de la série)
-    this.center = [this.listeSerie.map_x, this.listeSerie.map_y];
+    this.getSerie();
     // On met en place le timer
     this.timerFunction();
     // On récupère les photos
-    photo.photos.forEach(element => {
-      if (element.serie_id == this.idPartie) {
-        this.tabImages.push(element);
-      }
-    });
+    this.getnbPhoto();
   },
   beforeUpdate: function() {
     // Si il n'y a plus d'image, on met fin à la partie
@@ -313,13 +382,6 @@ export default {
       alert("Fin de la partie");
       this.statusPartie = 3;
       this.timer = -500;
-    }
-  },
-  computed: {
-    listeSerie() {
-      return serie.series.find(element => {
-        return element.id == this.idPartie;
-      });
     }
   }
 };

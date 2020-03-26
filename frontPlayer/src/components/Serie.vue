@@ -7,7 +7,7 @@
       </div>
       <div class="form-group col-md-6">
         <label>Séries</label>
-        <select v-model="selected" class="form-control">
+        <select v-model="idSerie" class="form-control">
           <option value disabled>Choisissez</option>
           <option
             v-bind:value="serie.id"
@@ -21,26 +21,26 @@
       <button
         type="button"
         class="btn btn-secondary text-center"
-        v-on:click="$router.push({path:'/partie/'+ pseudo + '/' + selected })"
+        v-on:click="createPartie();"
       >Créer une partie</button>
     </div>
     <!--
-    <p v-if="selected != null && pseudo != null ">
-      <router-link v-bind:to="'/partie/'+pseudo+ '/' + selected">Créer la partie</router-link>
+    <p v-if="idSerie != null && pseudo != null ">
+      <router-link v-bind:to="'/partie/'+pseudo+ '/' + idSerie">Créer la partie</router-link>
     </p>-->
   </div>
 </template>
 
 <script>
-import serie from "../assets/serie.json";
 const axios = require("axios");
 
 export default {
   data() {
     return {
       pseudo: "",
-      selected: "",
-      tabSeries: []
+      idSerie: "",
+      tabSeries: [],
+      idPartie: ""
     };
   },
   computed: {
@@ -51,10 +51,32 @@ export default {
     }
   },
   methods: {
+    // Pour créer la partie et envoyer au serveur
+    createPartie() {
+      let jsonEnvoi = {
+        pseudo: this.pseudo,
+        serie_id: this.idSerie
+      };
+      axios({
+        method: "POST",
+      //  url: "http://docketu.iutnc.univ-lorraine.fr:17180/series",
+        url: "https://58de787a.ngrok.io/parties",
+        data: jsonEnvoi
+      })
+        .then(response => {
+          console.log(response);
+          this.idPartie = response.data.idPartie
+          this.$router.push({path:'/partie/'+ this.idSerie + "/" + this.idPartie })
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
     getSeries() {
       // Pour voir toute les séries disponibles dans la liste déroulante
       axios
-        .get("http://docketu.iutnc.univ-lorraine.fr:17180/series")
+        //.get("http://docketu.iutnc.univ-lorraine.fr:17180/series")
+        .get("https://58de787a.ngrok.io/series")
         .then(response => {
           // handle success
           console.log(response);
@@ -73,6 +95,7 @@ export default {
   },
   created: function() {
     this.getSeries();
+    console.log(this.tabSeries);
   }
 };
 </script>

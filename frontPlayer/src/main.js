@@ -14,10 +14,10 @@ const router = new VueRouteur ({
   mode: 'history',
   routes: [
     {path: '/', component:Serie},
-    {path: '/partie/:pseudo/:id', component:Partie},
+    {path: '/partie/:serid/:id', component:Partie},
     {path: '*',redirect:'/'},
-    {path: '/play/:pseudo/:id', component:Play},
-    {path: '/end/:pseudo/:id/:score', component:Finish},
+    {path: '/play/:serid/:id', component:Play},
+    {path: '/end/:serid/:id/:score', component:Finish},
   ]
 })
 

@@ -23,15 +23,13 @@
     <button
       type="button"
       class="btn btn-secondary text-center"
-      v-on:click="$router.push({path:'/play/'+ pseudo + '/' + selected })"
+      v-on:click="$router.push({path:'/play/'+ idSerie + '/' + idPartie })"
     >Lancer la partie</button>
     <!--  <router-link v-bind:to="'/play/'+pseudo+ '/' + selected">Démarrer le jeu</router-link> -->
   </div>
 </template>
 
 <script>
-import serie from "../assets/serie.json";
-import partie from "../assets/partie.json";
 import Carte from "./Carte";
 const axios = require("axios");
 
@@ -42,19 +40,45 @@ export default {
   data() {
     return {
       idPartie: this.$route.params.id,
-      selected: this.$route.params.id,
-      pseudo: this.$route.params.pseudo,
+      idSerie: this.$route.params.serid,
+      pseudo: "",
       serie: "",
       nbphoto: 0
     };
   },
   methods: {
-    // Récupère la bonne série dans l'Api ainsi que ses infos
-    listeSerie() {
+    // Pour recup info de la partie 
+    findPartie() {
       axios
+        /*
         .get(
           "http://docketu.iutnc.univ-lorraine.fr:17180/series/" + this.idPartie
         )
+        */
+        .get("https://58de787a.ngrok.io/parties/" + this.idPartie)
+
+        .then(response => {
+          // handle success
+          console.log(response);
+        })
+        .catch(function(error) {
+          // handle error
+          console.log(error);
+        })
+        .finally(function() {
+          // always executed
+        });
+    },
+    // Récupère la bonne série dans l'Api ainsi que ses infos
+    haveSerie() {
+      axios
+        /*
+        .get(
+          "http://docketu.iutnc.univ-lorraine.fr:17180/series/" + this.idPartie
+        )
+        */
+        .get("https://58de787a.ngrok.io/series/" + this.idSerie)
+
         .then(response => {
           // handle success
           console.log(response.data[0]);
@@ -71,15 +95,19 @@ export default {
     getnbPhoto() {
       // Pour afficher le nombre de photo qu'il y a dans la série
       axios
+        /*
         .get(
           "http://docketu.iutnc.univ-lorraine.fr:17180/series/" +
             this.idPartie +
             "/photos"
         )
+        */
+        .get("https://58de787a.ngrok.io/series/" + this.idSerie + "/photos")
+
         .then(response => {
           // handle success
           console.log(response);
-          this.nbphoto = response.data.demande;
+          this.nbphoto = response.data.disponibles;
         })
         .catch(function(error) {
           // handle error
@@ -88,20 +116,17 @@ export default {
         .finally(function() {
           // always executed
         });
-    },
-    // A changer ??
-    findPartie() {
-      return partie.parties.find(element => {
-        return element.serie_id == this.idPartie;
-      });
     }
   },
   created: function() {
     // On récup l'id de la partie, le pseudo, la liste des séries et le nombre de photo
     this.idPartie = this.$route.params.id;
+    this.idSerie = this.$route.params.serid;
     this.pseudo = this.$route.params.pseudo;
-    this.listeSerie();
+    this.findPartie();
+    this.haveSerie();
     this.getnbPhoto();
+
   }
 };
 </script>
