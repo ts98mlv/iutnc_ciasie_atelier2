@@ -64,7 +64,7 @@ app.post("/parties", (req, res) => {
             res.status(404).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(404));
         }
 
-        let joueur_id = resultat.id;
+        let joueur_id = resultat[0].id;
 
         //génération du token uuid
         let token = uuid();
