@@ -200,7 +200,7 @@ app.post("/utilisateurs/:email/auth", (req, res) => {
 /**
  * @api {get} /series route pour modifier les series
  * @apiDescription route pour modifier les series
- * 
+ *
  */
 app.get("/series", (req, res) => {
     db.query("select * from serie;", [], (error, result) => {
@@ -285,7 +285,7 @@ app.post("/series", (req, res) => {
         res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(666));
     }
 
-    db.query("insert into serie (`ville`, `map_x`, `map_y`, `map_zoom`, `distance`) values (?, ?, ?, ?, 0.0022561023667568847)", [ville, map_x, map_y, map_zoom], (err, result) => {
+    db.query("insert into serie (`ville`, `map_x`, `map_y`, `map_zoom`, `distance`) values (?, ?, ?, ?, ?)", [ville, map_x, map_y, map_zoom, 0.0022561023667568847], (err, result) => {
         if(err){
             res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(500));
         }else{
