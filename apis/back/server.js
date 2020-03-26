@@ -48,14 +48,14 @@ app.get("/", (req, res) => {
 app.get("/photos", (req, res) => {
     let nonAssignees = req.query.nonAssignee;
     if(typeof nonAssignees === "undefined" || ! nonAssignees || nonAssignees === "false"){
-        db.query("select * from photo;", [], (error, result) => {
+        db.query("select * from `photo`;", [], (error, result) => {
             if(error){
                 res.status(500).end(getMessageFromHTTPCode(500));
             }
             res.status(200).json(JSON.stringify(result));
         })
     }else{
-        db.query("select * from photo where serie_id is null;", [], (error, result) => {
+        db.query("select * from `photo` where `serie_id` is null;", [], (error, result) => {
             if(error){
                 res.status(500).end(getMessageFromHTTPCode(500));
             }
@@ -71,7 +71,7 @@ app.get("/photos", (req, res) => {
  * 
  */
 app.get("/photos/:id", (req, res) => {
-    db.query("select * from photo where id=?;", [req.params.id], (error, result) => {
+    db.query("select * from `photo` where `id`=?;", [req.params.id], (error, result) => {
         if(error){
             res.status(500).end(getMessageFromHTTPCode(500));
         }
@@ -121,7 +121,7 @@ app.put("/photos/:id", (req, res) => {
         res.status(500).end(getMessageFromHTTPCode(666));
     }
 
-    db.query("select * from photo where id=?;", [req.params.id], (error, result) => {
+    db.query("select * from `photo` where `id`=?;", [req.params.id], (error, result) => {
         if(error){
             res.status(500).end(getMessageFromHTTPCode(500));
         }
@@ -129,7 +129,7 @@ app.put("/photos/:id", (req, res) => {
             res.status(404).end(getMessageFromHTTPCode(404));
         }
 
-        db.query("update photo set description=?, positionX=?, positionY=?, serie_id=? where id=?", [descr, coordX, coordY, serie_id, id], (err, rslt) => {
+        db.query("update `photo` set `description`=?, `positionX`=?, `positionY`=?, `serie_id`=? where `id`=?", [descr, coordX, coordY, serie_id, id], (err, rslt) => {
             if(err){
                 res.status(500).end(getMessageFromHTTPCode(500));
             }
@@ -166,7 +166,7 @@ app.post("/utilisateurs/:email/auth", (req, res) => {
 
     let mail = req.params.email;
 
-    db.query("select email, mdp from utilisateur where email=?", [mail], (error, result) => {
+    db.query("select `email`, `mdp` from `utilisateur` where `email`=?", [mail], (error, result) => {
         if (error) {
             res.status(500);
             res.end(getMessageFromHTTPCode(500));
@@ -203,7 +203,7 @@ app.post("/utilisateurs/:email/auth", (req, res) => {
  *
  */
 app.get("/series", (req, res) => {
-    db.query("select * from serie;", [], (error, result) => {
+    db.query("select * from `serie`;", [], (error, result) => {
         if(error){
             res.status(500).end(getMessageFromHTTPCode(500));
         }
@@ -218,7 +218,7 @@ app.get("/series", (req, res) => {
  * 
  */
 app.get("/series/:id", (req, res) => {
-    db.query("select * from serie where id=?;", [req.params.id], (error, result) => {
+    db.query("select * from `serie` where `id`=?;", [req.params.id], (error, result) => {
         if(error){
             res.status(500).end(getMessageFromHTTPCode(500));
         }
@@ -236,7 +236,7 @@ app.get("/series/:id", (req, res) => {
  * 
  */
 app.get("/series/:id/photos", (req, res) => {
-    db.query("select * from photo where serie_id=?;", [req.params.id], (error, result) => {
+    db.query("select * from `photo` where `serie_id`=?;", [req.params.id], (error, result) => {
         if(error){
             res.status(500).end(getMessageFromHTTPCode(500));
         }
@@ -254,7 +254,7 @@ app.get("/series/:id/photos", (req, res) => {
  * 
  */
 app.get("/series/:id/parties", (req, res) => {
-    db.query("select * from partie where serie_id=?;", [req.params.id], (error, result) => {
+    db.query("select * from `partie` where `serie_id`=?;", [req.params.id], (error, result) => {
         if(error){
             res.status(500).end(getMessageFromHTTPCode(500));
         }
@@ -285,7 +285,7 @@ app.post("/series", (req, res) => {
         res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(666));
     }
 
-    db.query("insert into serie (`ville`, `map_x`, `map_y`, `map_zoom`, `distance`) values (?, ?, ?, ?, ?)", [ville, map_x, map_y, map_zoom, 0.0022561023667568847], (err, result) => {
+    db.query("insert into `serie` (`ville`, `map_x`, `map_y`, `map_zoom`, `distance`) values (?, ?, ?, ?, ?)", [ville, map_x, map_y, map_zoom, 0.0022561023667568847], (err, result) => {
         if(err){
             res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(500));
         }else{

@@ -55,28 +55,18 @@ app.post("/parties", (req, res) => {
        res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(666));
    }
 
-   //recupération de l'id du joueur
-    db.query("select * from utilisateur where login=?", [login], (erreur, resultat) => {
-        if(erreur){
+    //génération du token uuid
+    let token = uuid();
+
+    //enregistrement en bdd
+    db.query("insert into `partie` (`token`, `joueur`, `serie_id`, `status`, `score`) values (?, ?, ?, 2, 0)", [token, login, serie_id], (err, result) => {
+        if(err){
             res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(500));
         }
-        if(resultat.length <= 0){
-            res.status(404).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(404));
-        }
-
-        let joueur_id = resultat[0].id;
-
-        //génération du token uuid
-        let token = uuid();
-
-        //enregistrement en bdd
-        db.query("insert into partie (`token`, `joueur`, `serie_id`, `status`, `score`) values (?, ?, ?, 2, 0)", [token, joueur_id, serie_id], (err, result) => {
-            if(err){
-                res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(500));
-            }
-            res.status(200).header("Content-Type", "application/json; charset=utf-8").json({"jsonFourni" : jsonPartie, "token": token, "idPartie" : result.insertId});
-        })
+        console.log("partie créée");
+        res.status(200).header("Content-Type", "application/json; charset=utf-8").json({"jsonFourni" : jsonPartie, "token": token, "idPartie" : result.insertId});
     });
+
 });
 
 /**
@@ -85,7 +75,7 @@ app.post("/parties", (req, res) => {
  * @apiSuccess {Json} fichier json avec un tableau d'objets correspondant à une série en bdd
  */
 app.get("/series", (req, res) => {
-    db.query("select * from serie;", [], (err, result) => {
+    db.query("select * from `serie`;", [], (err, result) => {
        if(err){
            res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(500));
        }
@@ -110,7 +100,7 @@ app.get("/series/:id", (req, res) => {
         res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(500));
     }
 
-    db.query("select * from serie where id=?;", [id], (err, result) => {
+    db.query("select * from `serie` where id=?;", [id], (err, result) => {
        if(err){
            res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(500));
        }
@@ -148,7 +138,7 @@ app.get("/series/:id/photos", (req, res) => {
 
     let lesPhotos = [];
 
-        db.query("select * from photo where `serie_id` = ?", [id], (err, result) => {
+        db.query("select * from `photo` where `serie_id` = ?", [id], (err, result) => {
             if(err){
                 res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(500));
             }
@@ -203,7 +193,7 @@ app.put("/parties/:id", (req, res) => {
         res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(666));
     }
 
-    db.query("select * from partie where id=?", [partie_id], (err, partie) => {
+    db.query("select * from `partie` where id=?", [partie_id], (err, partie) => {
         partie = partie[0];
         //vérification du token
         if(partie.token !== partie_token){
@@ -211,16 +201,29 @@ app.put("/parties/:id", (req, res) => {
         }
 
         //maj de la partie
-        db.query("UPDATE partie SET `nb_photos`=?,`status`=?,`score`=? WHERE id=?", [nb_photos, 3, score, partie_id], (error, result) => {
+        db.query("UPDATE `partie` SET `nb_photos`=?,`status`=?,`score`=? WHERE id=?", [nb_photos, 3, score, partie_id], (error, result) => {
             if(err){
                 res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(500));
             }
+            console.log("partie modifiée");
             res.status(200).header("Content-Type\", \"application/json; charset=utf-8").json(getMessageFromHTTPCode(200));
         })
     })
 
 });
 
+app.get("/parties", (req, res) => {
+   db.query("select * from `partie`", [], (err, result) => {
+       if(err){
+           res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(500));
+       }
+       if(result.length <= 0){
+           res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(500));
+       }
+       console.log("get /parties");
+       res.status(200).header("Content-Type", "application/json; charset=utf-8").json(result);
+   })
+});
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                  Fin des routes                                                                    //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

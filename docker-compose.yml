@@ -69,7 +69,7 @@ services:
       - MYSQL_PASSWORD=api_geoquizz
       - MYSQL_DATABASE=api_geoquizz
     ports:
-      - "17307:3306"
+      - "17307:3303"
     volumes:
       - ./api/sql:/var/sql
     networks:

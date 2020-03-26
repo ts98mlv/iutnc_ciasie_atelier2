@@ -75,7 +75,7 @@ app.post("/utilisateurs/:email/auth", (req, res) => {
 
     let mail = req.params.email;
 
-    db.query("select email, mdp from utilisateur where email=?", [mail], (error, result) => {
+    db.query("select `email`, `mdp` from `utilisateur` where `email`=?", [mail], (error, result) => {
         if (error) {
             res.status(500);
             res.end(getMessageFromHTTPCode(500));
@@ -133,7 +133,7 @@ app.post("/photos", async (req, res) => {
     }
     if (codeValidToken === 200) {
         //ajout de la photo en bdd
-        db.query("INSERT INTO photo (`url`, `positionX`, `positionY`) values (?, ?, ?);", [jsonPhoto.urlImage, jsonPhoto.position.positionX, jsonPhoto.position.positionY],
+        db.query("INSERT INTO `photo` (`url`, `positionX`, `positionY`) values (?, ?, ?);", [jsonPhoto.urlImage, jsonPhoto.position.positionX, jsonPhoto.position.positionY],
             (err, result) => {
                 if(err){
                     res.status(500).end(getMessageFromHTTPCode(500));
@@ -177,7 +177,7 @@ app.post("/utilisateurs", (req, res) => {
     let salt = bcrypt.genSaltSync(saltRounds);
     mdp = bcrypt.hashSync(mdp, salt);
     //insertion en bdd
-    db.query("insert into utilisateur (`login`, `email`, `mdp`) values (?, ?, ?);", [login, mail, mdp], (error, result) => {
+    db.query("insert into `utilisateur` (`login`, `email`, `mdp`) values (?, ?, ?);", [login, mail, mdp], (error, result) => {
         if(error){
             res.status(500).end(getMessageFromHTTPCode(500));
         }
@@ -207,7 +207,7 @@ app.post("/series", (req, res) => {
         res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(666));
     }
 
-    db.query("insert into serie (`ville`, `map_x`, `map_y`, `map_zoom`, `distance`) values (?, ?, ?, ?, 0.0022561023667568847)", [ville, map_x, map_y, map_zoom], (err, result) => {
+    db.query("insert into `serie` (`ville`, `map_x`, `map_y`, `map_zoom`, `distance`) values (?, ?, ?, ?, 0.0022561023667568847)", [ville, map_x, map_y, map_zoom], (err, result) => {
         if(err){
             res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(500));
         }else{

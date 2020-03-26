@@ -36,10 +36,9 @@ CREATE TABLE IF NOT EXISTS partie(
   nb_photos int(5),
   status int(5),
   score int(250),
-  joueur int(50),
+  joueur varchar(150),
   serie_id int(50),
   PRIMARY KEY (id),
-  FOREIGN KEY (joueur) REFERENCES utilisateur(id),
   FOREIGN KEY (serie_id) REFERENCES serie(id)
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
