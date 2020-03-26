@@ -188,14 +188,12 @@ app.post("/utilisateurs", (req, res) => {
 });
 
 app.post("/series", (req, res) => {
-    console.log(req.body);
 
     let jsonSerie = req.body;
     if(typeof jsonSerie === "undefined"){
         res.status(500).json(getMessageFromHTTPCode(500));
     }
 
-    console.log("c'était pas ça", jsonSerie);
     //vérification du format du json
     let ville = jsonSerie.ville;
     let map_x = jsonSerie.map_refs.map_x;
@@ -213,7 +211,7 @@ app.post("/series", (req, res) => {
         if(err){
             res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(500));
         }else{
-            res.status(200).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(200));
+            res.status(200).header("Content-Type", "application/json; charset=utf-8").send(getMessageFromHTTPCode(200));
         }
     })
 
