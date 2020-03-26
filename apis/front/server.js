@@ -41,7 +41,7 @@ app.get("/", (req, res) => {
  * @apiDescription crée une nouvelle partie en fonction d'un json fourni
  * @apiParam {json} body {
  *     "serie_id" : 1,
- *     "joueur_id" : 1
+ *     "pseudo" : "pseudo"
  * }
  * @apiSuccess {json} result fichier json avec les données fournies en entrée (jsonFourni) et le token de la partie (token) et l'id de la partie
  */
@@ -187,6 +187,37 @@ app.get("/series/:id/photos", (req, res) => {
                 }
             }
         })
+
+});
+
+app.put("/parties/:id", (req, res) => {
+    let partie_id = parseInt(req.params.id);
+
+    //vérification des données envoyées
+    let jsonPartie = req.body;
+    let partie_token = jsonPartie.partie_token;
+    let score = parseInt(jsonPartie.score);
+    let nb_photos = parseInt(jsonPartie.nb_photos);
+
+    if(isUndefined(partie_id) || isUndefined(partie_token) || isUndefined(score) || isUndefined(nb_photos) || !isStrictlyPositive(partie_id) || isEmptyString(partie_token) || !isPositive(score) || ! isStrictlyPositive(nb_photos)){
+        res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(666));
+    }
+
+    db.query("select * from partie where id=?", [partie_id], (err, partie) => {
+        partie = partie[0];
+        //vérification du token
+        if(partie.token !== partie_token){
+            res.status(403).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(403));
+        }
+
+        //maj de la partie
+        db.query("UPDATE partie SET `nb_photos`=?,`status`=?,`score`=? WHERE id=?", [nb_photos, 3, score, partie_id], (error, result) => {
+            if(err){
+                res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(500));
+            }
+            res.status(200).header("Content-Type\", \"application/json; charset=utf-8").json(getMessageFromHTTPCode(200));
+        })
+    })
 
 });
 
