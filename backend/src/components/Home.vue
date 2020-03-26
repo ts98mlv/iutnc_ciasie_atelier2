@@ -2,8 +2,8 @@
   <div class="home col-10 col-sm-6 mx-auto col-lg-6">
     <h1 class="mx-auto p-2">Gestion Backend GeoQuizz</h1>
     <hr>
-    <h4>{{email}}</h4>
-    <h4>{{toke}}</h4>
+    <h4 v-if="toke != null">Vous êtes connecté en tant que <b>{{email}}</b></h4>
+    <h4 v-if="toke != null">{{toke}}</h4>
     <ul>
       <li>
         <a class="hihi"
@@ -29,7 +29,7 @@
         </a>
       </li>
 
-      <li>
+      <li v-if="toke == null">
         <a
           href="/auth"
         >
@@ -37,7 +37,7 @@
         </a>
       </li>
 
-      <li>
+      <li v-if="toke == null">
         <a
           href="/inscription"
         >
@@ -63,17 +63,27 @@ export default {
 <style>
 @import '../../vendor/bootstrap/css/bootstrap.min.css';
 
+body {
+  background-image: url('../assets/sky.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+}
+
 .home {
-  background-color: #8e57bd;
+  background-color: #910c5e;
   margin-top: 10vh;
+  border-radius: 15px;
+  padding: 10px;
 }
 
 h1 {
   color: white;
 }
 
-h3 {
-  color: black;
+h4 {
+  color: #b7c7f7;
 }
 
 hr {
@@ -95,11 +105,4 @@ a:hover {
   text-decoration: none;
 }
 
-body {
-  background-image: url('https://img5.goodfon.com/wallpaper/nbig/1/b1/alexander-pavlov-by-alexander-pavlov-synth-retrowave-synthwa.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
-  background-position: center;
-}
 </style>

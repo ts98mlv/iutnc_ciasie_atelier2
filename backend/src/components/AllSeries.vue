@@ -36,7 +36,6 @@
 </template>
 
 <script>
-import datasSeries from '../assets/serie.json'
 import axios from "axios"
 
 const urlAPI = "http://docketu.iutnc.univ-lorraine.fr:17280/"
@@ -49,35 +48,39 @@ export default {
       listSeries: ''
     }
   },
-
-  filters: {
-
-  },
   
   created () {
-
+            // !!!Ancien!!!
             // Reqête axios récupérant toutes les séries
-            axios.get(urlAPI + "series")
-            .then( (res) => {
-                const pars = JSON.parse(res.data);
+            // axios.get(urlAPI + "series")
+            // .then( (res) => {
+            //     const pars = JSON.parse(res.data);
+            //     this.listSeries = pars.map(item => {
+            //         return item
+            //     })
+                
+            // })
+            // .catch( err => console.error(err));
+
+            // Requête axios récupérant toutes les séries et envoyant dans header le tokenJWT du localStorage ainsi que l'email
+			let tokenBearer = 'Bearer ' + localStorage.token; 
+
+			axios({
+                method: "get",
+                url: urlAPI + "series",
+                headers: {
+                    "Authorization": tokenBearer,
+                    'mail': localStorage.mail
+                }
+            })
+			.then(res => {
+				const pars = JSON.parse(res.data);
                 this.listSeries = pars.map(item => {
                     return item
                 })
-                
-            })
-            .catch( err => console.error(err));
-      },
-
-  methods: {
-
-    },
-
-  computed: {
-
-    listOfDatasSeries () {
-        
-    }
-  }
+			})		
+			.catch( err => console.error(err));
+      }
 }
 
 </script>

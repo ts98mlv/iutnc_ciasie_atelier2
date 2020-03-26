@@ -59,10 +59,6 @@ export default {
 		}
 	},
 
-	created () {
-		
-	},
-
 	methods: {
 		cnxUser() {
 			let mailPass = this.email + ':' + this.password;

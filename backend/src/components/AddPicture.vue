@@ -79,8 +79,6 @@
 </template>
 
 <script>
-import datasSeries from '../assets/serie.json'
-import datasPhotos from '../assets/photo.json'
 import axios from "axios"
 
 const urlAPI = "http://docketu.iutnc.univ-lorraine.fr:17280/"
@@ -91,67 +89,73 @@ export default {
     return {
       serieId: '',
       photoId: '',
-      test: 'salut',
       listPhotos: '',
       listSeries: ''
     }
   },
 
-  filters: {
-
-  },
   
   created () {
 
-            // axios.get(urlAPI + "photos")
-            // .then( (res) => {
-            //     console.log(res.data); // res.data contains request data
-                
-            // })
-            // .catch( err => console.error(err));
+    // Requête axios récupérant toutes les séries et envoyant dans header le tokenJWT du localStorage ainsi que l'email
+    let tokenBearerSeries = 'Bearer ' + localStorage.token; 
 
-            axios.get(urlAPI + "series")
-            .then( (res) => {
-                const pars = JSON.parse(res.data);
-                this.listSeries = pars.map(item => {
-                    return item
-                })
-                
+    axios({
+        method: "get",
+        url: urlAPI + "series",
+        headers: {
+            "Authorization": tokenBearerSeries,
+            'mail': localStorage.mail
+        }
+        })
+        .then(res => {
+            const pars = JSON.parse(res.data);
+            this.listSeries = pars.map(item => {
+                return item
             })
-            .catch( err => console.error(err));
+        })		
+        .catch( err => console.error(err));
 
-             axios.get(urlAPI + "photos")
-            .then( (res) => {
-                const pars = JSON.parse(res.data);
-                this.listPhotos = pars.map(item => {
-                    return item
-                })
-                
+    // Requête axios récupérant toutes les photos lors de l'actualisation de la page et envoyant dans header le tokenJWT du localStorage ainsi que l'email
+    let tokenBearerPhotos = 'Bearer ' + localStorage.token; 
+
+    axios({
+        method: "get",
+        url: urlAPI + "photos",
+        headers: {
+            "Authorization": tokenBearerPhotos,
+            'mail': localStorage.mail
+        }
+        })
+        .then(res => {
+            const pars = JSON.parse(res.data);
+            this.listPhotos = pars.map(item => {
+                return item
             })
-            .catch( err => console.error(err));
-      },
+        })		
+        .catch( err => console.error(err));
+    },
 
   methods: {
+    //   Formulaire envoie des données
       sendForm () {
 
-    //     datasPhotos.photos.map(item => {
-    //     //if (item.id = this.photoId) item.serie_id = this.serieId
-    //     console.log("if " + item.id + " = " + this.photoId + " alors " + item.serie_id + " prend " + this.serieId)
-    //     // console.log("id photo " + item.id + " id photo choisi " + this.photoId)
-    //   })
-
-        if(this.photoId.length == 0) {
-            console.log("Vous n'avez rien assigné")
+        if(this.photoId.length == 0 || this.serieId.length == 0) {
+            alert("Veuillez selectionner une série et une photo.")
             return
         }
-      
+
+        // Requête axios permettant de mettre à jour les données de l'api et envoyant dans header le tokenJWT du localStorage ainsi que l'email
+        let tokenBearer = 'Bearer ' + localStorage.token;   
         const elemAss = this.listPhotos.find(element => element.id == this.photoId); 
-        console.log(elemAss)
-        console.log(elemAss.id)
-            
+
         const options = {
             method: 'put',
             url: urlAPI + "photos/" + elemAss.id,
+            headers: {
+                "Authorization": tokenBearer,
+                'mail': localStorage.mail
+            },
             data: {
                 "id": elemAss.id,
                 "serie_id": this.serieId,
@@ -165,7 +169,6 @@ export default {
             },
             transformResponse: [(data) => {
                 // transform the response
-
                 return data;
                 this.reload();
             }]
@@ -183,33 +186,7 @@ export default {
     //         })
     //         .catch(err => console.error("non :" + err))
     //         return
-      }
-    },
 
-  computed: {
-
-    listOfDatasSeries () {
-        axios.get(urlAPI + "series")
-            .then( (res) => {
-                const pars = JSON.parse(res.data);
-                this.listSeries = pars.map(item => {
-                    return item
-                })
-                
-            })
-            .catch( err => console.error(err));
-    },
-
-    listOfDatasPhotos () {
-        axios.get(urlAPI + "photos")
-            .then( (res) => {
-                const pars = JSON.parse(res.data);
-                this.listPhotos = pars.map(item => {
-                    return item
-                })
-                
-            })
-            .catch( err => console.error(err));
     }
   }
 }
