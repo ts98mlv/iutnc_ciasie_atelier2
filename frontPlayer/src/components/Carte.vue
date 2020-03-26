@@ -168,17 +168,20 @@ export default {
     };
   },
   methods: {
+    // Fonction pour le timer
     timerFunction() {
+      // Si c supérieur à 0 on décrémente de 1 toute les secondes
       if (this.timer > 0) {
         setTimeout(() => {
           this.timer -= 1;
           this.timerFunction();
         }, 1000);
       }
+      // Si il est à 0 et que il n'y a plus d'image, on met fin à la partie
       if (this.timer == 0 && this.compteurImg == this.tabImages.length) {
         this.statusPartie = 3;
         this.timer = -500;
-        //alert("Fin de partie, c'était la dernière image");
+        // Si ce n'est pas la dernière image, on remet le timer à 20 et on passe à l'image suivante
       } else if (this.timer == 0) {
         alert("Trop tard, photo suivante ! ");
         this.compteurImg++;
@@ -190,138 +193,114 @@ export default {
         }, 1000);
       }
     },
-    alert(item) {
-      alert("this is " + JSON.stringify(item));
-    },
-    addMarker: function() {
+    // Pour ajouter une image sur la carte
+    onMapClick(e) {
       if (
         confirm(
           "Souhaitez-vous confirmer votre choix ? Vous ne pourrez plus le modifier"
         )
       ) {
         const newMarker = {
-          position: { lat: 50.5505, lng: -0.09 },
+          position: { lat: e.latlng.lat, lng: e.latlng.lng },
+          tooltip: this.tabImages[this.compteurImg].description,
           draggable: false,
           visible: true
         };
-      }
-      this.markers.push(newMarker);
-    },
-    removeMarker: function(index) {
-      this.markers.splice(index, 1);
-    },
-    onMapClick(e) {
-      if (this.markers.length > this.tabImages.length - 1) {
-        alert(
-          "Vous avez insérer toutes les photos sur la map. Vous pouvez mettre fin à la partie en cliquant sur OK."
-        );
-        this.statusPartie = 3;
-        this.timer = -500;
-      } else {
+        this.markers.push(newMarker);
+
+        /* ------------ CALCUL DU SCORE ------------------- */
+        /* ------------ CALCUL DU SCORE ------------------- */
+        /* ------------ CALCUL DU SCORE ------------------- */
+        /* ------------ CALCUL DU SCORE ------------------- */
+        // En fonction de la distance et du temps
         if (
-          confirm(
-            "Souhaitez-vous confirmer votre choix ? Vous ne pourrez plus le modifier"
-          )
+          newMarker.position.lat >=
+            this.tabImages[this.compteurImg].position_x &&
+          newMarker.position.lng >= this.tabImages[this.compteurImg].position_y
         ) {
-          const newMarker = {
-            position: { lat: e.latlng.lat, lng: e.latlng.lng },
-            tooltip: this.tabImages[this.compteurImg].description,
-            draggable: false,
-            visible: true
-          };
+          this.distance +=
+            this.distance +
+            (newMarker.position.lat -
+              this.tabImages[this.compteurImg].position_x) +
+            (newMarker.position.lng -
+              this.tabImages[this.compteurImg].position_y);
+        } else if (
+          newMarker.position.lat <=
+            this.tabImages[this.compteurImg].position_x &&
+          newMarker.position.lng >= this.tabImages[this.compteurImg].position_y
+        ) {
+          this.distance +=
+            this.distance +
+            (this.tabImages[this.compteurImg].position_x -
+              newMarker.position.lat) +
+            (newMarker.position.lng -
+              this.tabImages[this.compteurImg].position_y);
+        } else if (
+          newMarker.position.lat <=
+            this.tabImages[this.compteurImg].position_x &&
+          newMarker.position.lng <= this.tabImages[this.compteurImg].position_y
+        ) {
+          this.distance +=
+            this.distance +
+            (this.tabImages[this.compteurImg].position_x -
+              newMarker.position.lat) +
+            (this.tabImages[this.compteurImg].position_y -
+              newMarker.position.lng);
+        } else if (
+          newMarker.position.lat >=
+            this.tabImages[this.compteurImg].position_x &&
+          newMarker.position.lng <= this.tabImages[this.compteurImg].position_y
+        ) {
+          this.distance +=
+            this.distance +
+            (newMarker.position.lat -
+              this.tabImages[this.compteurImg].position_x) +
+            (this.tabImages[this.compteurImg].position_y -
+              newMarker.position.lng);
+        }
+        // Ajout de point
+        if (this.distance < this.listeSerie.distance) {
+          this.score = this.score + 5;
+        } else if (this.distance < this.listeSerie.distance * 2) {
+          this.score = this.score + 3;
+        } else if (this.distance < this.listeSerie.distance * 3) {
+          this.score = this.score + 1;
+        }
+
+        // On multiplie le score en fonction du temps
+        if (this.timer >= 15) {
+          this.score = this.score * 4;
+        } else if (this.timer >= 10 && this.timer <= 15) {
+          this.score = this.score * 2;
+        }
+
+        this.distance = 0;
+
+        /* ------------ FIN DU CALCUL DU SCORE ------------------- */
+        /* ------------ FIN DU CALCUL DU SCORE ------------------- */
+        /* ------------ FIN DU CALCUL DU SCORE ------------------- */
+        /* ------------ FIN DU CALCUL DU SCORE ------------------- */
+
+        // Si c la dernière image on met fin à la partie
+        if (this.compteurImg > this.tabImages.length - 1) {
           this.markers.push(newMarker);
-
-          /* ------------ CALCUL DU SCORE ------------------- */
-          /* ------------ CALCUL DU SCORE ------------------- */
-          /* ------------ CALCUL DU SCORE ------------------- */
-          /* ------------ CALCUL DU SCORE ------------------- */
-          if (
-            newMarker.position.lat >=
-              this.tabImages[this.compteurImg].position_x &&
-            newMarker.position.lng >=
-              this.tabImages[this.compteurImg].position_y
-          ) {
-            this.distance +=
-              this.distance +
-              (newMarker.position.lat -
-                this.tabImages[this.compteurImg].position_x) +
-              (newMarker.position.lng -
-                this.tabImages[this.compteurImg].position_y);
-          } else if (
-            newMarker.position.lat <=
-              this.tabImages[this.compteurImg].position_x &&
-            newMarker.position.lng >=
-              this.tabImages[this.compteurImg].position_y
-          ) {
-            this.distance +=
-              this.distance +
-              (this.tabImages[this.compteurImg].position_x -
-                newMarker.position.lat) +
-              (newMarker.position.lng -
-                this.tabImages[this.compteurImg].position_y);
-          } else if (
-            newMarker.position.lat <=
-              this.tabImages[this.compteurImg].position_x &&
-            newMarker.position.lng <=
-              this.tabImages[this.compteurImg].position_y
-          ) {
-            this.distance +=
-              this.distance +
-              (this.tabImages[this.compteurImg].position_x -
-                newMarker.position.lat) +
-              (this.tabImages[this.compteurImg].position_y -
-                newMarker.position.lng);
-          } else if (
-            newMarker.position.lat >=
-              this.tabImages[this.compteurImg].position_x &&
-            newMarker.position.lng <=
-              this.tabImages[this.compteurImg].position_y
-          ) {
-            this.distance +=
-              this.distance +
-              (newMarker.position.lat -
-                this.tabImages[this.compteurImg].position_x) +
-              (this.tabImages[this.compteurImg].position_y -
-                newMarker.position.lng);
-          }
-          // Ajout de point
-          if (this.distance < this.listeSerie.distance) {
-            this.score = this.score + 5;
-          } else if (this.distance < this.listeSerie.distance * 2) {
-            this.score = this.score + 3;
-          } else if (this.distance < this.listeSerie.distance * 3) {
-            this.score = this.score + 1;
-          }
-
-          if (this.timer >= 15) {
-            this.score = this.score * 4;
-          } else if (this.timer >= 10 && this.timer <= 15) {
-            this.score = this.score * 2;
-          }
-
-          this.distance = 0;
-
-          /* ------------ FIN DU CALCUL DU SCORE ------------------- */
-          /* ------------ FIN DU CALCUL DU SCORE ------------------- */
-          /* ------------ FIN DU CALCUL DU SCORE ------------------- */
-          /* ------------ FIN DU CALCUL DU SCORE ------------------- */
-
-          if (this.compteurImg > this.tabImages.length - 1) {
-            this.markers.push(newMarker);
-            this.statusPartie = 3;
-            this.timer = -500;
-          }
-          if (this.compteurImg < this.tabImages.length - 1) {
-            this.compteurImg++;
-            this.timer = 20;
-          }
+          this.statusPartie = 3;
+          this.timer = -500;
+        }
+        // Et si non, on passe à la photo suivante en remettant le timer à 20
+        if (this.compteurImg < this.tabImages.length - 1) {
+          this.compteurImg++;
+          this.timer = 20;
         }
       }
     }
   },
   created: function() {
+    // On met la bonne carte (associée à la ville de la série)
     this.center = [this.listeSerie.map_x, this.listeSerie.map_y];
+    // On met en place le timer
     this.timerFunction();
+    // On récupère les photos
     photo.photos.forEach(element => {
       if (element.serie_id == this.idPartie) {
         this.tabImages.push(element);
@@ -329,9 +308,7 @@ export default {
     });
   },
   beforeUpdate: function() {
-    if (this.statusPartie == 3) {
-      alert("ntm");
-    }
+    // Si il n'y a plus d'image, on met fin à la partie
     if (this.markers.length > this.tabImages.length - 1) {
       alert("Fin de la partie");
       this.statusPartie = 3;

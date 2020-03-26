@@ -52,6 +52,7 @@ export default {
   },
   methods: {
     getSeries() {
+      // Pour voir toute les séries disponibles dans la liste déroulante
       axios
         .get("http://docketu.iutnc.univ-lorraine.fr:17180/series")
         .then(response => {
