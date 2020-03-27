@@ -157,7 +157,6 @@ app.post("/photos", async (req, res) => {
     "mail": "bob@test.fr",
     "mdp": "michel"
 }
-
  */
 app.post("/utilisateurs", (req, res) => {
     let jsonUser = req.body;
@@ -187,7 +186,19 @@ app.post("/utilisateurs", (req, res) => {
     })
 });
 
-app.post("/series", (req, res) => {
+/**
+ * @api {post} /series permet d'ajouter une série en bdd
+ * @apiDescription route permettant d'ajouter une série en bdd
+ * @apiHeader {String} authorization "Bearer tokenJWT" avec tokenJWT correspondant au token JWT récupéré lors de la connexion
+ * @apiParam {json} body {
+        "ville": "Ncy",
+        "map_refs": {
+            "map_x": 00.00,
+            "map_y": 00.00,
+            "map_zoom": 0
+        }
+ */
+app.post("/series", async (req, res) => {
 
     let jsonSerie = req.body;
     if(typeof jsonSerie === "undefined"){
@@ -207,14 +218,25 @@ app.post("/series", (req, res) => {
         res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(666));
     }
 
-    db.query("insert into `serie` (`ville`, `map_x`, `map_y`, `map_zoom`, `distance`) values (?, ?, ?, ?, 0.0022561023667568847)", [ville, map_x, map_y, map_zoom], (err, result) => {
-        if(err){
-            res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(500));
-        }else{
-            res.status(200).header("Content-Type", "application/json; charset=utf-8").send(getMessageFromHTTPCode(200));
-        }
-    })
-
+    //verif du token
+    let codeValidToken;
+    try {
+        codeValidToken = await isValidTokenForSelectUser(req.headers.mail, req.headers.authorization);
+    } catch (e) {
+        codeValidToken = e;
+    }
+    if (codeValidToken === 200) {
+        //ajout de la série en bdd
+        db.query("insert into `serie` (`ville`, `map_x`, `map_y`, `map_zoom`, `distance`) values (?, ?, ?, ?, 0.0022561023667568847)", [ville, map_x, map_y, map_zoom], (err, result) => {
+            if(err){
+                res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(500));
+            }else{
+                res.status(200).header("Content-Type", "application/json; charset=utf-8").send(getMessageFromHTTPCode(200));
+            }
+        })
+    } else {
+        res.status(codeValidToken).end(getMessageFromHTTPCode(codeValidToken))
+    }
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -341,26 +363,56 @@ function isTokenUnaltered(token) {
     return isGood;
 }
 
-function isUndefined(element) {
-    return (typeof element === "undefined");
-}
-
-function isEmptyString(element){
-    return (element === "");
-}
-
-function isNumber(element){
-    return (typeof element === "number");
-}
-
+/**
+ * fonction qui permet de savoir si un élément est de type String
+ * @param element
+ * @returns {boolean}
+ */
 function isString(element){
     return (typeof element === "string");
 }
 
+/**
+ * fonction qui permet de définir si un élément est de type undefined
+ * @param element
+ * @returns {boolean}
+ */
+function isUndefined(element) {
+    return (typeof element === "undefined");
+}
+
+/**
+ * permet de définir si un élément est une chaîne vide
+ * @param element
+ * @returns {boolean}
+ */
+function isEmptyString(element){
+    return (element === "");
+}
+
+/**
+ * permet de définir si un élément est de type nombre
+ * @param element
+ * @returns {boolean}
+ */
+function isNumber(element){
+    return (typeof element === "number");
+}
+
+/**
+ * permet de définir si un élément est positif
+ * @param element
+ * @returns {boolean}
+ */
 function isPositive(element) {
     return (isNumber(element) && element >= 0);
 }
 
+/**
+ * permet de définir si un élément est strictement positif
+ * @param element
+ * @returns {boolean}
+ */
 function isStrictlyPositive(element) {
     return (isNumber(element) && element > 0);
 }
