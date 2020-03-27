@@ -4,9 +4,18 @@
             <div class="back ml-4"><i class="fas fa-chevron-left"></i> Retour</div>
         </div>
         <h1>Créer une série</h1>
+        <hr>
+        <div class="formCreate">
+            <label class="labelCity">Ville :</label><br>
+                <input type="text" name="city" v-model="city" placeholder="Paris"><br>
+            <label class="labelMapX">Position X :</label><br>
+                <input type="number" v-model="mapX" class="mapX" value="0.0" step="0.01"><br>
+            <label class="labelMapY">Position Y :</label><br>
+                <input type="number" v-model="mapY" class="mapY" value="0.0" step="0.01"><br>
+            <label class="labelMapX">Map Zoom :</label><br>
+                <input type="number" v-model="mapZoom" class="mapZoom" value="0" step="1"><br><br>
 
-        <div class="placeTab">
-
+            <a class="createSerie" @click="createS">Localiser</a>
             
         </div>
 
@@ -23,106 +32,79 @@ export default {
 
   data () {
     return {
-      serieId: '',
-      photoId: '',
-      listPhotos: '',
-      listSeries: ''
+      city: '',
+      mapX: '0.0',
+      mapY: '0.0',
+      mapZoom: '0'
     }
   },
 
   
   created () {
 
-    // Requête axios récupérant toutes les séries et envoyant dans header le tokenJWT du localStorage ainsi que l'email
-    let tokenBearerSeries = 'Bearer ' + localStorage.token; 
-
-    axios({
-        method: "get",
-        url: urlAPI + "series",
-        headers: {
-            "Authorization": tokenBearerSeries,
-            'mail': localStorage.mail
-        }
-        })
-        .then(res => {
-            const pars = JSON.parse(res.data);
-            this.listSeries = pars.map(item => {
-                return item
-            })
-        })		
-        .catch( err => console.error(err));
-
-    // Requête axios récupérant toutes les photos lors de l'actualisation de la page et envoyant dans header le tokenJWT du localStorage ainsi que l'email
-    let tokenBearerPhotos = 'Bearer ' + localStorage.token; 
-
-    axios({
-        method: "get",
-        url: urlAPI + "photos",
-        headers: {
-            "Authorization": tokenBearerPhotos,
-            'mail': localStorage.mail
-        }
-        })
-        .then(res => {
-            const pars = JSON.parse(res.data);
-            this.listPhotos = pars.map(item => {
-                return item
-            })
-        })		
-        .catch( err => console.error(err));
     },
 
   methods: {
     //   Formulaire envoie des données
-      sendForm () {
+      createS () {
 
-        if(this.photoId.length == 0 || this.serieId.length == 0) {
-            alert("Veuillez selectionner une série et une photo.")
+        if(this.city.length == 0 || this.mapX.length == 0 || this.mapY.length == 0 || this.mapX == null || this.mapY == null || this.mapZoom.length == 0 ) {
+            alert("Veuillez remplir tous les champs.")
             return
         }
 
+        console.log(this.city + " " + this.mapX + " " + this.mapY + " " + this.mapZoom + " " + localStorage.token)
+
         // Requête axios permettant de mettre à jour les données de l'api et envoyant dans header le tokenJWT du localStorage ainsi que l'email
         let tokenBearer = 'Bearer ' + localStorage.token;   
-        const elemAss = this.listPhotos.find(element => element.id == this.photoId); 
 
-        const options = {
-            method: 'put',
-            url: urlAPI + "photos/" + elemAss.id,
+        // const options = {
+        //     method: 'post',
+        //     url: urlAPI + "series",
+        //     headers: {
+        //         "Authorization": tokenBearer,
+        //         'mail': localStorage.email
+        //     },
+        //     data: {
+        //         "ville": this.city,
+        //         "map_refs" : {
+        //             "map_x": this.mapX,
+        //             "map_y": this.mapY,
+        //             "map_zoom": this.mapZoom,
+        //         }
+        //     },
+        //     transformResponse: [(data) => {
+        //         // transform the response
+        //         return data;
+                
+        //     }]
+        // };
+
+      axios({
+            method: "post",
+            url: urlAPI + "series",
             headers: {
                 "Authorization": tokenBearer,
                 'mail': localStorage.email
             },
             data: {
-                "id": elemAss.id,
-                "serie_id": this.serieId,
-                "description": elemAss.description,
-                "url": elemAss.url,
-                "position": 
-                {
-                    "positionX": elemAss.positionX,
-                    "positionY": elemAss.positionY
+                "ville": this.city,
+                "map_refs" : {
+                    "map_x": this.mapX,
+                    "map_y": this.mapY,
+                    "map_zoom": this.mapZoom,
                 }
-            },
-            transformResponse: [(data) => {
-                // transform the response
-                return data;
-                this.reload();
-            }]
-        };
-
-        // send the request
-        axios(options);  
-
-    //     // return
-    //     axios.put(urlAPI + "photos/" + elemAss.id, {
-    //             "serie_id": this.serieId
-    //         })
-    //         .then(res => {
-    //             console.log("reussi : " + res)
-    //         })
-    //         .catch(err => console.error("non :" + err))
-    //         return
-
+            }
+        })
+			.then(res => {
+				console.log(res)
+        
+			})		
+			.catch( err => console.error(err));
+    },
+        
+    retour() {
+        this.$router.push("/");
     }
   }
 }
@@ -156,14 +138,6 @@ hr {
   width: 70%;
   border: 1px solid #31313140;
 }
-.tableauSeries, .tableauPhotos {
-    border: 1px solid black;
-    margin: 0 auto;
-}
-
-.tableauPhotos img {
-    width: 80px;
-}
 
 .back {
   background-color: #ca1384;
@@ -176,6 +150,10 @@ hr {
 
 .btn-back {
   cursor: pointer;
+}
+
+a {
+    cursor: pointer;
 }
 
 </style>

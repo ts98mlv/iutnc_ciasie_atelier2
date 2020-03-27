@@ -82,7 +82,7 @@ export default {
 
   methods: {
       retour() {
-        this.$router.go(-1);
+        this.$router.push("/");
       }
     }
   

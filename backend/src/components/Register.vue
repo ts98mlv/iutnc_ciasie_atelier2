@@ -12,23 +12,23 @@
 					</span>
 
 					<div class="wrap-input100 validate-input" data-validate = "Enter pseudo">
-						<input class="input100" type="text" name="pseudo" placeholder="Pseudo">
+						<input class="input100" v-model="pseudo" type="text" name="pseudo" placeholder="Pseudo">
 					</div>
 
                     <div class="wrap-input100 validate-input" data-validate="Enter email">
-						<input class="input100" type="text" name="emailE" placeholder="Email">
+						<input class="input100" type="text" v-model="email" name="email" placeholder="Email">
 					</div>
 
 					<div class="wrap-input100 validate-input" data-validate="Enter password">
-						<input class="input100" type="password" name="pass" placeholder="Password">
+						<input class="input100" type="password" v-model="password" name="pass" placeholder="Password">
 					</div>
 
                     <div class="wrap-input100 validate-input" data-validate="Enter password">
-						<input class="input100" type="password" name="pass2" placeholder="Confirm Password">
+						<input class="input100" type="password" v-model="password2" name="pass2" placeholder="Confirm Password">
 					</div>
 
 					<div class="container-login100-form-btn">
-						<button class="login100-form-btn">
+						<button class="login100-form-btn" @click="register">
 							S'inscrire
 						</button>
 					</div>
@@ -47,7 +47,66 @@
 </template>
 
 <script>
+import axios from "axios"
 
+const urlAPI = "http://docketu.iutnc.univ-lorraine.fr:17280/"
+
+export default {
+
+	data () {
+		return {
+		pseudo: '',
+		email: '',
+		password: '',
+		password2: ''
+		}
+	},
+
+	methods: {
+		register() {
+			
+			if(this.password != this.password2) {
+				alert("Les mots de passe ne correspondent pas.")
+				return;
+			}
+
+			let mailPass = this.email + ':' + this.password;
+			let mailPass64 = Buffer.from(mailPass,'utf8').toString('base64');
+			let mailPassBasic = 'Basic ' + mailPass64; 
+
+			axios({
+                method: "post",
+                url: urlAPI + "utilisateurs/",
+                headers: {
+                    "Authorization": mailPassBasic
+				},
+				data: {
+                "login": this.pseudo,
+				"mail": this.mail,
+				"mdp": this.password
+				}
+            
+            })
+			.then(res => {
+				console.log(JSON.parse(res.data).tokenJWT);
+				  localStorage.token = JSON.parse(res.data).tokenJWT;
+				  localStorage.email = this.email;
+
+				  this.$route.push('/');
+			})		
+			.catch( err => console.error(err));
+
+			// localStorage.token = this.email + ':' + this.password;
+			// localStorage.email = this.email;
+		}
+	},
+
+	watch:{
+		token(newToken) {
+			localStorage.token = newToken;
+		}
+  }
+}
 </script>
 
 <style scoped>

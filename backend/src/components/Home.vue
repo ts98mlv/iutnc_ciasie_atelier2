@@ -3,7 +3,6 @@
     <h1 class="mx-auto p-2">Gestion Backend GeoQuizz</h1>
     <hr>
     <h4 v-if="toke != null">Vous êtes connecté en tant que <b>{{email}}</b></h4>
-    <h4 v-if="toke != null">{{toke}}</h4>
     <ul>
       <li>
         <a class="hihi"

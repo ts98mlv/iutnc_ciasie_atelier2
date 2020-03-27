@@ -170,22 +170,12 @@ export default {
             transformResponse: [(data) => {
                 // transform the response
                 return data;
-                this.reload();
+                
             }]
         };
 
         // send the request
         axios(options);  
-
-    //     // return
-    //     axios.put(urlAPI + "photos/" + elemAss.id, {
-    //             "serie_id": this.serieId
-    //         })
-    //         .then(res => {
-    //             console.log("reussi : " + res)
-    //         })
-    //         .catch(err => console.error("non :" + err))
-    //         return
 
     }
   }

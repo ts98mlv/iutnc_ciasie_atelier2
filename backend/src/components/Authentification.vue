@@ -20,10 +20,6 @@
 						<input class="input100" type="password" name="pass" placeholder="Password" v-model="password">
 					</div>
 
-					<div class="wrap-input100 validate-input" data-validate="Enter token">
-						<input class="input100" type="text" name="tok" placeholder="token" v-model="leToken">
-					</div>
-
 					<div class="container-login100-form-btn">
 						<button class="login100-form-btn" v-on:click="cnxUser">
 							Login
@@ -46,7 +42,7 @@
 <script>
 import axios from "axios"
 
-const urlAPI = "https://104aebac.ngrok.io/"
+const urlAPI = "http://docketu.iutnc.univ-lorraine.fr:17280/"
 
 export default {
 
@@ -54,8 +50,7 @@ export default {
 		return {
 		password: '',
 		email: '',
-		isLogged: false,
-		leToken: ''
+		isLogged: false
 		}
 	},
 
@@ -76,16 +71,14 @@ export default {
 				console.log(JSON.parse(res.data).tokenJWT);
 				  localStorage.token = JSON.parse(res.data).tokenJWT;
 				  localStorage.email = this.email;
+
+				  this.$route.push('/');
 			})		
 			.catch( err => console.error(err));
 
 			// localStorage.token = this.email + ':' + this.password;
 			// localStorage.email = this.email;
 		}
-	},
-
-	mounted() {
-    	if(localStorage.token) this.leToken = localStorage.token;
 	},
 
 	watch:{
