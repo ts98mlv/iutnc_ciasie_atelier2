@@ -615,3 +615,50 @@ function isTokenUnaltered(token) {
     }
     return isGood;
 }
+
+
+
+/**
+ * fonction qui permet de définir si un élément est de type undefined
+ * @param element
+ * @returns {boolean}
+ */
+function isUndefined(element) {
+    return (typeof element === "undefined");
+}
+
+/**
+ * permet de définir si un élément est une chaîne vide
+ * @param element
+ * @returns {boolean}
+ */
+function isEmptyString(element){
+    return (element === "");
+}
+
+/**
+ * permet de définir si un élément est de type nombre
+ * @param element
+ * @returns {boolean}
+ */
+function isNumber(element){
+    return (typeof element === "number");
+}
+
+/**
+ * permet de définir si un élément est positif
+ * @param element
+ * @returns {boolean}
+ */
+function isPositive(element) {
+    return (isNumber(element) && element >= 0);
+}
+
+/**
+ * permet de définir si un élément est strictement positif
+ * @param element
+ * @returns {boolean}
+ */
+function isStrictlyPositive(element) {
+    return (isNumber(element) && element > 0);
+}
