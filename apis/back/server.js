@@ -43,24 +43,35 @@ app.get("/", (req, res) => {
  * @api {get} /photos route pour récupérer toutes les photos
  * @apiParam {Boolean} [nonAssignee] paramètre optionnel qui si à true permet de ne retourner que les photos qui ne sont pas assignées à une série
  * @apiDescription route pour récupérer toutes les photos
- * 
+ * @apiHeader {String} authorization "Bearer tokenJWT" avec tokenJWT correspondant au token JWT récupéré lors de la connexion
  */
-app.get("/photos", (req, res) => {
-    let nonAssignees = req.query.nonAssignee;
-    if(typeof nonAssignees === "undefined" || ! nonAssignees || nonAssignees === "false"){
-        db.query("select * from `photo`;", [], (error, result) => {
-            if(error){
-                res.status(500).end(getMessageFromHTTPCode(500));
-            }
-            res.status(200).json(JSON.stringify(result));
-        })
-    }else{
-        db.query("select * from `photo` where `serie_id` is null;", [], (error, result) => {
-            if(error){
-                res.status(500).end(getMessageFromHTTPCode(500));
-            }
-            res.status(200).json(JSON.stringify(result));
-        })
+app.get("/photos", async (req, res) => {
+    //vérification du token
+    let codeValidToken;
+    try {
+        codeValidToken = await isValidTokenForSelectUser(req.headers.mail, req.headers.authorization);
+    } catch (e) {
+        codeValidToken = e;
+    }
+    if (codeValidToken === 200) {
+        let nonAssignees = req.query.nonAssignee;
+        if(typeof nonAssignees === "undefined" || ! nonAssignees || nonAssignees === "false"){
+            db.query("select * from `photo`;", [], (error, result) => {
+                if(error){
+                    res.status(500).end(getMessageFromHTTPCode(500));
+                }
+                res.status(200).json(JSON.stringify(result));
+            })
+        }else{
+            db.query("select * from `photo` where `serie_id` is null;", [], (error, result) => {
+                if(error){
+                    res.status(500).end(getMessageFromHTTPCode(500));
+                }
+                res.status(200).json(JSON.stringify(result));
+            })
+        }
+    } else {
+        res.status(codeValidToken).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(codeValidToken));
     }
 });
 
@@ -68,21 +79,33 @@ app.get("/photos", (req, res) => {
  * @api {get} /photos/:id route pour récupérer toutes les infos d'une photo
  * @apiParam {Number} id id de la photo concernée
  * @apiDescription route pour récupérer toutes les infos d'une photo
- * 
+ * @apiHeader {String} authorization "Bearer tokenJWT" avec tokenJWT correspondant au token JWT récupéré lors de la connexion
  */
-app.get("/photos/:id", (req, res) => {
-    db.query("select * from `photo` where `id`=?;", [req.params.id], (error, result) => {
-        if(error){
-            res.status(500).end(getMessageFromHTTPCode(500));
-        }
-        res.status(200).end(JSON.stringify(result));
-    })
+app.get("/photos/:id", async (req, res) => {
+    //vérification du token
+    let codeValidToken;
+    try {
+        codeValidToken = await isValidTokenForSelectUser(req.headers.mail, req.headers.authorization);
+    } catch (e) {
+        codeValidToken = e;
+    }
+    if (codeValidToken === 200) {
+        db.query("select * from `photo` where `id`=?;", [req.params.id], (error, result) => {
+            if(error){
+                res.status(500).end(getMessageFromHTTPCode(500));
+            }
+            res.status(200).end(JSON.stringify(result));
+        })
+    } else {
+        res.status(codeValidToken).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(codeValidToken));
+    }
 });
 
 /**
  * @api {put} /photos/:id route pour modifier les infos d'une photo
  * @apiParam {Number} id id de la photo concernée
  * @apiDescription route pour modifier les infos d'une photo
+ * @apiHeader {String} authorization "Bearer tokenJWT" avec tokenJWT correspondant au token JWT récupéré lors de la connexion
  * @apiParam {json} body de format
  * 
  * {
@@ -96,46 +119,57 @@ app.get("/photos/:id", (req, res) => {
  *           }
  * }
  */
-app.put("/photos/:id", (req, res) => {
-    let id = req.params.id;
-    let jsonPhoto = req.body;
-    if(typeof jsonPhoto === "undefined"){
-        res.status(500).end(getMessageFromHTTPCode(500));
+app.put("/photos/:id", async (req, res) => {
+    //vérification du token
+    let codeValidToken;
+    try {
+        codeValidToken = await isValidTokenForSelectUser(req.headers.mail, req.headers.authorization);
+    } catch (e) {
+        codeValidToken = e;
     }
-    //verification des champs du json
-    let coordX = jsonPhoto.position.positionX;
-    let coordY = jsonPhoto.position.positionY;
-    let descr = jsonPhoto.description;
-    let serie_id = jsonPhoto.serie_id;
-    let photo_id = jsonPhoto.id;
-
-
-    if(photo_id != id){
-        res.status(403).end(getMessageFromHTTPCode(403));
-    }
-
-    if(serie_id == 0)
-        serie_id = null;
-
-    if(typeof coordY === "undefined" || typeof coordX === "undefined" || typeof descr === "undefined" || typeof serie_id === "undefined" || typeof photo_id === "undefined"){
-        res.status(500).end(getMessageFromHTTPCode(666));
-    }
-
-    db.query("select * from `photo` where `id`=?;", [req.params.id], (error, result) => {
-        if(error){
+    if (codeValidToken === 200) {
+        let id = req.params.id;
+        let jsonPhoto = req.body;
+        if(typeof jsonPhoto === "undefined"){
             res.status(500).end(getMessageFromHTTPCode(500));
         }
-        if(result.length <= 0){
-            res.status(404).end(getMessageFromHTTPCode(404));
+        //verification des champs du json
+        let coordX = jsonPhoto.position.positionX;
+        let coordY = jsonPhoto.position.positionY;
+        let descr = jsonPhoto.description;
+        let serie_id = jsonPhoto.serie_id;
+        let photo_id = jsonPhoto.id;
+
+
+        if(photo_id != id){
+            res.status(403).end(getMessageFromHTTPCode(403));
         }
 
-        db.query("update `photo` set `description`=?, `positionX`=?, `positionY`=?, `serie_id`=? where `id`=?", [descr, coordX, coordY, serie_id, id], (err, rslt) => {
-            if(err){
+        if(serie_id <= 0)
+            serie_id = null;
+
+        if(typeof coordY === "undefined" || typeof coordX === "undefined" || typeof descr === "undefined" || typeof serie_id === "undefined" || typeof photo_id === "undefined"){
+            res.status(500).end(getMessageFromHTTPCode(666));
+        }
+
+        db.query("select * from `photo` where `id`=?;", [req.params.id], (error, result) => {
+            if(error){
                 res.status(500).end(getMessageFromHTTPCode(500));
             }
-            res.status(200).end(getMessageFromHTTPCode(200));
+            if(result.length <= 0){
+                res.status(404).end(getMessageFromHTTPCode(404));
+            }
+
+            db.query("update `photo` set `description`=?, `positionX`=?, `positionY`=?, `serie_id`=? where `id`=?", [descr, coordX, coordY, serie_id, id], (err, rslt) => {
+                if(err){
+                    res.status(500).end(getMessageFromHTTPCode(500));
+                }
+                res.status(200).end(getMessageFromHTTPCode(200));
+            })
         })
-    })
+    } else {
+        res.status(codeValidToken).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(codeValidToken));
+    }
 });
 
   
@@ -200,74 +234,123 @@ app.post("/utilisateurs/:email/auth", (req, res) => {
 /**
  * @api {get} /series route pour modifier les series
  * @apiDescription route pour modifier les series
- *
+ * @apiHeader {String} authorization "Bearer tokenJWT" avec tokenJWT correspondant au token JWT récupéré lors de la connexion
  */
-app.get("/series", (req, res) => {
-    db.query("select * from `serie`;", [], (error, result) => {
-        if(error){
-            res.status(500).end(getMessageFromHTTPCode(500));
-        }
-        res.status(200).json(JSON.stringify(result));
-    })
+app.get("/series", async (req, res) => {
+    //vérification du token
+    let codeValidToken;
+    try {
+        codeValidToken = await isValidTokenForSelectUser(req.headers.mail, req.headers.authorization);
+    } catch (e) {
+        codeValidToken = e;
+    }
+    if (codeValidToken === 200) {
+        db.query("select * from `serie`;", [], (error, result) => {
+            if(error){
+                res.status(500).end(getMessageFromHTTPCode(500));
+            }
+            res.status(200).json(JSON.stringify(result));
+        })
+    } else {
+        res.status(codeValidToken).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(codeValidToken));
+    }
 });
 
 /**
  * @api {get} /series/:id route pour avoir les infos d'une série
  * @apiDescription route pour avoir les infos d'une série
+ * @apiHeader {String} authorization "Bearer tokenJWT" avec tokenJWT correspondant au token JWT récupéré lors de la connexion
  * @apiParam {Number} id id de la série concernée
- * 
  */
-app.get("/series/:id", (req, res) => {
-    db.query("select * from `serie` where `id`=?;", [req.params.id], (error, result) => {
-        if(error){
-            res.status(500).end(getMessageFromHTTPCode(500));
-        }
-        if(result.length <= 0){
-            res.status(404).end(getMessageFromHTTPCode(404));
-        }
-        res.status(200).json(JSON.stringify(result));
-    })
+app.get("/series/:id", async (req, res) => {
+    //vérification du token
+    let codeValidToken;
+    try {
+        codeValidToken = await isValidTokenForSelectUser(req.headers.mail, req.headers.authorization);
+    } catch (e) {
+        codeValidToken = e;
+    }
+    if (codeValidToken === 200) {
+        db.query("select * from `serie` where `id`=?;", [req.params.id], (error, result) => {
+            if(error){
+                res.status(500).end(getMessageFromHTTPCode(500));
+            }
+            if(result.length <= 0){
+                res.status(404).end(getMessageFromHTTPCode(404));
+            }
+            res.status(200).json(JSON.stringify(result));
+        })
+    } else {
+        res.status(codeValidToken).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(codeValidToken));
+    }
+
 });
 
 /**
  * @api {get} /series/:id/photos route pour avoir les photos liées à une série
  * @apiDescription  route pour avoir les photos liées à une série
+ * @apiHeader {String} authorization "Bearer tokenJWT" avec tokenJWT correspondant au token JWT récupéré lors de la connexion
  * @apiParam {Number} id id de la série concernée
  * @apiHeader {String} authorization "Bearer tokenJWT" avec tokenJWT correspondant au token JWT récupéré lors de la connexion
  */
-app.get("/series/:id/photos", (req, res) => {
-    db.query("select * from `photo` where `serie_id`=?;", [req.params.id], (error, result) => {
-        if(error){
-            res.status(500).end(getMessageFromHTTPCode(500));
-        }
-        if(result.length <= 0){
-            res.status(404).end(getMessageFromHTTPCode(404));
-        }
-        res.status(200).json(JSON.stringify(result));
-    })
+app.get("/series/:id/photos", async (req, res) => {
+    //vérification du token
+    let codeValidToken;
+    try {
+        codeValidToken = await isValidTokenForSelectUser(req.headers.mail, req.headers.authorization);
+    } catch (e) {
+        codeValidToken = e;
+    }
+    if (codeValidToken === 200) {
+        db.query("select * from `photo` where `serie_id`=?;", [req.params.id], (error, result) => {
+            if(error){
+                res.status(500).end(getMessageFromHTTPCode(500));
+            }
+            if(result.length <= 0){
+                res.status(404).end(getMessageFromHTTPCode(404));
+            }
+            res.status(200).json(JSON.stringify(result));
+        })
+    } else {
+        res.status(codeValidToken).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(codeValidToken));
+    }
+
 });
 
 /**
  * @api {get} /series/:id/parties route pour avoir les parties liées à une série
  * @apiDescription route pour avoir les parties liées à une série
+ * @apiHeader {String} authorization "Bearer tokenJWT" avec tokenJWT correspondant au token JWT récupéré lors de la connexion
  * @apiParam {Number} id id de la série concernée
  * 
  */
-app.get("/series/:id/parties", (req, res) => {
-    db.query("select * from `partie` where `serie_id`=?;", [req.params.id], (error, result) => {
-        if(error){
-            res.status(500).end(getMessageFromHTTPCode(500));
-        }
-        if(result.length <= 0){
-            res.status(404).end(getMessageFromHTTPCode(404));
-        }
-        res.status(200).json(JSON.stringify(result));
-    })
+app.get("/series/:id/parties", async (req, res) => {
+    //vérification du token
+    let codeValidToken;
+    try {
+        codeValidToken = await isValidTokenForSelectUser(req.headers.mail, req.headers.authorization);
+    } catch (e) {
+        codeValidToken = e;
+    }
+    if (codeValidToken === 200) {
+        db.query("select * from `partie` where `serie_id`=?;", [req.params.id], (error, result) => {
+            if(error){
+                res.status(500).end(getMessageFromHTTPCode(500));
+            }
+            if(result.length <= 0){
+                res.status(404).end(getMessageFromHTTPCode(404));
+            }
+            res.status(200).json(JSON.stringify(result));
+        })
+    } else {
+        res.status(codeValidToken).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(codeValidToken));
+    }
 });
 
 /**
  * @api {post} /series permet d'ajouter une série en bdd
  * @apiDescription route permettant d'ajouter une série en bdd
+ * @apiHeader {String} authorization "Bearer tokenJWT" avec tokenJWT correspondant au token JWT récupéré lors de la connexion
  * @apiParam {json} body {
     "ville": "Ncy",
     "map_refs": {
@@ -277,33 +360,43 @@ app.get("/series/:id/parties", (req, res) => {
     }
 }
  */
-app.post("/series", (req, res) => {
-    let jsonSerie = req.body;
-    if(typeof jsonSerie === "undefined"){
-        res.status(500).end(getMessageFromHTTPCode(500));
+app.post("/series", async (req, res) => {
+    //vérification du token
+    let codeValidToken;
+    try {
+        codeValidToken = await isValidTokenForSelectUser(req.headers.mail, req.headers.authorization);
+    } catch (e) {
+        codeValidToken = e;
     }
-
-    //vérification du format du json
-    let ville = jsonSerie.ville;
-    let map_x = jsonSerie.map_refs.map_x;
-    let map_y = jsonSerie.map_refs.map_y;
-    let map_zoom = jsonSerie.map_refs.map_zoom;
-
-    if(isUndefined(ville) || isUndefined(map_x) || isUndefined(map_y) || isUndefined(map_zoom)){
-        res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(666));
-    }
-    if(!isString(ville) || isEmptyString(ville) || !isPositive(map_x) || !isPositive(map_y) || !isPositive(map_zoom)){
-        res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(666));
-    }
-
-    db.query("insert into `serie` (`ville`, `map_x`, `map_y`, `map_zoom`, `distance`) values (?, ?, ?, ?, ?)", [ville, map_x, map_y, map_zoom, 0.0022561023667568847], (err, result) => {
-        if(err){
-            res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(500));
-        }else{
-            res.status(200).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(200));
+    if (codeValidToken === 200) {
+        let jsonSerie = req.body;
+        if(typeof jsonSerie === "undefined"){
+            res.status(500).end(getMessageFromHTTPCode(500));
         }
-    })
 
+        //vérification du format du json
+        let ville = jsonSerie.ville;
+        let map_x = jsonSerie.map_refs.map_x;
+        let map_y = jsonSerie.map_refs.map_y;
+        let map_zoom = jsonSerie.map_refs.map_zoom;
+
+        if(isUndefined(ville) || isUndefined(map_x) || isUndefined(map_y) || isUndefined(map_zoom)){
+            res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(666));
+        }
+        if(!isString(ville) || isEmptyString(ville) || !isPositive(map_x) || !isPositive(map_y) || !isPositive(map_zoom)){
+            res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(666));
+        }
+
+        db.query("insert into `serie` (`ville`, `map_x`, `map_y`, `map_zoom`, `distance`) values (?, ?, ?, ?, ?)", [ville, map_x, map_y, map_zoom, 0.0022561023667568847], (err, result) => {
+            if(err){
+                res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(500));
+            }else{
+                res.status(200).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(200));
+            }
+        })
+    } else {
+        res.status(codeValidToken).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(codeValidToken));
+    }
 });
 
 /**
