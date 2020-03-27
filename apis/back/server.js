@@ -265,7 +265,18 @@ app.get("/series/:id/parties", (req, res) => {
     })
 });
 
-
+/**
+ * @api {post} /series permet d'ajouter une série en bdd
+ * @apiDescription route permettant d'ajouter une série en bdd
+ * @apiParam {json} body {
+    "ville": "Ncy",
+    "map_refs": {
+        "map_x": 00.00,
+        "map_y": 00.00,
+        "map_zoom": 0
+    }
+}
+ */
 app.post("/series", (req, res) => {
     let jsonSerie = req.body;
     if(typeof jsonSerie === "undefined"){
@@ -304,7 +315,6 @@ app.post("/series", (req, res) => {
     "mail": "bob@test.fr",
     "mdp": "michel"
 }
-
  */
 app.post("/utilisateurs", (req, res) => {
     let jsonUser = req.body;
