@@ -80,7 +80,7 @@
     <button
       type="button"
       class="btn btn-secondary text-center"
-      v-on:click="$router.push({path:'/end/' + idSerie +'/' + idPartie + '/' + score})"
+      v-on:click="$router.push({path:'/end/' + idSerie +'/' + idPartie + '/' + score +'/' + tokenSerie + '/' + nbPhoto})"
     >Cliqué ici si vous voulez enregistrer votre score</button>
   </div>
 </template>
@@ -144,12 +144,14 @@ export default {
       center: [0, 0],
       tabImages: [],
       compteurImg: 0,
+      nbPhoto : 0,
       timer: 20,
       score: 0,
       serie: "",
       distance: 0,
       statusPartie: 2,
       opacity: 0.6,
+      tokenSerie :"",
       token: "your token if using mapbox",
       mapOptions: {
         zoomControl: true,
@@ -293,19 +295,20 @@ export default {
         }
       }
     },
-    // Pour recup info de la partie et trouver la bonne série
+    // Pour recup info de la partie et trouver la bonne série ET AVOIR LE TOKEN POUR FINIR LA PARTIE
     findPartie() {
       axios
-        /*
+
         .get(
-          "http://docketu.iutnc.univ-lorraine.fr:17180/series/" + this.idPartie
+          "http://docketu.iutnc.univ-lorraine.fr:17180/parties/" + this.idPartie
         )
-        */
-        .get("https://58de787a.ngrok.io/parties/" + this.idPartie)
+
+        //.get("https://58de787a.ngrok.io/parties/" + this.idPartie)
 
         .then(response => {
           // handle success
           console.log(response);
+          this.tokenSerie = response.data[0].token
         })
         .catch(function(error) {
           // handle error
@@ -318,12 +321,12 @@ export default {
     // Récupère la bonne série dans l'Api ainsi que ses infos + Place la map avec bon coordonnée
     getSerie() {
       axios
-        /*
+
         .get(
-          "http://docketu.iutnc.univ-lorraine.fr:17180/series/" + this.idPartie
+          "http://docketu.iutnc.univ-lorraine.fr:17180/series/" + this.idSerie
         )
-        */
-        .get("https://58de787a.ngrok.io/series/" + this.idSerie)
+
+        //.get("https://58de787a.ngrok.io/series/" + this.idSerie)
 
         .then(response => {
           // handle success
@@ -342,18 +345,19 @@ export default {
     getnbPhoto() {
       // Pour afficher le nombre de photo qu'il y a dans la série
       axios
-        /*
+
         .get(
           "http://docketu.iutnc.univ-lorraine.fr:17180/series/" +
-            this.idPartie +
+            this.idSerie +
             "/photos"
         )
-        */
-        .get("https://58de787a.ngrok.io/series/" + this.idSerie + "/photos")
+
+        //.get("https://58de787a.ngrok.io/series/" + this.idSerie + "/photos")
 
         .then(response => {
           // handle success
           console.log(response);
+          this.nbPhoto = response.data.disponibles
           response.data.photos.forEach(element => {
             this.tabImages.push(element);
           });

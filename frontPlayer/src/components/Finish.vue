@@ -1,6 +1,13 @@
 <template>
   <div class="container text-center">
-      Votre Partie est finit. Vous avez obtenu un score de <b>{{score}}</b>
+    <p>
+    Votre Partie est finit. Vous avez obtenu un score de
+    <b>{{score}}</b></p>
+    <button
+      type="button"
+      class="btn btn-secondary text-center"
+      v-on:click="$router.push({path:'/score/' + idSerie })"
+    >Voir le classement de cette série</button>
   </div>
 </template>
 
@@ -8,39 +15,38 @@
 const axios = require("axios");
 
 export default {
-
   data() {
     return {
       idPartie: this.$route.params.id,
       idSerie: this.$route.params.serid,
-      pseudo: this.$route.params.pseudo,
-      score : this.$route.params.score
+      score: this.$route.params.score,
+      token: this.$route.params.token,
+      nbphoto: this.$route.params.nbphoto
     };
   },
-  computed: {
-
-  },
+  computed: {},
   created: function() {
-     let jsonEnvoi = {
-        score: this.score,
-        nb_photos : 5
-      };
-      axios({
-        method: "PUT",
-        url: "http://docketu.iutnc.univ-lorraine.fr:17180/parties/" + this.idPartie,
-        data: jsonEnvoi
+    let jsonEnvoi = {
+      score: this.score,
+      nb_photos: this.nbphoto,
+      partie_token: this.token
+    };
+    axios({
+      method: "PUT",
+      url:
+        "http://docketu.iutnc.univ-lorraine.fr:17180/parties/" + this.idPartie,
+      data: jsonEnvoi
+    })
+      .then(response => {
+        console.log(response);
       })
-        .then(response => {
-          console.log(response);
-        })
-        .catch(error => {
-          console.log(error);
-        });
+      .catch(error => {
+        console.log(error);
+      });
   }
 };
 </script>
 
 <style>
 @import "../style/css/End.css";
-
 </style>

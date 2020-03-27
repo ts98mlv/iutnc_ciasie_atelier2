@@ -59,8 +59,8 @@ export default {
       };
       axios({
         method: "POST",
-      //  url: "http://docketu.iutnc.univ-lorraine.fr:17180/series",
-        url: "https://58de787a.ngrok.io/parties",
+        url: "http://docketu.iutnc.univ-lorraine.fr:17180/parties",
+        //url: "https://58de787a.ngrok.io/parties",
         data: jsonEnvoi
       })
         .then(response => {
@@ -75,8 +75,8 @@ export default {
     getSeries() {
       // Pour voir toute les séries disponibles dans la liste déroulante
       axios
-        //.get("http://docketu.iutnc.univ-lorraine.fr:17180/series")
-        .get("https://58de787a.ngrok.io/series")
+        .get("http://docketu.iutnc.univ-lorraine.fr:17180/series")
+        //.get("https://58de787a.ngrok.io/series")
         .then(response => {
           // handle success
           console.log(response);

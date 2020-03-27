@@ -47,15 +47,15 @@ export default {
     };
   },
   methods: {
-    // Pour recup info de la partie 
+    // Pour recup info de la partie
     findPartie() {
       axios
-        /*
+
         .get(
-          "http://docketu.iutnc.univ-lorraine.fr:17180/series/" + this.idPartie
+          "http://docketu.iutnc.univ-lorraine.fr:17180/parties/" + this.idPartie
         )
-        */
-        .get("https://58de787a.ngrok.io/parties/" + this.idPartie)
+
+        //.get("https://58de787a.ngrok.io/parties/" + this.idPartie)
 
         .then(response => {
           // handle success
@@ -72,12 +72,12 @@ export default {
     // Récupère la bonne série dans l'Api ainsi que ses infos
     haveSerie() {
       axios
-        /*
+
         .get(
-          "http://docketu.iutnc.univ-lorraine.fr:17180/series/" + this.idPartie
+          "http://docketu.iutnc.univ-lorraine.fr:17180/series/" + this.idSerie
         )
-        */
-        .get("https://58de787a.ngrok.io/series/" + this.idSerie)
+
+        //.get("https://58de787a.ngrok.io/series/" + this.idSerie)
 
         .then(response => {
           // handle success
@@ -95,14 +95,14 @@ export default {
     getnbPhoto() {
       // Pour afficher le nombre de photo qu'il y a dans la série
       axios
-        /*
+
         .get(
           "http://docketu.iutnc.univ-lorraine.fr:17180/series/" +
-            this.idPartie +
+            this.idSerie +
             "/photos"
         )
-        */
-        .get("https://58de787a.ngrok.io/series/" + this.idSerie + "/photos")
+
+        //.get("https://58de787a.ngrok.io/series/" + this.idSerie + "/photos")
 
         .then(response => {
           // handle success
@@ -126,7 +126,6 @@ export default {
     this.findPartie();
     this.haveSerie();
     this.getnbPhoto();
-
   }
 };
 </script>
