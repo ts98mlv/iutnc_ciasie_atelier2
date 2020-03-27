@@ -180,6 +180,17 @@ app.get("/series/:id/photos", (req, res) => {
 
 });
 
+/**
+ * @api {put} /parties/:id permet de modifier une partie
+ * @apiDescription permet de modifier une partie, utilisé surtout pour finir une partie
+ * @apiParam {Number} id id de la partie concernée
+ * @apiParam {Json} body json avec le token de la partie, le score et le nombre de photos
+ * @apiParamExemple {Json} {
+ *     "partie_token" : "string token",
+ *     "score" : 1,
+ *     "nb_photos": 10
+ * }
+ */
 app.put("/parties/:id", (req, res) => {
     let partie_id = parseInt(req.params.id);
 
@@ -193,7 +204,7 @@ app.put("/parties/:id", (req, res) => {
         res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(666));
     }
 
-    db.query("select * from `partie` where id=?", [partie_id], (err, partie) => {
+    db.query("select * from `partie` where `id`=?", [partie_id], (err, partie) => {
         partie = partie[0];
         //vérification du token
         if(partie.token !== partie_token){
@@ -212,6 +223,11 @@ app.put("/parties/:id", (req, res) => {
 
 });
 
+/**
+ * @api {get} /parties permet d'avoir la liste des parties
+ * @apiDescription permet d'avoir la liste des parties
+ * @apiSuccess {Json} Json avec la liste des parties
+ */
 app.get("/parties", (req, res) => {
    db.query("select * from `partie`", [], (err, result) => {
        if(err){
@@ -225,6 +241,12 @@ app.get("/parties", (req, res) => {
    })
 });
 
+/**
+ * @api {get} /parties/:id permet d'avoir les infos d'une partie
+ * @apiDescription permet d'avoir les infos d'une partie
+ * @apiParam {Number} id id de la partie concernée
+ * @apiSuccess {Json} Json avec la liste des infos de la partie
+ */
 app.get("/parties/:id", (req, res) => {
     let id = parseInt(req.params.id);
     if(id <= 0 || isUndefined(id)){
@@ -272,7 +294,8 @@ const db = mysql.createConnection({
 // connexion à la bdd
 db.connect(err => {
     if (err) {
-        throw err;
+        console.log(err);
+        throw new Error(err);
     }else{
         console.log("Connected to database");
     }
@@ -281,22 +304,47 @@ db.connect(err => {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          Fonctions                                                                 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * fonction qui permet de définir si un élément est de type undefined
+ * @param element
+ * @returns {boolean}
+ */
 function isUndefined(element) {
     return (typeof element === "undefined");
 }
 
+/**
+ * permet de définir si un élément est une chaîne vide
+ * @param element
+ * @returns {boolean}
+ */
 function isEmptyString(element){
     return (element === "");
 }
 
+/**
+ * permet de définir si un élément est de type nombre
+ * @param element
+ * @returns {boolean}
+ */
 function isNumber(element){
     return (typeof element === "number");
 }
 
+/**
+ * permet de définir si un élément est positif
+ * @param element
+ * @returns {boolean}
+ */
 function isPositive(element) {
     return (isNumber(element) && element >= 0);
 }
 
+/**
+ * permet de définir si un élément est strictement positif
+ * @param element
+ * @returns {boolean}
+ */
 function isStrictlyPositive(element) {
     return (isNumber(element) && element > 0);
 }
@@ -339,6 +387,12 @@ function getMessageFromHTTPCode(code) {
     return message;
 }
 
+/**
+ * fonction qui permet de générer un nombre entier aléatoire entre deux bornes
+ * @param {Number} min borne inférieure
+ * @param {Number} max borne supérieure
+ * @returns {Number}
+ */
 function entierAleatoire(min, max)
 {
     return Math.floor(Math.random() * (max - min + 1)) + min;
