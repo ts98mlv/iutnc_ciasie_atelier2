@@ -46,7 +46,10 @@
                 erreurLocation: false,
                 upload: false,
                 progress: 0,
-                location: {},
+                location: {
+                    longitude: 0,
+                    latitude: 0,
+                },
                 connection: "",
                 urlAPI: "http://docketu.iutnc.univ-lorraine.fr:17080/",
             }
