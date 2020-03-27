@@ -159,7 +159,7 @@ export default {
         zoomSnap: true,
         scrollWheelZoom: false
       },
-      zoom: 13,
+      zoom: 14,
       minZoom: 1,
       maxZoom: 20,
       imperial: false,

@@ -1,7 +1,7 @@
 <template>
   <div class="container text-center">
     <p>
-    Votre Partie est finit. Vous avez obtenu un score de
+    Vous avez enregistré votre partie avec votre score de 
     <b>{{score}}</b></p>
     <button
       type="button"

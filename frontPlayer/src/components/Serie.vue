@@ -53,7 +53,9 @@ export default {
   methods: {
     // Pour créer la partie et envoyer au serveur
     createPartie() {
-      let jsonEnvoi = {
+      if(this.pseudo != "" && this.idSerie != "")
+      {
+              let jsonEnvoi = {
         pseudo: this.pseudo,
         serie_id: this.idSerie
       };
@@ -71,6 +73,11 @@ export default {
         .catch(error => {
           console.log(error);
         });
+      }
+      else {
+        alert("N'oubliez d'insérer votre pseudo et choisir une série")
+      }
+
     },
     getSeries() {
       // Pour voir toute les séries disponibles dans la liste déroulante
