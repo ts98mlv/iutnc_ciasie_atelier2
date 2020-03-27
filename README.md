@@ -22,13 +22,13 @@ Bien évidemment nous étions tout le temps en contact et sommes au courant du c
 ### Installation : 
 <ol>
     <li>
-        Envoyer les APIs sur docketu avec le fichier docker-compose_docketu.yml au serveur.
+        Envoyer les APIs sur docketu avec le fichier <i>docker-compose_docketu.yml</i> au serveur.
     </li>
     <li>
-        Renommer le fichier docker-compose_docketu.yml en docker-compose.yml sur le serveur.
+        Renommer le fichier <i>docker-compose_docketu.yml</i> en <i>docker-compose.yml</i> sur le serveur.
     </li>
     <li>
-        En ssh, se connecter au serveur et entrer docker-compose up. Il se peut que vous soyez obligé de la lancer plusieurs fois pour avoir les 3 APIs de connectées à la base de données.
+        En ssh, se connecter au serveur et entrer <code>docker-compose up</code>. Il se peut que vous soyez obligé de la lancer plusieurs fois pour avoir les 3 APIs de connectées à la base de données.
     </li>
     <li>Lancer les applications voulues en suivant les instructions du readme qui les accompagne.</li>
 </ol>
