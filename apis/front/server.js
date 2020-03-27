@@ -275,8 +275,7 @@ app.get("/parties/:id", (req, res) => {
 app.all("*", (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.status(400);
-    res.header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(400
-    ));
+    res.end(JSON.stringify({type: "error", error: 400, message: "Requête daubée du cul : " + req.url}));
 });
 
 // lance l'application
@@ -285,7 +284,7 @@ console.log(`GeoQuizz API Running on http://${HOST}:${PORT}`);
 
 // créé la bdd
 const db = mysql.createConnection({
-    host: "mysql",
+    host: "db",
     user: "api_geoquizz",
     password: "api_geoquizz",
     database: "api_geoquizz"
@@ -294,8 +293,7 @@ const db = mysql.createConnection({
 // connexion à la bdd
 db.connect(err => {
     if (err) {
-        console.log(err);
-        throw new Error(err);
+        return err; //c'est cette ligne
     }else{
         console.log("Connected to database");
     }

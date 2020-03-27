@@ -233,7 +233,7 @@ app.get("/series/:id", (req, res) => {
  * @api {get} /series/:id/photos route pour avoir les photos liées à une série
  * @apiDescription  route pour avoir les photos liées à une série
  * @apiParam {Number} id id de la série concernée
- * 
+ * @apiHeader {String} authorization "Bearer tokenJWT" avec tokenJWT correspondant au token JWT récupéré lors de la connexion
  */
 app.get("/series/:id/photos", (req, res) => {
     db.query("select * from `photo` where `serie_id`=?;", [req.params.id], (error, result) => {
@@ -280,7 +280,7 @@ app.get("/series/:id/parties", (req, res) => {
 app.post("/series", (req, res) => {
     let jsonSerie = req.body;
     if(typeof jsonSerie === "undefined"){
-        res.status(500).json(getMessageFromHTTPCode(500));
+        res.status(500).end(getMessageFromHTTPCode(500));
     }
 
     //vérification du format du json
@@ -290,17 +290,17 @@ app.post("/series", (req, res) => {
     let map_zoom = jsonSerie.map_refs.map_zoom;
 
     if(isUndefined(ville) || isUndefined(map_x) || isUndefined(map_y) || isUndefined(map_zoom)){
-        res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(666));
+        res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(666));
     }
     if(!isString(ville) || isEmptyString(ville) || !isPositive(map_x) || !isPositive(map_y) || !isPositive(map_zoom)){
-        res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(666));
+        res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(666));
     }
 
     db.query("insert into `serie` (`ville`, `map_x`, `map_y`, `map_zoom`, `distance`) values (?, ?, ?, ?, ?)", [ville, map_x, map_y, map_zoom, 0.0022561023667568847], (err, result) => {
         if(err){
-            res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(500));
+            res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(500));
         }else{
-            res.status(200).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(200));
+            res.status(200).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(200));
         }
     })
 
@@ -343,6 +343,61 @@ app.post("/utilisateurs", (req, res) => {
     })
 });
 
+/**
+ * @api {delete} /series/:id permet de supprimer une série
+ * @apiDescription permet de supprimer une série
+ * @apiParam {Number} id id de la série concernée
+ * @apiHeader {String} authorization "Bearer tokenJWT" avec tokenJWT correspondant au token JWT récupéré lors de la connexion
+ * @apiHeader {String} mail email de l'utilisateur connecté
+ */
+app.delete("/series/:id", async (req, res) => {
+   //vérification du token
+    let codeValidToken;
+    try {
+        codeValidToken = await isValidTokenForSelectUser(req.headers.mail, req.headers.authorization);
+    } catch (e) {
+        codeValidToken = e;
+    }
+    if (codeValidToken === 200) {
+        console.log("sup : code 200");
+        //vérification de l'existence de la série
+        let id = parseInt(req.params.id);
+        db.query("select * from `serie` where `id`=?", [id], (err, result) => {
+            if(err){
+                res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(500));
+            }
+            if(result.length <= 0){
+              res.status(404).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(404));
+            }
+
+            //suppression des photos de la series
+            db.query("delete from `photo` where `serie_id`=?", [id], (err2, result2) => {
+                if(err2){
+                    res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(500));
+                }
+
+                //suppression des parties de la series
+                db.query("delete from `partie` where `serie_id`=?", [id], (err3, result2) => {
+                    if(err3){
+                        res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(500));
+                    }
+
+                    //suppression de la serie
+                    db.query("delete from `serie` where `id`=?", [id], (err4, result3) => {
+                        if(err4){
+                            res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(500));
+                        }
+
+                        console.log("série supprimée");
+                        res.status(200).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(200));
+                    });
+                });
+            });
+        });
+    } else {
+        res.status(codeValidToken).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(codeValidToken));
+    }
+});
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                  Fin des routes                                                                    //
@@ -365,7 +420,7 @@ console.log(`GeoQuizz API Running on http://${HOST}:${PORT}`);
 
 // créé la bdd
 const db = mysql.createConnection({
-    host: "mysql",
+    host: "db",
     user: "api_geoquizz",
     password: "api_geoquizz",
     database: "api_geoquizz"
@@ -374,7 +429,7 @@ const db = mysql.createConnection({
 // connexion à la bdd
 db.connect(err => {
     if (err) {
-        throw err;
+       return err; //c'est cette ligne
     }else{
         console.log("Connected to database");
     }

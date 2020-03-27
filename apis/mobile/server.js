@@ -264,7 +264,7 @@ console.log(`GeoQuizz API Running on http://${HOST}:${PORT}`);
 
 // créé la bdd
 const db = mysql.createConnection({
-    host: "mysql",
+    host: "db",
     user: "api_geoquizz",
     password: "api_geoquizz",
     database: "api_geoquizz"
@@ -273,7 +273,7 @@ const db = mysql.createConnection({
 // connexion à la bdd
 db.connect(err => {
     if (err) {
-        throw err;
+        return err;
     }else{
         console.log("Connected to database");
     }
