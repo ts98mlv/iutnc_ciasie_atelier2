@@ -188,7 +188,6 @@
         },
         created() {
 
-            console.log("Token : " + localStorage.getItem("tokenJWT"));
 
             geolocation.enableLocationRequest(true)
                 .then(() => {
