@@ -295,6 +295,44 @@ app.post("/series", (req, res) => {
 
 });
 
+/**
+ * @api {post} /utilisateurs permet d'ajouter un utilisateur en bdd
+ * @apiDescription route permettant d'ajouter un utilisateur en bdd
+ * @apiHeader {String} authorization "Basic chaineEncodeeB64" avec chaineEncodeeB64 correspondant à "email:motDePasse" encodé en base 64
+ * @apiParam {json} body {
+    "login": "bb",
+    "mail": "bob@test.fr",
+    "mdp": "michel"
+}
+
+ */
+app.post("/utilisateurs", (req, res) => {
+    let jsonUser = req.body;
+    if(isUndefined(jsonUser)){
+        res.status(500).end(getMessageFromHTTPCode(500));
+    }
+    //vérification du contenu du json
+    let login = jsonUser.login;
+    let mail = jsonUser.mail;
+    let mdp = jsonUser.mdp;
+    if(isUndefined(login) || isUndefined(mail) || isUndefined(mdp) || isEmptyString(mail) || isEmptyString(mdp)){
+        res.status(500).end(getMessageFromHTTPCode(666));
+    }
+
+    //hashage du mot de passe
+    let salt = bcrypt.genSaltSync(saltRounds);
+    mdp = bcrypt.hashSync(mdp, salt);
+    //insertion en bdd
+    db.query("insert into `utilisateur` (`login`, `email`, `mdp`) values (?, ?, ?);", [login, mail, mdp], (error, result) => {
+        if(error){
+            res.status(500).end(getMessageFromHTTPCode(500));
+        }
+        else{
+            res.status(200).end(getMessageFromHTTPCode(200));
+        }
+    })
+});
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                  Fin des routes                                                                    //
