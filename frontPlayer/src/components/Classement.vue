@@ -42,6 +42,7 @@ export default {
         response.data.forEach(element => {
           if (element.serie_id == this.idSerie) this.tabScore.push(element);
         });
+        // tri le tableau dans l'ordre croissant
         this.tabScore.sort(function (a,b) {
             return b.score - a.score;
         })

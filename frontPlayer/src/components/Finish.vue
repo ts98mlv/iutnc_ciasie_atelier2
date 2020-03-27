@@ -1,13 +1,20 @@
 <template>
   <div class="container text-center">
     <p>
-    Vous avez enregistré votre partie avec votre score de 
-    <b>{{score}}</b></p>
+      Vous avez enregistré votre partie avec votre score de
+      <b>{{score}}</b>
+    </p>
     <button
       type="button"
       class="btn btn-secondary text-center"
       v-on:click="$router.push({path:'/score/' + idSerie })"
     >Voir le classement de cette série</button>
+    <br>
+    <button
+      type="button"
+      class="btn btn-secondary text-center"
+      v-on:click="$router.push({path:'/'})"
+    >Revenir à l'accueil</button>
   </div>
 </template>
 
@@ -26,6 +33,7 @@ export default {
   },
   computed: {},
   created: function() {
+    // Met fin à la partie dans l'API avec le score
     let jsonEnvoi = {
       score: this.score,
       nb_photos: this.nbphoto,
