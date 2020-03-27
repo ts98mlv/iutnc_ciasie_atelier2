@@ -16,3 +16,7 @@ Sachant que la géolocalisation est utilisée qu'à la prise de photos, pas en p
 Il est ensuite possible de créer une série, cela prend notre localisation, et le nom de la ville, envoyant toutes les informations à l'API.
 
 Tout fonctionne, quand Docketu le veut, donc, pas souvent, surtout avec NodeJS.
+
+## Installation
+Pour installer l'application, il suffit de faire un 'tns run' à la racine du projet.
+Surtout, ne pas oublier le VPN, si utilisation des APIs sous docketu.
