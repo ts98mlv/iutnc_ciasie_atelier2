@@ -101,6 +101,7 @@ app.post("/utilisateurs/:email/auth", (req, res) => {
             {expiresIn: '3h'}
         );
 
+        console.log("utilisateur connecté");
         res.status(200).end(JSON.stringify({tokenJWT: token, code: 200}));
     });
 
@@ -138,6 +139,7 @@ app.post("/photos", async (req, res) => {
                 if(err){
                     res.status(500).end(getMessageFromHTTPCode(500));
                 }else{
+                    console.log("photo ajoutée");
                     res.status(200).end(JSON.stringify(getMessageFromHTTPCode(200)));
                 }
             });
@@ -181,6 +183,7 @@ app.post("/utilisateurs", (req, res) => {
             res.status(500).end(getMessageFromHTTPCode(500));
         }
         else{
+            console.log("utilisateur créé");
             res.status(200).end(getMessageFromHTTPCode(200));
         }
     })
@@ -231,6 +234,7 @@ app.post("/series", async (req, res) => {
             if(err){
                 res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(500));
             }else{
+                console.log("série crée");
                 res.status(200).header("Content-Type", "application/json; charset=utf-8").send(getMessageFromHTTPCode(200));
             }
         })

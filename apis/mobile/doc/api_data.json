@@ -49,6 +49,43 @@
   },
   {
     "type": "post",
+    "url": "/series",
+    "title": "permet d'ajouter une série en bdd",
+    "description": "<p>route permettant d'ajouter une série en bdd</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>&quot;Bearer tokenJWT&quot; avec tokenJWT correspondant au token JWT récupéré lors de la connexion</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "json",
+            "optional": false,
+            "field": "body",
+            "description": "<p>{ &quot;ville&quot;: &quot;Ncy&quot;, &quot;map_refs&quot;: { &quot;map_x&quot;: 00.00, &quot;map_y&quot;: 00.00, &quot;map_zoom&quot;: 0 }</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "./server.js",
+    "group": "/home/thomas/Documents/ciasie/atelier2/iutnc_ciasie_atelier2/apis/mobile/server.js",
+    "groupTitle": "/home/thomas/Documents/ciasie/atelier2/iutnc_ciasie_atelier2/apis/mobile/server.js",
+    "name": "PostSeries"
+  },
+  {
+    "type": "post",
     "url": "/utilisateurs",
     "title": "permet d'ajouter un utilisateur en bdd",
     "description": "<p>route permettant d'ajouter un utilisateur en bdd</p>",

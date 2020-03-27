@@ -185,7 +185,7 @@ app.get("/series/:id/photos", (req, res) => {
  * @apiDescription permet de modifier une partie, utilisé surtout pour finir une partie
  * @apiParam {Number} id id de la partie concernée
  * @apiParam {Json} body json avec le token de la partie, le score et le nombre de photos
- * @apiParamExemple {Json} {
+ * @apiParamExample {Json} {
  *     "partie_token" : "string token",
  *     "score" : 1,
  *     "nb_photos": 10
