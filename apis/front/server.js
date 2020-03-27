@@ -58,6 +58,8 @@ app.post("/parties", (req, res) => {
     //génération du token uuid
     let token = uuid();
 
+   getConnexion();
+
     //enregistrement en bdd
     db.query("insert into `partie` (`token`, `joueur`, `serie_id`, `status`, `score`) values (?, ?, ?, 2, 0)", [token, login, serie_id], (err, result) => {
         if(err){
@@ -75,6 +77,7 @@ app.post("/parties", (req, res) => {
  * @apiSuccess {Json} fichier json avec un tableau d'objets correspondant à une série en bdd
  */
 app.get("/series", (req, res) => {
+    getConnexion();
     db.query("select * from `serie`;", [], (err, result) => {
        if(err){
            res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(500));
@@ -99,6 +102,8 @@ app.get("/series/:id", (req, res) => {
     if(typeof id !== "number" || id <= 0){
         res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(500));
     }
+
+    getConnexion();
 
     db.query("select * from `serie` where id=?;", [id], (err, result) => {
        if(err){
@@ -137,6 +142,7 @@ app.get("/series/:id/photos", (req, res) => {
     }
 
     let lesPhotos = [];
+    getConnexion();
 
         db.query("select * from `photo` where `serie_id` = ?", [id], (err, result) => {
             if(err){
@@ -204,6 +210,8 @@ app.put("/parties/:id", (req, res) => {
         res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(666));
     }
 
+    getConnexion();
+
     db.query("select * from `partie` where `id`=?", [partie_id], (err, partie) => {
         partie = partie[0];
         //vérification du token
@@ -229,6 +237,7 @@ app.put("/parties/:id", (req, res) => {
  * @apiSuccess {Json} Json avec la liste des parties
  */
 app.get("/parties", (req, res) => {
+    getConnexion();
    db.query("select * from `partie`", [], (err, result) => {
        if(err){
            res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(500));
@@ -252,6 +261,7 @@ app.get("/parties/:id", (req, res) => {
     if(id <= 0 || isUndefined(id)){
        res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(500));
     }
+    getConnexion();
    db.query("select * from `partie` where `id`=?", [id], (err, result) => {
        if(err){
            res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(500));
@@ -283,25 +293,13 @@ app.listen(PORT, HOST);
 console.log(`GeoQuizz API Running on http://${HOST}:${PORT}`);
 
 // créé la bdd
-const db = mysql.createConnection({
-    host: "db",
-    user: "api_geoquizz",
-    password: "api_geoquizz",
-    database: "api_geoquizz"
-});
-
-// connexion à la bdd
-db.connect(err => {
-    if (err) {
-        return err; //c'est cette ligne
-    }else{
-        console.log("Connected to database");
-    }
-});
+let db;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          Fonctions                                                                 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 /**
  * fonction qui permet de définir si un élément est de type undefined
  * @param element
@@ -394,4 +392,27 @@ function getMessageFromHTTPCode(code) {
 function entierAleatoire(min, max)
 {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+/**
+ * fonction singleton qui permet d'initialiser la connexion si ce n'est pas déjà le cas
+ */
+function getConnexion() {
+    if (isUndefined(db)) {
+        db = mysql.createConnection({
+            host: "db",
+            user: "api_geoquizz",
+            password: "api_geoquizz",
+            database: "api_geoquizz"
+        });
+
+        // connexion à la bdd
+        db.connect(err => {
+            if (err) {
+                return err; //c'est cette ligne
+            } else {
+                console.log("Connected to database");
+            }
+        });
+    }
 }

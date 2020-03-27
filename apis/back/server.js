@@ -46,6 +46,7 @@ app.get("/", (req, res) => {
  * @apiHeader {String} authorization "Bearer tokenJWT" avec tokenJWT correspondant au token JWT récupéré lors de la connexion
  */
 app.get("/photos", async (req, res) => {
+    getConnexion();
     //vérification du token
     let codeValidToken;
     try {
@@ -82,6 +83,8 @@ app.get("/photos", async (req, res) => {
  * @apiHeader {String} authorization "Bearer tokenJWT" avec tokenJWT correspondant au token JWT récupéré lors de la connexion
  */
 app.get("/photos/:id", async (req, res) => {
+    getConnexion();
+
     //vérification du token
     let codeValidToken;
     try {
@@ -120,6 +123,8 @@ app.get("/photos/:id", async (req, res) => {
  * }
  */
 app.put("/photos/:id", async (req, res) => {
+    getConnexion();
+
     //vérification du token
     let codeValidToken;
     try {
@@ -182,6 +187,7 @@ app.put("/photos/:id", async (req, res) => {
  * 
  */
 app.post("/utilisateurs/:email/auth", (req, res) => {
+    getConnexion();
 
     let autorization = req.headers["authorization"];
     if (typeof autorization === "undefined") {
@@ -237,6 +243,8 @@ app.post("/utilisateurs/:email/auth", (req, res) => {
  * @apiHeader {String} authorization "Bearer tokenJWT" avec tokenJWT correspondant au token JWT récupéré lors de la connexion
  */
 app.get("/series", async (req, res) => {
+    getConnexion();
+
     //vérification du token
     let codeValidToken;
     try {
@@ -263,6 +271,9 @@ app.get("/series", async (req, res) => {
  * @apiParam {Number} id id de la série concernée
  */
 app.get("/series/:id", async (req, res) => {
+    getConnexion();
+
+
     //vérification du token
     let codeValidToken;
     try {
@@ -294,6 +305,8 @@ app.get("/series/:id", async (req, res) => {
  * @apiHeader {String} authorization "Bearer tokenJWT" avec tokenJWT correspondant au token JWT récupéré lors de la connexion
  */
 app.get("/series/:id/photos", async (req, res) => {
+    getConnexion();
+
     //vérification du token
     let codeValidToken;
     try {
@@ -325,6 +338,8 @@ app.get("/series/:id/photos", async (req, res) => {
  * 
  */
 app.get("/series/:id/parties", async (req, res) => {
+    getConnexion();
+
     //vérification du token
     let codeValidToken;
     try {
@@ -361,6 +376,8 @@ app.get("/series/:id/parties", async (req, res) => {
 }
  */
 app.post("/series", async (req, res) => {
+    getConnexion();
+
     //vérification du token
     let codeValidToken;
     try {
@@ -391,6 +408,7 @@ app.post("/series", async (req, res) => {
             if(err){
                 res.status(500).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(500));
             }else{
+                console.log("série créée");
                 res.status(200).header("Content-Type", "application/json; charset=utf-8").end(getMessageFromHTTPCode(200));
             }
         })
@@ -410,6 +428,8 @@ app.post("/series", async (req, res) => {
 }
  */
 app.post("/utilisateurs", (req, res) => {
+    getConnexion();
+
     let jsonUser = req.body;
     if(isUndefined(jsonUser)){
         res.status(500).end(getMessageFromHTTPCode(500));
@@ -444,7 +464,9 @@ app.post("/utilisateurs", (req, res) => {
  * @apiHeader {String} mail email de l'utilisateur connecté
  */
 app.delete("/series/:id", async (req, res) => {
-   //vérification du token
+    getConnexion();
+
+    //vérification du token
     let codeValidToken;
     try {
         codeValidToken = await isValidTokenForSelectUser(req.headers.mail, req.headers.authorization);
@@ -512,22 +534,7 @@ app.listen(PORT, HOST);
 console.log(`GeoQuizz API Running on http://${HOST}:${PORT}`);
 
 // créé la bdd
-const db = mysql.createConnection({
-    host: "db",
-    user: "api_geoquizz",
-    password: "api_geoquizz",
-    database: "api_geoquizz"
-});
-
-// connexion à la bdd
-db.connect(err => {
-    if (err) {
-       return err; //c'est cette ligne
-    }else{
-        console.log("Connected to database");
-    }
-});
-
+let db;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          Fonctions                                                                 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -616,8 +623,6 @@ function isTokenUnaltered(token) {
     return isGood;
 }
 
-
-
 /**
  * fonction qui permet de définir si un élément est de type undefined
  * @param element
@@ -661,4 +666,37 @@ function isPositive(element) {
  */
 function isStrictlyPositive(element) {
     return (isNumber(element) && element > 0);
+}
+
+
+/**
+ * fonction qui permet de savoir si un élément est de type String
+ * @param element
+ * @returns {boolean}
+ */
+function isString(element){
+    return (typeof element === "string");
+}
+
+/**
+ * fonction singleton qui permet d'initialiser la connexion si ce n'est pas déjà le cas
+ */
+function getConnexion() {
+    if (isUndefined(db)) {
+        db = mysql.createConnection({
+            host: "db",
+            user: "api_geoquizz",
+            password: "api_geoquizz",
+            database: "api_geoquizz"
+        });
+
+        // connexion à la bdd
+        db.connect(err => {
+            if (err) {
+                return err; //c'est cette ligne
+            } else {
+                console.log("Connected to database");
+            }
+        });
+    }
 }

@@ -74,6 +74,7 @@ app.post("/utilisateurs/:email/auth", (req, res) => {
     let passwordGiven = dataDecodedB64['1'];
 
     let mail = req.params.email;
+    getConnexion();
 
     db.query("select `email`, `mdp` from `utilisateur` where `email`=?", [mail], (error, result) => {
         if (error) {
@@ -121,6 +122,7 @@ app.post("/utilisateurs/:email/auth", (req, res) => {
  */
 app.post("/photos", async (req, res) => {
     let jsonPhoto = req.body;
+    getConnexion();
 
     if(typeof jsonPhoto === "undefined"){
         res.status(500).end(getMessageFromHTTPCode(500));
@@ -177,6 +179,8 @@ app.post("/utilisateurs", (req, res) => {
     //hashage du mot de passe
     let salt = bcrypt.genSaltSync(saltRounds);
     mdp = bcrypt.hashSync(mdp, salt);
+
+    getConnexion();
     //insertion en bdd
     db.query("insert into `utilisateur` (`login`, `email`, `mdp`) values (?, ?, ?);", [login, mail, mdp], (error, result) => {
         if(error){
@@ -221,6 +225,8 @@ app.post("/series", async (req, res) => {
         res.status(500).header("Content-Type", "application/json; charset=utf-8").json(getMessageFromHTTPCode(666));
     }
 
+    getConnexion();
+
     //verif du token
     let codeValidToken;
     try {
@@ -263,21 +269,7 @@ app.listen(PORT, HOST);
 console.log(`GeoQuizz API Running on http://${HOST}:${PORT}`);
 
 // créé la bdd
-const db = mysql.createConnection({
-    host: "db",
-    user: "api_geoquizz",
-    password: "api_geoquizz",
-    database: "api_geoquizz"
-});
-
-// connexion à la bdd
-db.connect(err => {
-    if (err) {
-        return err;
-    }else{
-        console.log("Connected to database");
-    }
-});
+let db;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                          Fonctions                                                                 //
@@ -419,4 +411,27 @@ function isPositive(element) {
  */
 function isStrictlyPositive(element) {
     return (isNumber(element) && element > 0);
+}
+
+/**
+ * fonction singleton qui permet d'initialiser la connexion si ce n'est pas déjà le cas
+ */
+function getConnexion() {
+    if (isUndefined(db)) {
+        db = mysql.createConnection({
+            host: "db",
+            user: "api_geoquizz",
+            password: "api_geoquizz",
+            database: "api_geoquizz"
+        });
+
+        // connexion à la bdd
+        db.connect(err => {
+            if (err) {
+                return err; //c'est cette ligne
+            } else {
+                console.log("Connected to database");
+            }
+        });
+    }
 }
