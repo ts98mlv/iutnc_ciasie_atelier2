@@ -82,6 +82,12 @@
       class="btn btn-secondary text-center"
       v-on:click="$router.push({path:'/end/' + idSerie +'/' + idPartie + '/' + score +'/' + tokenSerie + '/' + nbPhoto})"
     >Cliqué ici si vous voulez enregistrer votre score</button>
+    <br>
+    <button
+      type="button"
+      class="btn btn-secondary text-center"
+      v-on:click="$router.push({path:'/'})"
+    >Revenir à l'accueil</button>
   </div>
 </template>
 
@@ -144,14 +150,15 @@ export default {
       center: [0, 0],
       tabImages: [],
       compteurImg: 0,
-      nbPhoto : 0,
+      nbPhoto: 0,
       timer: 20,
       score: 0,
+      points: 0,
       serie: "",
       distance: 0,
       statusPartie: 2,
       opacity: 0.6,
-      tokenSerie :"",
+      tokenSerie: "",
       token: "your token if using mapbox",
       mapOptions: {
         zoomControl: true,
@@ -260,20 +267,24 @@ export default {
               newMarker.position.lng);
         }
         // Ajout de point
+        this.points = 0;
         if (this.distance < this.serie.distance) {
-          this.score = this.score + 5;
+          this.points = this.points + 5;
         } else if (this.distance < this.serie.distance * 2) {
-          this.score = this.score + 3;
+          this.points = this.points + 3;
         } else if (this.distance < this.serie.distance * 3) {
-          this.score = this.score + 1;
+          this.points = this.points + 1;
         }
 
-        // On multiplie le score en fonction du temps
-        if (this.timer >= 15) {
-          this.score = this.score * 4;
+        // On multiplie les points en fonction du temps
+        if (this.timer >= 15 && this.points > 0) {
+          this.points = this.points * 4;
         } else if (this.timer >= 10 && this.timer <= 15) {
-          this.score = this.score * 2;
+          this.points = this.points * 2;
         }
+
+        // On ajoute les points au score
+        this.score += this.points;
 
         this.distance = 0;
 
@@ -308,7 +319,7 @@ export default {
         .then(response => {
           // handle success
           console.log(response);
-          this.tokenSerie = response.data[0].token
+          this.tokenSerie = response.data[0].token;
         })
         .catch(function(error) {
           // handle error
@@ -357,7 +368,7 @@ export default {
         .then(response => {
           // handle success
           console.log(response);
-          this.nbPhoto = response.data.disponibles
+          this.nbPhoto = response.data.disponibles;
           response.data.photos.forEach(element => {
             this.tabImages.push(element);
           });
