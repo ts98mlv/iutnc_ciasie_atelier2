@@ -1,5 +1,8 @@
 <template>
-    <div class="AddPhoto col-10 col-sm-6 mx-auto col-lg-6">
+    <div class="DetailPhoto col-10 col-sm-6 mx-auto col-lg-6">
+      <div class="btn-back row" @click="retour">
+        <div class="back ml-4"><i class="fas fa-chevron-left"></i> Retour</div>
+      </div>
         <h1 class="mx-auto p-2">Toutes les photos de l'id {{$route.params.id}}</h1>
         <hr>
         <div class="placeTab">
@@ -71,7 +74,7 @@ export default {
             url: urlAPI + "photos",
             headers: {
                 "Authorization": tokenBearer,
-                'mail': localStorage.mail
+                'mail': localStorage.email
             }
         })
         .then(res => {
@@ -84,7 +87,9 @@ export default {
       },
 
   methods: {
-
+      retour() {
+        this.$router.go(-1);
+      }
     },
 
   computed: {
@@ -110,10 +115,11 @@ body {
   background-size: cover;
   background-attachment: fixed;
   background-position: center;
+  min-width: 600px;
 }
 
-.AddPhoto {
-  background-color: #910c5e;
+.DetailPhoto {
+  background-color: #910c5ee8;
   margin-top: 10vh;
   border-radius: 15px;
   padding: 10px;
@@ -148,5 +154,17 @@ th {
     color: white;
 }
 
+.back {
+  background-color: #ca1384;
+  font-size: 1.3em;
+  padding: 4px;
+  padding-left: 7px;
+  padding-right: 7px;
+  border-radius: 8px;
+}
+
+.btn-back {
+  cursor: pointer;
+}
 
 </style>

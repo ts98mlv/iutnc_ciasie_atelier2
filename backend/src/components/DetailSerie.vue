@@ -67,10 +67,10 @@ export default {
 
 			axios({
                 method: "get",
-                url: urlAPI + "serie" + serieId,
+                url: urlAPI + "series",
                 headers: {
                     "Authorization": tokenBearer,
-                    'mail': localStorage.mail
+                    'mail': localStorage.email
                 }
             })
 			.then(res => {
@@ -78,6 +78,7 @@ export default {
                 this.listSeries = pars.map(item => {
                     return item
                 })
+                console.log(this.listSeries)
 			})		
 			.catch( err => console.error(err));
       },

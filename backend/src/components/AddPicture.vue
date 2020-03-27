@@ -1,6 +1,6 @@
 <template>
     <div class="AddPhoto">
-        <h1>Saluuuuuuuuuuuut</h1>
+        <h1>Assigner une photo</h1>
 
         <div class="placeTab">
             <h3 class="titreTab">Series</h3>
@@ -154,7 +154,7 @@ export default {
             url: urlAPI + "photos/" + elemAss.id,
             headers: {
                 "Authorization": tokenBearer,
-                'mail': localStorage.mail
+                'mail': localStorage.email
             },
             data: {
                 "id": elemAss.id,

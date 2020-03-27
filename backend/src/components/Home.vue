@@ -29,6 +29,22 @@
         </a>
       </li>
 
+      <li>
+        <a
+          href="/photos-nonLoc"
+        >
+          Voir toutes les photos non localisées
+        </a>
+      </li>
+
+      <li>
+        <a
+          href="/create-serie"
+        >
+          Créer une série
+        </a>
+      </li>
+
       <li v-if="toke == null">
         <a
           href="/auth"
@@ -72,7 +88,7 @@ body {
 }
 
 .home {
-  background-color: #910c5e;
+  background-color: #910c5ee8;
   margin-top: 10vh;
   border-radius: 15px;
   padding: 10px;

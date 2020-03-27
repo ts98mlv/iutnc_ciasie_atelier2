@@ -12,7 +12,11 @@ import DetailPic from './components/DetailPic.vue'
 import DetailSerie from './components/DetailSerie.vue'
 import Auth from './components/Authentification.vue'
 import Register from './components/Register.vue'
+import PicNonLoc from './components/AllPicNonLoc.vue'
+import AddLocPic from './components/AddLocalisationPic.vue'
+import createSerie from './components/CreateSerie'
 
+require('../fontawesome/css/all.css');
 
 Vue.use(Router)
 
@@ -28,6 +32,9 @@ const router = new Router({
     { path: '/series/:id', component: DetailSerie },
     { path: '/auth', component: Auth },
     { path: '/inscription', component: Register },
+    { path: '/photos-nonLoc', component: PicNonLoc },
+    { path: '/photos-nonLoc/:id', component: AddLocPic },
+    { path: '/create-serie', component: createSerie },
     { path: '*', redirect: '/' }
   ]
 })
