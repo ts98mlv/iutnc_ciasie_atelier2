@@ -13,7 +13,7 @@
                     <tr>
                         <th scope="col">Description</th>
                         <th scope="col">Photo</th>
-                        <th scope="col">Assigné</th>
+                        <th scope="col">Assignée</th>
                         <th scope="col">Detail</th>
                     </tr>
                 </thead>
