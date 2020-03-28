@@ -30,6 +30,9 @@ Bien évidemment nous étions tout le temps en contact et sommes au courant du c
     <li>
         En ssh, se connecter au serveur et entrer <code>docker-compose up</code>. Il se peut que vous soyez obligé de la lancer plusieurs fois pour avoir les 3 APIs de connectées à la base de données.
     </li>
+    <li>
+        Ajouter les données dans la base de données à partir du fichier bdd.sql
+    </li>
     <li>Lancer les applications voulues en suivant les instructions du readme qui les accompagne.</li>
 </ol>
 
@@ -39,3 +42,7 @@ Bien évidemment nous étions tout le temps en contact et sommes au courant du c
 login : <code>Michel2i</code> <br>
 email : <code>michel@test.fr</code> <br>
 mot de passe : <code>michel</code> <br>
+
+###### phpmyadmin
+compte : <code>root</code> <br>
+mdp : <code>comroot123</code>
