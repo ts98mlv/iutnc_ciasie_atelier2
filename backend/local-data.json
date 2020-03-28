@@ -1,0 +1,85 @@
+{ 
+    "series" : [
+    {
+        "id" : 1,
+        "ville" : "Paris",
+        "map_x" : 58,
+        "map_y" : 67,
+        "map_zoom": 2,
+        "distance" : 10
+    },
+    {
+        "id" : 2,
+        "ville" : "Nancy",
+        "map_x" : 15,
+        "map_y" : 24,
+        "map_zoom": 2,
+        "distance" : 2
+    },
+    {
+        "id" : 3,
+        "ville" : "Metz",
+        "map_x" : 48,
+        "map_y" : 18,
+        "map_zoom": 2,
+        "distance" : 80
+    },
+    {
+        "id" : 4,
+        "ville" : "Strasbourg",
+        "map_x" : 29,
+        "map_y" : 57,
+        "map_zoom": 2,
+        "distance" : 20
+    }
+    ],
+
+    "photos" : [
+        {
+            "id" : 1,
+            "description" : "Tour Eiffel",
+            "position": {
+                "positionX" : 4,
+                "positionY" : 10
+            },
+            "url": "https://www.numerama.com/content/uploads/2019/05/trou-noir-espace-univers-astronomie.jpg"
+        },
+        {
+            "id" : 2,
+            "description" : "Cathédrale Notre Dame",
+            "position": {
+                "positionX" : 24,
+                "positionY" : 20
+            },
+            "url": ""
+        },
+        {
+            "id" : 3,
+            "description" : "Place Stanislas",
+            "position": {
+                "positionX" : 15,
+                "positionY" : 31
+            },
+            "url": ""
+        },
+        {
+            "id" : 4,
+            "description" : "Centre Pompidou",
+            "position": { 
+                "positionX" : 27,
+                "positionY" : 8
+            },
+            "url": ""
+        },
+        {
+            "id" : 5,
+            "description" : "Place St Epvre",
+            "position": {
+                "positionX" : 48,
+                "positionY" : 53
+            },
+            "url": ""
+        }
+    ]
+
+}

@@ -1,0 +1,18 @@
+[
+    {
+        "id": 1,
+        "description": null,
+        "positionX": "6.8378592",
+        "positionY": "48.4075591",
+        "url": "https://i.ibb.co/9wdGm17/NSIMG-20200318-162312.jpg",
+        "serie_id": null
+    },
+    {
+        "id": 2,
+        "description": null,
+        "positionX": "6.8379225",
+        "positionY": "48.4075152",
+        "url": "https://i.ibb.co/F4dFNDD/NSIMG-20200318-163050.jpg",
+        "serie_id": 1
+    }
+]

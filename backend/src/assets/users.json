@@ -1,0 +1,9 @@
+[
+    {
+        "id": 1,
+        "pseudo": "allan",
+        "mail": "a@i.fr",
+        "mdp": "123",
+        "tokenJWT": "token123"
+    }
+]
