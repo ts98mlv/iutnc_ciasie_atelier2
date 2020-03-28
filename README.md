@@ -32,3 +32,10 @@ Bien évidemment nous étions tout le temps en contact et sommes au courant du c
     </li>
     <li>Lancer les applications voulues en suivant les instructions du readme qui les accompagne.</li>
 </ol>
+
+### Pour tester : 
+
+###### utilisateur : 
+login : <code>Michel2i</code> <br>
+email : <code>michel@test.fr</code> <br>
+mot de passe : <code>michel</code> <br>
