@@ -1,0 +1,28 @@
+{
+  "name": "GeoQuizz",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "Théo LEGRAND, Thomas SERRES, Allan IZZI, Théo HELF",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "bcrypt": "^3.0.7",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "file-system": "^2.2.2",
+    "jsonwebtoken": "^8.5.1",
+    "mysql": "^2.18.0",
+    "uuid": "^3.4.0",
+    "validator": "^12.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
