@@ -55,13 +55,17 @@ Si une photo est assignée à une série, elle possèdera dont la valeur 'oui' d
 
         Permet de visualiser plus de détails de la photo choisie
 
->>>>>   # Ajout de photos
+>>>>>   # Voir toutes les séries
 
 Permets de visualiser toutes les séries de l'application et de pouvoir accéder à ses détails via le bouton 'Détail >'
 
         ## Détail d'une série
 
         Permet de visualiser plus de détails de la série choisie
+
+        ## Supprimer une série
+
+        Permet de supprimer la série voulue. On est ensuite redirigé à l'accueil.
 
 >>>>>   # Voir toutes les photos non localisées
 

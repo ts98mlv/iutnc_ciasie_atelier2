@@ -14,6 +14,7 @@
                         <th scope="col">Id</th>
                         <th scope="col">Ville</th>
                         <th scope="col">Detail</th>
+                        <th scope="col">Supprimer</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -21,6 +22,7 @@
                         <th scope="row">{{serie.id}}</th>
                         <td>{{serie.ville}}</td>
                         <td><router-link class="lienDet" v-bind:to="'/series/'+serie.id">Detail <i class="fas fa-chevron-right"></i><i class="fas fa-chevron-right"></i></router-link></td>
+                        <td><a class="lienSuppr" @click="supprS(serie.id)">Supprimer <i class="fas fa-map-marker-alt"></i></a></td>
                     </tr>
                 </tbody>
             </table>
@@ -68,7 +70,32 @@ export default {
     methods: {
       retour() {
         this.$router.push("/");
-      }
+      },
+
+      supprS (idSer) {
+
+        // Requête axios permettant de supprimer une série et envoyant dans header le tokenJWT du localStorage ainsi que l'email
+        let tokenBearer = 'Bearer ' + localStorage.token;   
+
+      axios({
+          method: "delete",
+          url: urlAPI + "series/" + idSer,
+          headers: {
+              "Authorization": tokenBearer,
+              'mail': localStorage.email
+          }
+        })
+			.then(res => {
+				console.log(res)
+        
+			})		
+      .catch( err => console.error(idSer + " : " + err));
+
+      alert("Votre série a bien été supprimée.")
+      this.$router.push("/");
+
+    },
+
     }
 }
 
@@ -125,16 +152,20 @@ td {
     vertical-align: middle !important;
 }
 
-.lienDet {
+.lienDet, .lienSuppr {
   color: white;
   background-color: #ca1384;
   padding: 5px;
   border-radius: 8px;
 }
 
-.lienDet:hover {
+.lienDet:hover, .lienSuppr:hover {
   text-decoration: none;
   color: #d4d4d4;
+}
+
+a {
+  cursor: pointer;
 }
 
 .back {
