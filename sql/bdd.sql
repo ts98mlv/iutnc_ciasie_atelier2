@@ -49,10 +49,10 @@ ALTER TABLE `serie` CHANGE `distance` `distance` FLOAT(250,25) NULL DEFAULT NULL
 
 -- insertion de séries et de photos
 INSERT INTO `serie` (`id`, `ville`, `map_x`, `map_y`, `map_zoom`, `distance`) VALUES
-(1, 'Paris', '48.849806', '2.407379', NULL, 0.0022561023943126200000000),
-(2, 'Nancy', '48.689827', '6.194057', NULL, 0.0022561023943126200000000),
-(3, 'Metz', '49.11658', '6.193886', NULL, 0.0022561023943126200000000),
-(4, 'Strasbourg', '48.581718', '7.760124', NULL, 0.0022561023943126200000000);
+(1, 'Paris', '48.849806', '2.407379', NULL, 0.0022561023667568847),
+(2, 'Nancy', '48.689827', '6.194057', NULL, 0.0022561023667568847),
+(3, 'Metz', '49.11658', '6.193886', NULL, 0.0022561023667568847),
+(4, 'Strasbourg', '48.581718', '7.760124', NULL, 0.0022561023667568847);
 
 
 INSERT INTO `photo` (`id`, `description`, `positionX`, `positionY`, `url`, `serie_id`) VALUES
