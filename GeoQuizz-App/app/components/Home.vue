@@ -93,7 +93,6 @@
                             let img = new Image();
                             img.src = selected;
                             this.images.push(img);
-
                         });
                     }).catch(function (e) {
                     console.log('error in selectPicture : ', e);
