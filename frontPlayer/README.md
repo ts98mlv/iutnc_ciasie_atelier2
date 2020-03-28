@@ -21,3 +21,5 @@
 
 ### Si vous rencontrez un problème ou avez une question, n'hésitez pas à nous contacter. (theohelf@gmail.com)
 
+### PS : L'application est reliée avec l'Api sous docketu. Il faut donc avoir un VPN. (car utilisation des APIs sous docketu). Sans Api, pas de série, donc pas de photo, donc pas de jeu !
+
