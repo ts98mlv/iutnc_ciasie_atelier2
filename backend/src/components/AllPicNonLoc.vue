@@ -1,5 +1,5 @@
 <template>
-    <div class="AllPhotoNonLoc col-10 col-sm-6 mx-auto col-lg-6">
+    <div class="AllPhotoNonLoc col-10 col-md-10 mx-auto col-lg-8">
       <div class="btn-back row" @click="retour">
         <div class="back ml-4"><i class="fas fa-chevron-left"></i> Retour</div>
       </div>
@@ -8,13 +8,13 @@
         <div class="placeTab">
             <h3 class="titreTab">Photos</h3>
 
-            <table class="tableauPhotos">
+            <table class="tableauPhotos table mt-3">
                 <thead>
                     <tr>
-                        <th>Description</th>
-                        <th>Photo</th>
-                        <th>Assigné</th>
-                        <th>Detail</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Photo</th>
+                        <th scope="col">Assigné</th>
+                        <th scope="col">Detail</th>
                     </tr>
                 </thead>
                     <tr v-if="(photo.positionX == null || photo.positionX == 0) && (photo.positionY == null || photo.positionY == 0)" v-for="photo in this.listPhotos">
@@ -22,7 +22,7 @@
                         <td><img :src='photo.url'></td>
                         <td v-if="photo.serie_id == null">Non</td>
                         <td v-if="photo.serie_id != null">Oui</td>
-                        <td><router-link v-bind:to="'/photos-nonLoc/'+photo.id">Detail</router-link></td>
+                        <td><router-link class="lienDet" v-bind:to="'/photos-nonLoc/'+photo.id">Detail <i class="fas fa-chevron-right"></i></router-link></td>
                     </tr>
 
                 <tbody>
@@ -49,35 +49,24 @@ export default {
   
   created () {
 
-            // Requête axios récupérant toutes les photos lors de l'actualisation de la page
-            // axios.get(urlAPI + "photos")
-            // .then( (res) => {
-            //     const pars = JSON.parse(res.data);
-            //     this.listPhotos = pars.map(item => {
-            //         return item
-            //     })
-                
-            // })
-            // .catch( err => console.error(err));
-
             // Requête axios récupérant toutes les photos lors de l'actualisation de la page et envoyant dans header le tokenJWT du localStorage ainsi que l'email
             let tokenBearer = 'Bearer ' + localStorage.token; 
 
 			axios({
-                method: "get",
-                url: urlAPI + "photos",
-                headers: {
-                    "Authorization": tokenBearer,
-                    'mail': localStorage.email
-                }
-            })
+          method: "get",
+          url: urlAPI + "photos",
+          headers: {
+              "Authorization": tokenBearer,
+              'mail': localStorage.email
+          }
+      })
 			.then(res => {
 				const pars = JSON.parse(res.data);
-                this.listPhotos = pars.map(item => {
-                    return item
-                })
+        this.listPhotos = pars.map(item => {
+            return item
+        })
 			})		
-            .catch( err => console.error(err));
+      .catch( err => console.error(err));
       },
 
   methods: {
@@ -98,7 +87,7 @@ body {
   background-size: cover;
   background-attachment: fixed;
   background-position: center;
-    min-width: 600px;
+  min-width: 600px;
 }
 
 .AllPhotoNonLoc {
@@ -120,8 +109,8 @@ hr {
 .titreTab {
     color: white;
 }
+
 .tableauPhotos {
-    border: 1px solid black;
     margin: 0 auto;
 }
 
@@ -129,9 +118,30 @@ hr {
     width: 80px;
 }
 
+thead {
+    background-color: #600909;
+}
+
 th {
     padding: 5px;
     color: white;
+    text-align: center;
+
+}
+
+td {
+    color: white;
+    vertical-align: middle !important;
+}
+
+.lienDet {
+  color: white;
+  padding: 5px;
+}
+
+.lienDet:hover {
+  text-decoration: none;
+  color: #d4d4d4;
 }
 
 .back {
@@ -141,9 +151,6 @@ th {
   padding-left: 7px;
   padding-right: 7px;
   border-radius: 8px;
-}
-
-.btn-back {
   cursor: pointer;
 }
 

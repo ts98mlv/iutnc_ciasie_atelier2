@@ -12,12 +12,12 @@
 					</span>
 
 					<div class="wrap-input100 validate-input" data-validate = "Enter email">
-						<input class="input100" type="text" name="email" placeholder="Email" v-model="email">
+						<input class="input100" type="text" placeholder="Email" v-model="email">
                         
 					</div>
 
 					<div class="wrap-input100 validate-input" data-validate="Enter password">
-						<input class="input100" type="password" name="pass" placeholder="Password" v-model="password">
+						<input class="input100" type="password" placeholder="Password" v-model="password">
 					</div>
 
 					<div class="container-login100-form-btn">
@@ -72,12 +72,9 @@ export default {
 				  localStorage.token = JSON.parse(res.data).tokenJWT;
 				  localStorage.email = this.email;
 
-				  this.$route.push('/');
+				  this.$router.push('/');
 			})		
 			.catch( err => console.error(err));
-
-			// localStorage.token = this.email + ':' + this.password;
-			// localStorage.email = this.email;
 		}
 	},
 

@@ -1,21 +1,21 @@
 <template>
-    <div class="CreateSer col-10 col-sm-6 mx-auto col-lg-6">
+    <div class="CreateSer col-10 col-sm-6 mx-auto col-lg-6 pb-3">
         <div class="btn-back row" @click="retour">
             <div class="back ml-4"><i class="fas fa-chevron-left"></i> Retour</div>
         </div>
         <h1>Créer une série</h1>
         <hr>
         <div class="formCreate">
-            <label class="labelCity">Ville :</label><br>
-                <input type="text" name="city" v-model="city" placeholder="Paris"><br>
-            <label class="labelMapX">Position X :</label><br>
+            <label class="labelCity mt-3">Ville :</label><br>
+                <input type="text" class="" name="city" v-model="city" placeholder="Paris"><br>
+            <label class="labelMapX mt-3">Position X :</label><br>
                 <input type="number" v-model="mapX" class="mapX" value="0.0" step="0.01"><br>
-            <label class="labelMapY">Position Y :</label><br>
+            <label class="labelMapY mt-3">Position Y :</label><br>
                 <input type="number" v-model="mapY" class="mapY" value="0.0" step="0.01"><br>
-            <label class="labelMapX">Map Zoom :</label><br>
-                <input type="number" v-model="mapZoom" class="mapZoom" value="0" step="1"><br><br>
+            <label class="labelMapX mt-3">Map Zoom :</label><br>
+                <input type="number" v-model="mapZoom" class="mapZoom mb-4" value="0" step="1"><br>
 
-            <a class="createSerie" @click="createS">Localiser</a>
+            <a class="createSerie" @click="createS">Localiser <i class="fas fa-map-marker-alt"></i></a>
             
         </div>
 
@@ -53,54 +53,34 @@ export default {
             return
         }
 
-        console.log(this.city + " " + this.mapX + " " + this.mapY + " " + this.mapZoom + " " + localStorage.token)
-
         // Requête axios permettant de mettre à jour les données de l'api et envoyant dans header le tokenJWT du localStorage ainsi que l'email
         let tokenBearer = 'Bearer ' + localStorage.token;   
 
-        // const options = {
-        //     method: 'post',
-        //     url: urlAPI + "series",
-        //     headers: {
-        //         "Authorization": tokenBearer,
-        //         'mail': localStorage.email
-        //     },
-        //     data: {
-        //         "ville": this.city,
-        //         "map_refs" : {
-        //             "map_x": this.mapX,
-        //             "map_y": this.mapY,
-        //             "map_zoom": this.mapZoom,
-        //         }
-        //     },
-        //     transformResponse: [(data) => {
-        //         // transform the response
-        //         return data;
-                
-        //     }]
-        // };
-
       axios({
-            method: "post",
-            url: urlAPI + "series",
-            headers: {
-                "Authorization": tokenBearer,
-                'mail': localStorage.email
-            },
-            data: {
-                "ville": this.city,
-                "map_refs" : {
-                    "map_x": this.mapX,
-                    "map_y": this.mapY,
-                    "map_zoom": this.mapZoom,
-                }
-            }
+          method: "post",
+          url: urlAPI + "series",
+          headers: {
+              "Authorization": tokenBearer,
+              'mail': localStorage.email
+          },
+          data: {
+              "ville": this.city,
+              "map_refs" : {
+                  "map_x": this.mapX,
+                  "map_y": this.mapY,
+                  "map_zoom": this.mapZoom,
+              }
+          }
         })
 			.then(res => {
 				console.log(res)
         
 			})		
-			.catch( err => console.error(err));
+      .catch( err => console.error(err));
+
+      alert("Votre série a bien été enregistrée.")
+      this.$router.push("/");
+
     },
         
     retour() {
@@ -130,8 +110,31 @@ body {
   padding: 10px;
 }
 
+label {
+  color: white;
+}
+
+input {
+    border-radius: 5px;
+    padding: 2px;
+    padding-left: 8px;
+}
+
 h1 {
   color: white;
+}
+
+.createSerie {
+  color: white !important;
+  background-color: #ca1384;
+  padding: 5px;
+  border-radius: 8px;
+  font-size: 1.3em;
+}
+
+.createSerie:hover {
+  text-decoration: none;
+  color: #d4d4d4;
 }
 
 hr {
@@ -146,9 +149,6 @@ hr {
   padding-left: 7px;
   padding-right: 7px;
   border-radius: 8px;
-}
-
-.btn-back {
   cursor: pointer;
 }
 

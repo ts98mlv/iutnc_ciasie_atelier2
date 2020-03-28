@@ -71,6 +71,10 @@ export default {
       email: localStorage.email,
       toke: localStorage.token
     }
+  },
+
+  created () {
+      
   }
 }
 </script>

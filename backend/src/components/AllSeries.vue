@@ -1,7 +1,7 @@
 <template>
     <div class="AllSeries col-10 col-sm-6 mx-auto col-lg-6">
-      <div class="btn-back row" @click="retour">
-        <div class="back ml-4"><i class="fas fa-chevron-left"></i> Retour</div>
+      <div class="btn-back row">
+        <div class="back ml-4" @click="retour"><i class="fas fa-chevron-left"></i> Retour</div>
       </div>
         <h1 class="mx-auto p-2">Toutes les séries</h1>
         <hr>
@@ -13,7 +13,6 @@
                     <tr>
                         <th scope="col">Id</th>
                         <th scope="col">Ville</th>
-                        <th scope="col">Distance</th>
                         <th scope="col">Detail</th>
                     </tr>
                 </thead>
@@ -21,11 +20,8 @@
                     <tr v-for="serie in this.listSeries">
                         <th scope="row">{{serie.id}}</th>
                         <td>{{serie.ville}}</td>
-                        <td>{{serie.distance}}</td>
-                        <td><router-link v-bind:to="'/series/'+serie.id">Detail</router-link></td>
+                        <td><router-link class="lienDet" v-bind:to="'/series/'+serie.id">Detail <i class="fas fa-chevron-right"></i><i class="fas fa-chevron-right"></i></router-link></td>
                     </tr>
-
-
                 </tbody>
             </table>
 
@@ -48,34 +44,23 @@ export default {
   },
   
   created () {
-            // !!!Ancien!!!
-            // Reqête axios récupérant toutes les séries
-            // axios.get(urlAPI + "series")
-            // .then( (res) => {
-            //     const pars = JSON.parse(res.data);
-            //     this.listSeries = pars.map(item => {
-            //         return item
-            //     })
-                
-            // })
-            // .catch( err => console.error(err));
 
-            // Requête axios récupérant toutes les séries et envoyant dans header le tokenJWT du localStorage ainsi que l'email
+      // Requête axios récupérant toutes les séries et envoyant dans header le tokenJWT du localStorage ainsi que l'email
 			let tokenBearer = 'Bearer ' + localStorage.token; 
 
 			axios({
-                method: "get",
-                url: urlAPI + "series",
-                headers: {
-                    "Authorization": tokenBearer,
-                    'mail': localStorage.email
-                }
-            })
+          method: "get",
+          url: urlAPI + "series",
+          headers: {
+              "Authorization": tokenBearer,
+              'mail': localStorage.email
+          }
+      })
 			.then(res => {
 				const pars = JSON.parse(res.data);
-                this.listSeries = pars.map(item => {
-                    return item
-                })
+        this.listSeries = pars.map(item => {
+            return item
+        })
 			})		
 			.catch( err => console.error(err));
       },
@@ -98,7 +83,7 @@ body {
   background-size: cover;
   background-attachment: fixed;
   background-position: center;
-    min-width: 600px;       
+  min-width: 600px;       
 }
 
 .AllSeries {
@@ -126,7 +111,6 @@ thead {
 }
 
 .tableauSeries {
-
     margin: 20px auto;
 }
 
@@ -138,6 +122,19 @@ th {
 
 td {
     color: white;
+    vertical-align: middle !important;
+}
+
+.lienDet {
+  color: white;
+  background-color: #ca1384;
+  padding: 5px;
+  border-radius: 8px;
+}
+
+.lienDet:hover {
+  text-decoration: none;
+  color: #d4d4d4;
 }
 
 .back {
@@ -147,9 +144,6 @@ td {
   padding-left: 7px;
   padding-right: 7px;
   border-radius: 8px;
-}
-
-.btn-back {
   cursor: pointer;
 }
 

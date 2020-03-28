@@ -1,32 +1,30 @@
 <template>
-    <div class="AllPhoto col-10 col-sm-6 mx-auto col-lg-6">
-      <div class="btn-back row" @click="retour">
-        <div class="back ml-4"><i class="fas fa-chevron-left"></i> Retour</div>
+    <div class="AllPhoto col-10 col-md-10 mx-auto col-lg-8">
+      <div class="btn-back row">
+        <div class="back ml-4" @click="retour"><i class="fas fa-chevron-left"></i> Retour</div>
       </div>
         <h1 class="mx-auto p-2">Toutes les photos</h1>
         <hr>
         <div class="placeTab">
             <h3 class="titreTab">Photos</h3>
 
-            <table class="tableauPhotos">
+            <table class="tableauPhotos table">
                 <thead>
                     <tr>
-                        <th>Description</th>
-                        <th>Photo</th>
-                        <th>Assigné</th>
-                        <th>Detail</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Photo</th>
+                        <th scope="col">Assignée</th>
+                        <th scope="col"></th>
                     </tr>
                 </thead>
+                <tbody>
                     <tr v-for="photo in this.listPhotos">
-                        <td>{{photo.description}}</td>
+                        <td scope="row">{{photo.description}}</td>
                         <td><img :src='photo.url'></td>
                         <td v-if="photo.serie_id == null">Non</td>
                         <td v-if="photo.serie_id != null">Oui</td>
-                        <td><router-link v-bind:to="'/photos/'+photo.id">Detail</router-link></td>
+                        <td><router-link class="lienDet" v-bind:to="'/photos/'+photo.id">Detail <i class="fas fa-chevron-right"></i></router-link></td>
                     </tr>
-
-                <tbody>
-
                 </tbody>
             </table>
         </div>
@@ -48,17 +46,6 @@ export default {
   },
   
   created () {
-
-            // Requête axios récupérant toutes les photos lors de l'actualisation de la page
-            // axios.get(urlAPI + "photos")
-            // .then( (res) => {
-            //     const pars = JSON.parse(res.data);
-            //     this.listPhotos = pars.map(item => {
-            //         return item
-            //     })
-                
-            // })
-            // .catch( err => console.error(err));
 
             // Requête axios récupérant toutes les photos lors de l'actualisation de la page et envoyant dans header le tokenJWT du localStorage ainsi que l'email
             let tokenBearer = 'Bearer ' + localStorage.token; 
@@ -122,8 +109,7 @@ hr {
     color: white;
 }
 .tableauPhotos {
-    border: 1px solid black;
-    margin: 0 auto;
+    margin: 20px auto;
 }
 
 .tableauPhotos img {
@@ -133,6 +119,26 @@ hr {
 th {
     padding: 5px;
     color: white;
+    text-align: center !important;
+}
+
+td {
+  color: white;
+  vertical-align: middle !important;
+}
+
+thead {
+    background-color: #600909;
+}
+
+.lienDet {
+  color: white;
+  padding: 5px;
+}
+
+.lienDet:hover {
+  text-decoration: none;
+  color: #d4d4d4;
 }
 
 .back {
@@ -142,9 +148,6 @@ th {
   padding-left: 7px;
   padding-right: 7px;
   border-radius: 8px;
-}
-
-.btn-back {
   cursor: pointer;
 }
 

@@ -1,47 +1,45 @@
 <template>
-    <div class="AddPhoto">
-        <h1>Assigner une photo</h1>
+    <div class="AddPhoto col-10 col-md-10 mx-auto col-lg-8 mb-5 pb-4">
+        <div class="btn-back row">
+            <div class="back ml-4" @click="retour"><i class="fas fa-chevron-left"></i> Retour</div>
+        </div>
+        <h1 class="mx-auto p-2">Assigner une photo</h1>
+        <hr>
 
+        <div id="affectPhoto">
+            
+            <label class="labelSerie">Choisir une série : </label><br>
+            <select v-model="serieId" class="mb-3">
+                <option value="" disabled>Série</option>
+                <option v-bind:value="serie.id" v-for="serie in this.listSeries">{{serie.ville}}</option>
+            </select><br>
+           
+           <label class="labelPhoto">Choisir une photo : </label><br>
+            <select v-model="photoId" >
+                <option value="" disabled>Photo</option>
+                <option v-if="photo.serie_id == null" v-bind:value="photo.id" v-for="photo in this.listPhotos">{{photo.description}}</option>
+            </select>
+
+            <div class="mt-3">
+                <a class="assPhoto" @click="sendForm">Assigner <i class="fas fa-map-marker-alt"></i></a>
+            </div>
+
+        </div>
+        <hr>
         <div class="placeTab">
-            <h3 class="titreTab">Series</h3>
-
-            <table class="tableauSeries">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Ville</th>
-                        <th>Map X</th>
-                        <th>Map Y</th>
-                        <th>Map zoom</th>
-                        <th>Distance</th>
-                    </tr>
-                </thead>
-                    <tr v-for="serie in this.listSeries">
-                        <td>{{serie.id}}</td>
-                        <td>{{serie.ville}}</td>
-                        <td>{{serie.map_x}}</td>
-                        <td>{{serie.map_y}}</td>
-                        <td>{{serie.map_zoom}}</td>
-                        <td>{{serie.distance}}</td>
-                    </tr>
-
-                <tbody>
-
-                </tbody>
-            </table>
-
             <h3 class="titreTab">Photos</h3>
 
-            <table class="tableauPhotos">
+            <table  class="tableauPhotos table">
                 <thead>
                     <tr>
-                        <th>Description</th>
-                        <th>positionX</th>
-                        <th>positionY</th>
-                        <th>Photo</th>
-                        <th>Serie</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">positionX</th>
+                        <th scope="col">positionY</th>
+                        <th scope="col">Photo</th>
+                        <th scope="col">Serie</th>
                     </tr>
                 </thead>
+                <tbody>
                     <tr v-for="photo in this.listPhotos">
                         <td>{{photo.description}}</td>
                         <td>{{photo.positionX}}</td>
@@ -49,32 +47,11 @@
                         <td><img :src='photo.url'></td>
                         <td>{{photo.serie_id}}</td>
                     </tr>
-
-                <tbody>
-
                 </tbody>
             </table>
         </div>
 
-        <div id="affectPhoto">
-            
-            <p>Choisir une série : </p>
-            <select v-model="serieId" >
-                <option value="" disabled>Choisissez</option>
-                <option v-bind:value="serie.id" v-for="serie in this.listSeries">{{serie.ville}}</option>
-            </select>
-           
-           <p>Choisir une photo : </p>
-            <select v-model="photoId" >
-                <option value="" disabled>Choisissez</option>
-                <option v-if="photo.serie_id == null" v-bind:value="photo.id" v-for="photo in this.listPhotos">{{photo.description}}</option>
-            </select>
-
-            <p>
-                <button v-on:click="sendForm">Assigner</button>
-            </p>
-
-        </div>
+        
     </div>
 </template>
 
@@ -99,13 +76,14 @@ export default {
 
     // Requête axios récupérant toutes les séries et envoyant dans header le tokenJWT du localStorage ainsi que l'email
     let tokenBearerSeries = 'Bearer ' + localStorage.token; 
+    let nbNonAssignee = 0;
 
     axios({
         method: "get",
         url: urlAPI + "series",
         headers: {
             "Authorization": tokenBearerSeries,
-            'mail': localStorage.mail
+            'mail': localStorage.email
         }
         })
         .then(res => {
@@ -124,16 +102,23 @@ export default {
         url: urlAPI + "photos",
         headers: {
             "Authorization": tokenBearerPhotos,
-            'mail': localStorage.mail
+            'mail': localStorage.email
         }
         })
         .then(res => {
             const pars = JSON.parse(res.data);
             this.listPhotos = pars.map(item => {
+                if(item.serie_id == null) nbNonAssignee += 1
                 return item
             })
+        if(nbNonAssignee == 0)
+        {
+            alert("Toutes les photos sont déjà assignées.")
+            this.$router.push("/");
+        }
         })		
         .catch( err => console.error(err));
+
     },
 
   methods: {
@@ -177,6 +162,10 @@ export default {
         // send the request
         axios(options);  
 
+    },
+
+    retour() {
+        this.$router.push("/");
     }
   }
 }
@@ -184,13 +173,90 @@ export default {
 </script>
 
 <style>
-.tableauSeries, .tableauPhotos {
-    border: 1px solid black;
-    margin: 0 auto;
+@import '../../vendor/bootstrap/css/bootstrap.min.css';
+
+body {
+  background-image: url('../assets/sky.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  min-width: 790px;
+}
+
+
+.AddPhoto {
+  background-color: #910c5ee8;
+  margin-top: 10vh;
+  border-radius: 15px;
+  padding: 10px;
+}
+
+h1 {
+  color: white;
+}
+
+hr {
+  width: 70%;
+  border: 1px solid #31313140;
+}
+
+.titreTab {
+    color: white;
+}
+
+.tableauPhotos {
+    margin: 20px auto;
 }
 
 .tableauPhotos img {
     width: 80px;
+}
+
+label {
+  color: white;
+}
+
+th {
+    padding: 5px;
+    color: white;
+    text-align: center !important;
+}
+
+td {
+  color: white;
+  vertical-align: middle !important;
+}
+
+thead {
+    background-color: #600909;
+}
+
+.assPhoto {
+  color: white !important;
+  background-color: #ca1384;
+  padding: 5px;
+  border-radius: 8px;
+  font-size: 1.3em;
+}
+
+.assPhoto:hover {
+  text-decoration: none;
+  color: #d4d4d4;
+}
+
+a {
+    cursor: pointer;
+}
+
+.back {
+  background-color: #ca1384;
+  font-size: 1.3em;
+  padding: 4px;
+  padding-left: 7px;
+  padding-right: 7px;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
 </style>

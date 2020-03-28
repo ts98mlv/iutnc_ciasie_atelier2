@@ -12,19 +12,19 @@
 					</span>
 
 					<div class="wrap-input100 validate-input" data-validate = "Enter pseudo">
-						<input class="input100" v-model="pseudo" type="text" name="pseudo" placeholder="Pseudo">
+						<input class="input100" v-model="pseudo" type="text" placeholder="Pseudo">
 					</div>
 
                     <div class="wrap-input100 validate-input" data-validate="Enter email">
-						<input class="input100" type="text" v-model="email" name="email" placeholder="Email">
+						<input class="input100" type="text" v-model="email" placeholder="Email">
 					</div>
 
 					<div class="wrap-input100 validate-input" data-validate="Enter password">
-						<input class="input100" type="password" v-model="password" name="pass" placeholder="Password">
+						<input class="input100" type="password" v-model="password" placeholder="Password">
 					</div>
 
                     <div class="wrap-input100 validate-input" data-validate="Enter password">
-						<input class="input100" type="password" v-model="password2" name="pass2" placeholder="Confirm Password">
+						<input class="input100" type="password" v-model="password2" placeholder="Confirm Password">
 					</div>
 
 					<div class="container-login100-form-btn">
@@ -70,42 +70,38 @@ export default {
 				return;
 			}
 
-			let mailPass = this.email + ':' + this.password;
-			let mailPass64 = Buffer.from(mailPass,'utf8').toString('base64');
-			let mailPassBasic = 'Basic ' + mailPass64; 
+			// axios.get("http://docketu.iutnc.univ-lorraine.fr:17280/users")
+            //     .then(res => {
+			// 		console.log("eedf" + res);
+			// 	  	// this.$router.push('/auth');
+			// 	})		
+			// 	.catch( err => console.error(this.pseudo + " " + this.email + " " + this.password +" " + err));
 
-			axios({
-                method: "post",
-                url: urlAPI + "utilisateurs/",
-                headers: {
-                    "Authorization": mailPassBasic
-				},
-				data: {
-                "login": this.pseudo,
-				"mail": this.mail,
-				"mdp": this.password
-				}
+				 axios
+					.post('http://docketu.iutnc.univ-lorraine.fr:17280/utilisateurs', 
+						this.pseudo,
+						this.email,
+						this.password)
+					.then(function (response) {
+						return otpSent("ok " + response)
+					})
+					.catch(function (error) {
+						console.log("pas ok " + JSON.stringify(error));
+					});  
+
+
+			// axios({
+            //     method: "get",
+            //     url: urlAPI + "users"
             
-            })
-			.then(res => {
-				console.log(JSON.parse(res.data).tokenJWT);
-				  localStorage.token = JSON.parse(res.data).tokenJWT;
-				  localStorage.email = this.email;
-
-				  this.$route.push('/');
-			})		
-			.catch( err => console.error(err));
-
-			// localStorage.token = this.email + ':' + this.password;
-			// localStorage.email = this.email;
+            // })
+			// .then(res => {
+			// 	console.log("eedf" + res);
+			// 	//   this.$router.push('/auth');
+			// })		
+			// .catch( err => console.error(this.pseudo + " " + this.email + " " + this.password +" " + err));
 		}
-	},
-
-	watch:{
-		token(newToken) {
-			localStorage.token = newToken;
-		}
-  }
+	}
 }
 </script>
 

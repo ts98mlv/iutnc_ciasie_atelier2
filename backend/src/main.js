@@ -15,6 +15,8 @@ import Register from './components/Register.vue'
 import PicNonLoc from './components/AllPicNonLoc.vue'
 import AddLocPic from './components/AddLocalisationPic.vue'
 import createSerie from './components/CreateSerie'
+import axios from 'axios'
+
 
 require('../fontawesome/css/all.css');
 
