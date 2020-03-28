@@ -3,6 +3,9 @@
 		<div class="container-login100">
 			<div class="wrap-login100">
 				<div class="login100-form validate-form">
+				<div class="btn-back row">
+					<div class="back ml-4" @click="retour"><i class="fas fa-chevron-left"></i> Retour</div>
+				</div>
 					<span class="login100-form-logo">
 						<i class="zmdi zmdi-landscape"></i>
 					</span>
@@ -68,14 +71,18 @@ export default {
                 }
             })
 			.then(res => {
-				console.log(JSON.parse(res.data).tokenJWT);
+				JSON.parse(res.data).tokenJWT;
 				  localStorage.token = JSON.parse(res.data).tokenJWT;
 				  localStorage.email = this.email;
 
 				  this.$router.push('/');
 			})		
 			.catch( err => console.error(err));
-		}
+		},
+
+		retour() {
+        this.$router.push("/");
+    }
 	},
 
 	watch:{
@@ -108,5 +115,18 @@ export default {
 
 .container-login100 {
 	padding: 50px;
+}
+
+a {
+    cursor: pointer;
+}
+
+.back {
+  font-size: 1.3em;
+  padding: 4px;
+  padding-left: 7px;
+  padding-right: 7px;
+  border-radius: 8px;
+  cursor: pointer;
 }
 </style>

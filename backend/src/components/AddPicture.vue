@@ -160,7 +160,8 @@ export default {
         };
 
         // send the request
-        axios(options);  
+        axios(options); 
+        alert("Photo assignée") 
 
     },
 

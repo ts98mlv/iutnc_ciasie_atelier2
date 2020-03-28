@@ -15,7 +15,7 @@
             <label class="labelMapX mt-3">Map Zoom :</label><br>
                 <input type="number" v-model="mapZoom" class="mapZoom mb-4" value="0" step="1"><br>
 
-            <a class="createSerie" @click="createS">Localiser <i class="fas fa-map-marker-alt"></i></a>
+            <a class="createSerie" @click="createS">Créer <i class="fas fa-map-marker-alt"></i></a>
             
         </div>
 

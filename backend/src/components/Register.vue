@@ -2,7 +2,10 @@
     <div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100">
-				<form class="login100-form validate-form">
+				<div class="login100-form validate-form">
+				<div class="btn-back row">
+					<div class="back ml-4" @click="retour"><i class="fas fa-chevron-left"></i> Retour</div>
+				</div>
 					<span class="login100-form-logo">
 						<i class="zmdi zmdi-landscape"></i>
 					</span>
@@ -38,7 +41,7 @@
 							Déjà inscrit ?
 						</a>
 					</div>
-				</form>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -89,18 +92,11 @@ export default {
 						console.log("pas ok " + JSON.stringify(error));
 					});  
 
+		},
 
-			// axios({
-            //     method: "get",
-            //     url: urlAPI + "users"
-            
-            // })
-			// .then(res => {
-			// 	console.log("eedf" + res);
-			// 	//   this.$router.push('/auth');
-			// })		
-			// .catch( err => console.error(this.pseudo + " " + this.email + " " + this.password +" " + err));
-		}
+		retour() {
+        	this.$router.push("/");
+    	}
 	}
 }
 </script>
@@ -125,5 +121,18 @@ export default {
 
 .container-login100::before {
     position: relative !important;
+}
+
+a {
+    cursor: pointer;
+}
+
+.back {
+  font-size: 1.3em;
+  padding: 4px;
+  padding-left: 7px;
+  padding-right: 7px;
+  border-radius: 8px;
+  cursor: pointer;
 }
 </style>

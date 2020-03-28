@@ -5,7 +5,7 @@
     <h4 v-if="toke != null">Vous êtes connecté en tant que <b>{{email}}</b></h4>
     <ul>
       <li>
-        <a class="hihi"
+        <a v-if="toke != null" class="hihi"
           href="/addPictures"
         >
           Ajout de photos
@@ -13,7 +13,7 @@
       </li>
 
       <li>
-        <a
+        <a v-if="toke != null"
           href="/photos"
         >
           Voir toutes les photos
@@ -21,7 +21,7 @@
       </li>
 
       <li>
-        <a
+        <a v-if="toke != null"
           href="/series"
         >
           Voir toutes les series
@@ -29,7 +29,7 @@
       </li>
 
       <li>
-        <a
+        <a v-if="toke != null"
           href="/photos-nonLoc"
         >
           Voir toutes les photos non localisées
@@ -37,10 +37,18 @@
       </li>
 
       <li>
-        <a
+        <a v-if="toke != null"
           href="/create-serie"
         >
           Créer une série
+        </a>
+      </li>
+
+      <li v-if="toke != null">
+        <a href="/"
+          @click="deconnect"
+        >
+          Se deconnecter
         </a>
       </li>
 
@@ -75,6 +83,14 @@ export default {
 
   created () {
       
+  },
+
+  methods: {
+    deconnect() {
+      localStorage.clear()
+      alert("Vous êtes deconnecté.")
+      this.$router.push("/")
+    }
   }
 }
 </script>
