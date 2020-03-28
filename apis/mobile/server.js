@@ -428,7 +428,7 @@ function getConnexion() {
         // connexion à la bdd
         db.connect(err => {
             if (err) {
-                return err; //c'est cette ligne
+                return err;
             } else {
                 console.log("Connected to database");
             }

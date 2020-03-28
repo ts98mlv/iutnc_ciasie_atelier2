@@ -420,7 +420,6 @@ app.post("/series", async (req, res) => {
 /**
  * @api {post} /utilisateurs permet d'ajouter un utilisateur en bdd
  * @apiDescription route permettant d'ajouter un utilisateur en bdd
- * @apiHeader {String} authorization "Basic chaineEncodeeB64" avec chaineEncodeeB64 correspondant à "email:motDePasse" encodé en base 64
  * @apiParam {json} body {
     "login": "bb",
     "mail": "bob@test.fr",
@@ -434,6 +433,7 @@ app.post("/utilisateurs", (req, res) => {
     if(isUndefined(jsonUser)){
         res.status(500).end(getMessageFromHTTPCode(500));
     }
+    console.log(jsonUser);
     //vérification du contenu du json
     let login = jsonUser.login;
     let mail = jsonUser.mail;
@@ -451,6 +451,7 @@ app.post("/utilisateurs", (req, res) => {
             res.status(500).end(getMessageFromHTTPCode(500));
         }
         else{
+            console.log("200");
             res.status(200).end(getMessageFromHTTPCode(200));
         }
     })
@@ -693,7 +694,7 @@ function getConnexion() {
         // connexion à la bdd
         db.connect(err => {
             if (err) {
-                return err; //c'est cette ligne
+                return err;
             } else {
                 console.log("Connected to database");
             }
