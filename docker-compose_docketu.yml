@@ -56,6 +56,7 @@ services:
       - geoquizz.net
 
   geoquizz_api_front:
+    container_name: geoquizz_api_front
     image: node
     environment:
       - NODE_ENV=production
@@ -74,6 +75,7 @@ services:
 
   geoquizz_api_back:
     image: node
+    container_name: geoquizz_api_back
     environment:
       - NODE_ENV=production
       - http_proxy=http://www-cache.iutnc.univ-lorraine.fr:3128
@@ -88,3 +90,30 @@ services:
       - mysql:db
     networks:
       - geoquizz.net
+
+  geoquizz_backoffice:
+    image: httpd:latest
+    container_name: geoquizz_backoffice
+    ports:
+      - "17250:80"
+    volumes:
+      - ./backOffice:/usr/local/apache2/htdocs
+    working_dir: /usr/local/apache2/htdocs
+    networks:
+      - geoquizz.net
+#    links:
+#      - geoquizz_api_back:docketu.iutnc.univ-lorraine.fr
+
+
+  geoquizz_frontoffice:
+    image: httpd:latest
+    container_name: geoquizz_frontoffice
+    ports:
+      - "17150:80"
+    volumes:
+      - ./frontPlayer:/usr/local/apache2/htdocs
+    working_dir: /usr/local/apache2/htdocs
+    networks:
+      - geoquizz.net
+#    links:
+#      - geoquizz_api_front:docketu.iutnc.univ-lorraine.fr
