@@ -114,7 +114,7 @@ export default {
         if(nbNonAssignee == 0)
         {
             alert("Toutes les photos sont déjà assignées.")
-            this.$router.push("/");
+            this.$router.push("/#");
         }
         })		
         .catch( err => console.error(err));
@@ -166,7 +166,7 @@ export default {
     },
 
     retour() {
-        this.$router.push("/");
+        this.$router.push("/#");
     }
   }
 }

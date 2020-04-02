@@ -80,7 +80,7 @@ export default {
 
   methods: {
       retour() {
-        this.$router.push("/photos-nonLoc");
+        this.$router.push("/#photos-nonLoc");
       },
 
       addLoc() {
@@ -119,7 +119,7 @@ export default {
 
         // On averti à l'user que cela à bien été enregistré
         alert("Votre photo a bien été enregistrée.")
-        this.$router.push('/photos-nonLoc');
+        this.$router.push('/#photos-nonLoc');
       }
     }
 }

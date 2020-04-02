@@ -74,7 +74,7 @@ export default {
 
   methods: {
         retour() {
-            this.$router.push("/series");
+            this.$router.push("/#series");
         }
     }
 }

@@ -89,7 +89,7 @@ export default {
     deconnect() {
       localStorage.clear()
       alert("Vous êtes deconnecté.")
-      this.$router.push("/")
+      this.$router.push("/#")
     }
   }
 }

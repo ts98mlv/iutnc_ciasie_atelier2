@@ -23,21 +23,21 @@ require('../fontawesome/css/all.css');
 Vue.use(Router)
 
 const router = new Router({
-  mode: 'history',
+  mode: 'hash',
 
   routes: [
-    { path: '/', component: Home },
-    { path: '/addPictures', component: AddPic },
-    { path: '/photos', component: AllPic },
-    { path: '/series', component: AllSeries },
-    { path: '/photos/:id', component: DetailPic },
-    { path: '/series/:id', component: DetailSerie },
-    { path: '/auth', component: Auth },
-    { path: '/inscription', component: Register },
-    { path: '/photos-nonLoc', component: PicNonLoc },
-    { path: '/photos-nonLoc/:id', component: AddLocPic },
-    { path: '/create-serie', component: createSerie },
-    { path: '*', redirect: '/' }
+    { path: '/#', component: Home },
+    { path: '/#addPictures', component: AddPic },
+    { path: '/#photos', component: AllPic },
+    { path: '/#series', component: AllSeries },
+    { path: '/#photos/:id', component: DetailPic },
+    { path: '/#series/:id', component: DetailSerie },
+    { path: '/#auth', component: Auth },
+    { path: '/#inscription', component: Register },
+    { path: '/#photos-nonLoc', component: PicNonLoc },
+    { path: '/#photos-nonLoc/:id', component: AddLocPic },
+    { path: '/#create-serie', component: createSerie },
+    { path: '*', redirect: '/#' }
   ]
 })
 

@@ -73,13 +73,6 @@ export default {
 				return;
 			}
 
-			// axios.get("http://docketu.iutnc.univ-lorraine.fr:17280/users")
-            //     .then(res => {
-			// 		console.log("eedf" + res);
-			// 	  	// this.$router.push('/auth');
-			// 	})		
-			// 	.catch( err => console.error(this.pseudo + " " + this.email + " " + this.password +" " + err));
-
 				 axios
 					.post('http://docketu.iutnc.univ-lorraine.fr:17280/utilisateurs', 
 						this.pseudo,
@@ -95,7 +88,7 @@ export default {
 		},
 
 		retour() {
-        	this.$router.push("/");
+        	this.$router.push("/#");
     	}
 	}
 }
