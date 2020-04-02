@@ -30,7 +30,7 @@
 					</div>
 										
                     <div class="text-center p-t-90">
-						<a class="txt1" href="/inscription">
+						<a class="txt1" href="/#inscription">
 							Pas encore inscrit ?
 						</a>
 					</div>

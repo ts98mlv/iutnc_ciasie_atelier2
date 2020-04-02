@@ -37,7 +37,7 @@
 					</div>
 
                     <div class="text-center p-t-90">
-						<a class="txt1" href="/auth">
+						<a class="txt1" href="/#auth">
 							Déjà inscrit ?
 						</a>
 					</div>
