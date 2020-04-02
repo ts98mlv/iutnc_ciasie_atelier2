@@ -75,7 +75,7 @@ export default {
 
   methods: {
       retour() {
-        this.$router.push("/#photos");
+        this.$router.push("/#/photos");
       }
     }
 }
