@@ -23,7 +23,7 @@
                         <td><img :src='photo.url'></td>
                         <td v-if="photo.serie_id == null">Non</td>
                         <td v-if="photo.serie_id != null">Oui</td>
-                        <td><router-link class="lienDet" v-bind:to="'/#/photos/'+photo.id">Detail <i class="fas fa-chevron-right"></i></router-link></td>
+                        <td><router-link class="lienDet" v-bind:to="'/#photos/'+photo.id">Detail <i class="fas fa-chevron-right"></i></router-link></td>
                     </tr>
                 </tbody>
             </table>
@@ -69,7 +69,7 @@ export default {
 
   methods: {
       retour() {
-        this.$router.push("/#/");
+        this.$router.push("/#");
       }
     }
   

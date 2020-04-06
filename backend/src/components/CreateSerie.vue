@@ -79,12 +79,12 @@ export default {
       .catch( err => console.error(err));
 
       alert("Votre série a bien été enregistrée.")
-      this.$router.push("/#/");
+      this.$router.push("/#");
 
     },
         
     retour() {
-        this.$router.push("/#/");
+        this.$router.push("/#");
     }
   }
 }

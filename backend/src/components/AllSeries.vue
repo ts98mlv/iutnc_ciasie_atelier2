@@ -21,7 +21,7 @@
                     <tr v-for="serie in this.listSeries">
                         <th scope="row">{{serie.id}}</th>
                         <td>{{serie.ville}}</td>
-                        <td><router-link class="lienDet" v-bind:to="'/#/series/'+serie.id">Detail <i class="fas fa-chevron-right"></i><i class="fas fa-chevron-right"></i></router-link></td>
+                        <td><router-link class="lienDet" v-bind:to="'/#series/'+serie.id">Detail <i class="fas fa-chevron-right"></i><i class="fas fa-chevron-right"></i></router-link></td>
                         <td><a class="lienSuppr" @click="supprS(serie.id)">Supprimer <i class="fas fa-map-marker-alt"></i></a></td>
                     </tr>
                 </tbody>
@@ -69,7 +69,7 @@ export default {
 
     methods: {
       retour() {
-        this.$router.push("/#/");
+        this.$router.push("/#");
       },
 
       supprS (idSer) {
@@ -92,7 +92,7 @@ export default {
       .catch( err => console.error(idSer + " : " + err));
 
       alert("Votre série a bien été supprimée.")
-      this.$router.push("/#/");
+      this.$router.push("/#");
 
     },
 

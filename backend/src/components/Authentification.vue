@@ -30,7 +30,7 @@
 					</div>
 										
                     <div class="text-center p-t-90">
-						<a class="txt1" href="/#/inscription">
+						<a class="txt1" href="/#inscription">
 							Pas encore inscrit ?
 						</a>
 					</div>
@@ -75,13 +75,13 @@ export default {
 				  localStorage.token = JSON.parse(res.data).tokenJWT;
 				  localStorage.email = this.email;
 
-				  this.$router.push('/#/');
+				  this.$router.push('/#');
 			})		
 			.catch( err => console.error(err));
 		},
 
 		retour() {
-        this.$router.push("/#/");
+        this.$router.push("/#");
     }
 	},
 
