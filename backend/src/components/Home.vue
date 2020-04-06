@@ -6,15 +6,15 @@
     <ul>
       <li>
         <a v-if="toke != null" class="hihi"
-          href="/#addPictures"
+          href="/addPictures"
         >
-          Ajout de photos
+          Assigner des photos
         </a>
       </li>
 
       <li>
         <a v-if="toke != null"
-          href="/#photos"
+          href="/photos"
         >
           Voir toutes les photos
         </a>
@@ -22,7 +22,7 @@
 
       <li>
         <a v-if="toke != null"
-          href="/#series"
+          href="/series"
         >
           Voir toutes les series
         </a>
@@ -30,7 +30,7 @@
 
       <li>
         <a v-if="toke != null"
-          href="/#photos-nonLoc"
+          href="/photos-nonLoc"
         >
           Voir toutes les photos non localisées
         </a>
@@ -38,14 +38,14 @@
 
       <li>
         <a v-if="toke != null"
-          href="/#create-serie"
+          href="/create-serie"
         >
           Créer une série
         </a>
       </li>
 
       <li v-if="toke != null">
-        <a href="/#"
+        <a href="/"
           @click="deconnect"
         >
           Se deconnecter
@@ -54,7 +54,7 @@
 
       <li v-if="toke == null">
         <a
-          href="/#auth"
+          href="/auth"
         >
           Se connecter
         </a>
@@ -62,7 +62,7 @@
 
       <li v-if="toke == null">
         <a
-          href="/#inscription"
+          href="/inscription"
         >
           S'inscrire
         </a>
@@ -82,7 +82,7 @@ export default {
   },
 
   created () {
-      
+
   },
 
   methods: {

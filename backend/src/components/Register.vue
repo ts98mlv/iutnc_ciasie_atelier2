@@ -37,7 +37,7 @@
 					</div>
 
                     <div class="text-center p-t-90">
-						<a class="txt1" href="/#auth">
+						<a class="txt1" href="/auth">
 							Déjà inscrit ?
 						</a>
 					</div>
@@ -67,7 +67,7 @@ export default {
 
 	methods: {
 		register() {
-			
+
 			if(this.password != this.password2) {
 				alert("Les mots de passe ne correspondent pas.")
 				return;
@@ -77,11 +77,11 @@ export default {
             //     .then(res => {
 			// 		console.log("eedf" + res);
 			// 	  	// this.$router.push('/auth');
-			// 	})		
+			// 	})
 			// 	.catch( err => console.error(this.pseudo + " " + this.email + " " + this.password +" " + err));
 
 				 axios
-					.post('http://docketu.iutnc.univ-lorraine.fr:17280/utilisateurs', 
+					.post('http://docketu.iutnc.univ-lorraine.fr:17280/utilisateurs',
 						this.pseudo,
 						this.email,
 						this.password)
@@ -90,7 +90,7 @@ export default {
 					})
 					.catch(function (error) {
 						console.log("pas ok " + JSON.stringify(error));
-					});  
+					});
 
 		},
 

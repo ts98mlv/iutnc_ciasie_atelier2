@@ -16,7 +16,7 @@
 
 					<div class="wrap-input100 validate-input" data-validate = "Enter email">
 						<input class="input100" type="text" placeholder="Email" v-model="email">
-                        
+
 					</div>
 
 					<div class="wrap-input100 validate-input" data-validate="Enter password">
@@ -28,9 +28,9 @@
 							Login
 						</button>
 					</div>
-										
+
                     <div class="text-center p-t-90">
-						<a class="txt1" href="/#inscription">
+						<a class="txt1" href="/inscription">
 							Pas encore inscrit ?
 						</a>
 					</div>
@@ -61,7 +61,7 @@ export default {
 		cnxUser() {
 			let mailPass = this.email + ':' + this.password;
 			let mailPass64 = Buffer.from(mailPass,'utf8').toString('base64');
-			let mailPassBasic = 'Basic ' + mailPass64; 
+			let mailPassBasic = 'Basic ' + mailPass64;
 
 			axios({
                 method: "post",
@@ -76,7 +76,7 @@ export default {
 				  localStorage.email = this.email;
 
 				  this.$router.push('/');
-			})		
+			})
 			.catch( err => console.error(err));
 		},
 
