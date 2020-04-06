@@ -75,13 +75,13 @@ export default {
 				  localStorage.token = JSON.parse(res.data).tokenJWT;
 				  localStorage.email = this.email;
 
-				  this.$router.push('/#');
+				  this.$router.push('/');
 			})		
 			.catch( err => console.error(err));
 		},
 
 		retour() {
-        this.$router.push("/#");
+        this.$router.push("/");
     }
 	},
 
