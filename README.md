@@ -46,3 +46,10 @@ mot de passe : <code>michel</code> <br>
 ###### phpmyadmin
 compte : <code>root</code> <br>
 mdp : <code>comroot123</code>
+
+### démos : 
+Pour l'application mobile : un fichier .apk est disponible pour installer l'application sur android. <br>
+Pour l'application backoffice : une vidéo de démonstration est disponible (on a eu des problèmes pour la build sur docketu. Toutefois elle est encore disponible sur <a href="http://docketu.iutnc.univ-lorraine.fr:17250/">http://docketu.iutnc.univ-lorraine.fr:17250/</a> il faut juste rajouter un /# devant chaque url pour que cela fonctionne).
+Pour l'application frontoffice : vous pouvez tester le jeu à l'adresse <a href="http://docketu.iutnc.univ-lorraine.fr:17150/">http://docketu.iutnc.univ-lorraine.fr:17150/</a>.
+
+#### Attention, pour tester les applications il faut activer le vpn de l'université de Lorraine
